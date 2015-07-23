@@ -1,0 +1,25 @@
+{
+	"name" : "kaikmedia/gallery-module",
+	"description" : "Gallery module for Zikula",
+	"type" : "zikula-module",
+	"license" : "LGPL-3.0+",
+	"authors" : [{
+			"name" : "Kaik",
+			"homepage" : "http://kaikmedia.com/",
+			"email" : "contact@kaikmedia.com"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Kaikmedia\\GalleryModule\\" : ""
+		}
+	},
+	"require" : {
+		"php" : ">5.3.3"
+	},
+	"extra" : {
+		"zikula" : {
+			"class" : "Kaikmedia\\GalleryModule\\KaikmediaGalleryModule"
+		}
+	}
+}
