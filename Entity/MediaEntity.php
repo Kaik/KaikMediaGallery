@@ -9,11 +9,12 @@ use UserUtil;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Media
  * @ORM\Table(name="kmgallery_media")
- * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\MediaRepository")
+ * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\MediaRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class MediaEntity
@@ -30,7 +31,17 @@ class MediaEntity
      * @Assert\File(maxSize="6000000")
      */
     public $file;
+    
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $ext;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $mimeType;
+    
     /**
      *
      * @var string @ORM\Column(name="name", type="string", length=255)
@@ -64,7 +75,69 @@ class MediaEntity
      * @var string @ORM\Column(name="path", type="string", length=255)
      */
     private $path;
-
+    
+    /**
+     * @ORM\Column(type="string", length=150)
+     */
+    private $status = 'A';
+    
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+    
+    /**
+     * The user id of the creator of the category
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\JoinColumn(name="createdBy", referencedColumnName="uid")
+     */
+    private $createdBy;
+    
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+    
+    /**
+     * The user id of the last updater of the category
+     * @Gedmo\Blameable(on="update")
+     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\JoinColumn(name="updatedBy", referencedColumnName="uid")
+     */
+    private $updatedBy;
+    
+    /**
+     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     */
+    private $deletedAt;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\JoinColumn(name="deletedBy", referencedColumnName="uid")
+     */
+    private $deletedBy;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\MediaObjMapEntity", mappedBy="media")
+     */
+    protected $mappedobjects;    
+    
+    /**
+     * constructor
+     */
+    public function __construct()
+    {
+        $em = ServiceUtil::getService('doctrine.entitymanager');
+        $this->author = $em->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy(array(
+            'uid' => UserUtil::getVar('uid')
+        ));
+        $this->publicdomian = 0;       
+        $this->mappedobjects = new ArrayCollection();
+    }    
+    
     /**
      * Get id
      * 
@@ -73,6 +146,50 @@ class MediaEntity
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * Set ext
+     *
+     * @param string $ext
+     * @return Image
+     */
+    public function setExt($ext)
+    {
+        $this->ext = $ext;
+        return $this;
+    }
+    
+    /**
+     * Get ext
+     *
+     * @return string
+     */
+    public function getExt()
+    {
+        return $this->ext;
+    }
+    
+    /**
+     * Set mimeType
+     *
+     * @param string $mimeType
+     * @return Image
+     */
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+        return $this;
+    }
+    
+    /**
+     * Get mimeType
+     *
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 
     /**
@@ -149,6 +266,160 @@ class MediaEntity
     {
         return $this->author;
     }
+    /**
+     * Set obj_status
+     *
+     * @param string $obj_status
+     * @return Pages
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    
+        return $this;
+    }
+    
+    /**
+     * Get obj_status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Pages
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    
+        return $this;
+    }
+    
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+    
+    /**
+     * Set createdBy
+     *
+     * @param integer $createdBy
+     * @return Pages
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+    
+        return $this;
+    }
+    
+    /**
+     * Get createdBy
+     *
+     * @return integer
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+    
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Pages
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = new \DateTime($updatedAt);
+    
+        return $this;
+    }
+    
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+    
+    /**
+     * Set updatedBy
+     *
+     * @param integer $updatedBy
+     * @return Pages
+     */
+    public function setUpdatedBy($updatedBy)
+    {
+        $this->updatedBy = $updatedBy;
+    
+        return $this;
+    }
+    
+    /**
+     * Get updatedBy
+     *
+     * @return integer
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+    
+    /**
+     * Get delete status
+     *
+     * @return DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+    
+    /**
+     * Set deleted at status
+     *
+     * @return integer
+     */
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
+    }
+    
+    /**
+     * Get deleted by status
+     *
+     * @return integer
+     */
+    public function getDeletedBy()
+    {
+        return $this->deletedBy;
+    }
+    
+    /**
+     * Get deleted by
+     *
+     * @return integer
+     */
+    public function setDeletedBy($deletedBy)
+    {
+        $this->deletedBy = $deletedBy;
+    }
 
     public function getPublicdomain()
     {
@@ -205,18 +476,6 @@ class MediaEntity
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
         return 'uploads/documents';
-    }
-
-    /**
-     * constructor
-     */
-    public function __construct()
-    {
-        $em = ServiceUtil::getService('doctrine.entitymanager');
-        $this->author = $em->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy(array(
-            'uid' => UserUtil::getVar('uid')
-        ));
-        $this->publicdomian = 0;
     }
 
     /**
@@ -282,6 +541,8 @@ class MediaEntity
     {    
         $array =array();
         $array['id'] = $this->id;
+        $array['ext'] = $this->ext;
+        $array['mimeType'] = $this->mimeType;
         $array['name'] = $this->name;
         $array['description'] = $this->description;
         $array['legal'] = $this->legal;
@@ -290,5 +551,25 @@ class MediaEntity
         $array['author'] = $this->author;
         $array['absolute_path'] = $this->getUploadDir().'/'.$this->path;
         return $array;
-    }    
+    }
+
+    /**
+     *
+     * @return object array
+     */
+    public function getMappedobjects()
+    {
+        return $this->mappedobjects;
+    }
+
+    /**
+     *
+     * @param object array $mappedobjects            
+     */
+    public function setMappedobjects($mappedobjects)
+    {
+        $this->mappedobjects = $mappedobjects;
+        return $this;
+    }
+     
 }
