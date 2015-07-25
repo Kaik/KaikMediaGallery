@@ -1,0 +1,3 @@
+kaikmediagallerymodule:
+    resource: "@KaikmediaGalleryModule/Controller"
+    type:     annotation
