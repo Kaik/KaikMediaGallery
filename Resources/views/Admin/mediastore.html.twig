@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row">
 	<div class="list-group col-md-12">
-		<div class="list-group-item col-md-12" style="background: #d9edf7;">
+		<div class="list-group-item col-md-12 clearer" style="background: #d9edf7;">
                 {{ getstatusmsg() }}
                 {{ form_start(form) }}
                 {{ form_errors(form) }}                    
@@ -48,8 +48,8 @@
 				<p class="list-group-item-text">{{ file.author.uname }}</p>
 			</div>			
 			<div class="col-md-1 text-right">
-				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': file.id}) }}"><i
-					class="fa fa-pencil"></i></a>
+				<a href="{{ path('kaikmediagallerymodule_admin_modify', {'id': file.id}) }}"><i
+					class="fa fa-pencil"></i> </a>
 				<a data-toggle="collapse" data-target="#file-details-{{ file.id }}"  href="#" > <i class="fa fa-angle-down fa-1x" title="{{  __('Read') }}"> </i></a> 	
 			</div>	
         <div id="file-details-{{ file.id }}" class="row collapse">
