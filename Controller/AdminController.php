@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-//use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
+use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
 
 /**
  * @Route("/admin")
@@ -105,6 +105,99 @@ class AdminController extends AbstractController
             //   'form' => $form->createView(),
             //    'thisPage' => $a['page'],
             //    'maxPages' => ceil($pages->count() / $a['limit'])
+        ));
+    }
+    
+    /**
+     * @Route("/media/addnew")
+     * Modify site information.
+     *
+     * @param Request $request
+     * 
+     */
+    public function addnewAction(Request $request)
+    {
+        // Security check
+        if (! UserUtil::isLoggedIn() || ! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        $media = new Media();
+
+        $form = $this->createForm('media', $media);
+    
+        $form->handleRequest($request);
+    
+        $em = $this->getDoctrine()->getManager();
+        if ($form->isValid()) {
+            $em->persist($media);
+            $em->flush();
+            $request->getSession()
+            ->getFlashBag()
+            ->add('status', "Media added!");
+    
+            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
+        }
+    
+        $request->attributes->set('_legacy', true); // forces template to render inside old theme
+        return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }   
+     
+    /**
+     * @Route("/media/modify/{id}", requirements={"id" = "\d+"})
+     * Modify site information.
+     *
+     * @param Request $request
+     * @param integer $id
+     *            Parameters passed via GET:
+     *            --------------------------------------------------
+     *            string uname The user name of the account for which profile information should be modified; defaults to the uname of the current user.
+     *            dynadata array The modified profile information passed into this function in case of an error in the update function.
+     * @return RedirectResponse|string The rendered template output.
+     * @throws AccessDeniedException on failed permission check
+     */
+    public function modifyAction(Request $request, $id = null)
+    {
+        // Security check
+        if (! UserUtil::isLoggedIn() || ! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+    
+        if ($id == null) {
+            // create a new customer
+            $media = new Media();
+        } else {
+            $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
+            $media = $this->entityManager->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getOneBy(array(
+                'id' => $id
+            ));
+        }
+    
+        $form = $this->createForm('media', $media);
+    
+        $form->handleRequest($request);
+    
+        /**
+         *
+         * @var \Doctrine\ORM\EntityManager $em
+        */
+        $em = $this->getDoctrine()->getManager();
+        if ($form->isValid()) {
+            $em->persist($media);
+            $em->flush();
+            $request->getSession()
+            ->getFlashBag()
+            ->add('status', "Media saved!");
+    
+            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
+        }
+    
+        $request->attributes->set('_legacy', true); // forces template to render inside old theme
+        return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', array(
+            'form' => $form->createView(),
+            'media' => $media
         ));
     }
 

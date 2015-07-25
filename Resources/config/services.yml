@@ -1,0 +1,6 @@
+services:
+    gallery.form.type.media:
+        class: Kaikmedia\GalleryModule\Form\Type\MediaType
+        tags:
+            - { name: form.type, alias: media }
+            

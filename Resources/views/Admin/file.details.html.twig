@@ -1,9 +1,11 @@
+<p> <br /> </p>
 <div class="col-md-4">
     <a href="#" class="thumbnail">
       {% if file.path %}        
       <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ file.path }}" />
       {% else %}
-                 
+       <span class="fa fa-exclamation-triangle fa-2x"> <span/>
+       {{ __('File path is empty!') }}           
       {% endif %}
     </a>
 </div>        
@@ -37,11 +39,11 @@
               </div>                            
               </div>
       {% else %}
-              
+              <p class="alert alert-warning text-center"> {{ __('Not used') }} </p>        
       {% endfor %}
       </div>
       </div>                          
 </div>
 <div class="col-md-12">
         <p class="text-center"> <strong> {{ __('Full path:') }}</strong> {{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ file.path }}</p>                                    
-</div>  
+</div>

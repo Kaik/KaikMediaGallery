@@ -5,6 +5,7 @@
 namespace Kaikmedia\GalleryModule\Entity;
 
 use ServiceUtil;
+use ModUtil;
 use UserUtil;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
@@ -474,8 +475,8 @@ class MediaEntity
     protected function getUploadDir()
     {
         // get rid of the __DIR__ so it doesn't screw up
-        // when displaying uploaded doc/image in the view.
-        return 'uploads/documents';
+        // when displaying uploaded doc/image in the view.       
+        return 'uploads/'.ModUtil::getVar('KaikmediaGalleryModule','upload_dir','kmgallery');
     }
 
     /**
@@ -493,6 +494,10 @@ class MediaEntity
             $filename = sha1(uniqid(mt_rand(), true));
             $this->path = $filename . '.' . $this->file->guessExtension();
             $this->name = $this->file->getClientOriginalName();
+            
+            $this->ext = $this->file->guessExtension();
+            $this->mimeType = $this->file->getMimeType();      
+            
         }
     }
 
