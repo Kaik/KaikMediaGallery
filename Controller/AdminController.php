@@ -141,7 +141,8 @@ class AdminController extends AbstractController
     
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'settings' => ModUtil::getVar($this->name)
         ));
     }   
      
@@ -197,7 +198,8 @@ class AdminController extends AbstractController
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', array(
             'form' => $form->createView(),
-            'media' => $media
+            'media' => $media,
+            'settings' => ModUtil::getVar($this->name)
         ));
     }
 

@@ -17,12 +17,12 @@
 	<div class="col-md-6">
     {{ form_label(form.file) }} 
     {{ form_widget(form.file) }}    
-    {% if media is defined %}        
-    <a href="#" class="thumbnail"><img src="{*  *}" /></a>
+    <br />
+    {% if media.path is defined and media.path is not null %}        
+    <a href="#" class="thumbnail"><img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ media.path }}" /></a>
     {% else %}
                     
     {% endif %}
-
 	</div>
 	<div class="col-md-6">
 	{{ form_label(form.name) }} 
