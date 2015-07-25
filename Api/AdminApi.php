@@ -35,6 +35,9 @@ class AdminApi extends \Zikula_AbstractApi
                 'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_mediastore'),'text' => $this->__('Media store'),'title' => $this->__('Media store manager'),'icon' => 'hdd-o'
             );
             $links[] = array(
+                'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_addnew'),'text' => $this->__('Add media'),'title' => $this->__('Add media'),'icon' => 'plus'
+            );
+            $links[] = array(
                 'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_preferences'),'text' => $this->__('Settings'),'title' => $this->__('Adjust module settings'),'icon' => 'wrench'
             );
         }
