@@ -1,0 +1,46 @@
+{{ render(controller('ZikulaAdminModule:Admin:adminheader')) }}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+ <h3><span class="fa fa-wrench"></span> {{ __('Settings')}}</h3>   
+ {{ getstatusmsg() }}       
+<div class="container-fluid">
+	{{ form_start(form) }}
+	{{ form_errors(form) }}    
+    <div class="col-md-6">
+         <h3>{{ __('General settings') }}</h3>    
+         <div class="col-md-12">
+             {{ form_label(form.upload_dir) }}
+             {{ form_widget(form.upload_dir) }}
+         <p> {{ __('Upload directory under web/uploads folder. Default: kmgallery') }} </p>
+         </div> 
+         <div class="col-md-12">
+             {{ form_label(form.upload_max_media_size) }}
+             {{ form_widget(form.upload_max_media_size) }}
+         <p> {{ __('Maximum size for single file upload. This need to be beetween 0 and maximum upload file size configured in php.ini. Default: 6000000') }} </p>             
+         </div> 
+         <div class="col-md-12">
+             {{ form_label(form.upload_max_total_size) }}
+             {{ form_widget(form.upload_max_total_size) }}
+         <p> {{ __('Maximum total size per user. For unlimited total size chose 0. Default: 0') }} </p> 
+         </div>
+         <div class="col-md-12">
+             {{ form_label(form.upload_allowed_ext) }}
+             {{ form_widget(form.upload_allowed_ext) }}
+         <p> {{ __('Allowed extensions comma separated.') }} </p>             
+         </div> 
+    </div>   
+    <div class="col-md-6">
+         <h3>{{ __('Display settings') }}</h3>    
+         <div class="col-md-6">
+            {{ form_label(form.itemsperpage) }}
+         </div>
+         <div class="col-md-6">
+             {{ form_widget(form.itemsperpage) }}
+         </div> 
+    </div>      
+      
+    <div class="col-md-12 text-right">
+        {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+    </div>
+    {{ form_end(form) }}     
+</div>      
+{{ render(controller('ZikulaAdminModule:Admin:adminfooter')) }}

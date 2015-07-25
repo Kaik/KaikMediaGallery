@@ -1,0 +1,47 @@
+<div class="col-md-4">
+    <a href="#" class="thumbnail">
+      {% if file.path %}        
+      <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ file.path }}" />
+      {% else %}
+                 
+      {% endif %}
+    </a>
+</div>        
+<div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+          <strong>{{ __('Media details') }}</strong>
+      </div>
+      <div class="panel-body">
+    	  <p class=""> <strong> {{ __('Description:') }}</strong> {{ file.description }}</p>
+    	  <p class=""> <strong> {{ __('Legal:') }}</strong> {{ file.legal }}</p>
+      </div>
+    </div>           
+</div>
+<div class="col-md-4">
+      <div class="panel panel-default">
+      <div class="panel-heading">
+                <strong>{{ __('Usage') }}</strong>
+      </div>
+      <div class="panel-body">
+      {%for mappedto in file.mappedobjects %}
+           <div class="row">
+              <div class="col-md-3">
+              {{ mappedto.obj_name }}
+              </div>
+              <div class="col-md-3">
+              {{ mappedto.obj_id }}
+              </div>
+              <div class="col-md-3">
+              
+              </div>                            
+              </div>
+      {% else %}
+              
+      {% endfor %}
+      </div>
+      </div>                          
+</div>
+<div class="col-md-12">
+        <p class="text-center"> <strong> {{ __('Full path:') }}</strong> {{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ file.path }}</p>                                    
+</div>  
