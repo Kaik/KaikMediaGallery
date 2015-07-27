@@ -6,11 +6,11 @@
 <div class="container-fluid">
     <div class="row">
 	<div class="list-group col-md-12">
-		<div class="list-group-item col-md-12 clearer" style="background: #d9edf7;">
+		<div class="list-group-item col-md-12 clearfix" style="background: #d9edf7;">
                 {{ getstatusmsg() }}
                 {{ form_start(form) }}
                 {{ form_errors(form) }}                    
-                <div class="col-md-2">
+                <div class="col-xs-2 col-md-2">
                 {{ form_widget(form.name) }}                    
                 </div>
                 <div class="col-md-1 pull-right text-right">                
@@ -18,7 +18,7 @@
                 </div>
                 {{ form_end(form) }} 
 		</div>
-		<div class="list-group-item col-md-12" style="background: #eee;">
+		<div class="list-group-item col-md-12 clearfix hidden-xs hidden-sm" style="background: #eee;">
 			<div class="col-md-3">{{ __('Name')}}</div>
 		    <div class="col-md-1">{{ __('Ext')}}</div>
 		    <div class="col-md-2">{{ __('Mime Type')}}</div>
@@ -28,24 +28,24 @@
 			<div class="col-md-1 pull-right text-right">{{ __('Options')}}</div>
 		</div>
 		{%for file in media %}
-		<div class="list-group-item col-md-12">
+		<div class="list-group-item col-md-12 clearfix">
 			<div class="col-md-3">
-				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': file.id}) }}">{{ file.name }}</a>
+				<span class="hidden-md hidden-lg"> {{ __('Name')}}: </span><a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': file.id}) }}">{{ file.name }}</a>
 			</div>
 			<div class="col-md-1">
-				<p class="list-group-item-text">{{ file.ext }}</p>
+				<p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Ext')}}: </span> {{ file.ext }}</p>
 			</div>			
 			<div class="col-md-2">
-				<p class="list-group-item-text">{{ file.mimeType }}</p>
+				<p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('MimeType')}}: </span> {{ file.mimeType }}</p>
 			</div>
 			<div class="col-md-1">
-				<p class="list-group-item-text">{% if file.publicdomain %} {{ __('Yes')}}  {% else %} {{ __('No')}} {% endif %}</p>
+				<p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Public')}}: </span> {% if file.publicdomain %} {{ __('Yes')}}  {% else %} {{ __('No')}} {% endif %}</p>
 			</div>
 			<div class="col-md-2">
-				<p class="list-group-item-text">{{ file.createdAt|date('d/m/Y') }}</p>
+				<p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Created')}}: </span> {{ file.createdAt|date('d/m/Y') }}</p>
 			</div>			
 			<div class="col-md-2">
-				<p class="list-group-item-text">{{ file.author.uname }}</p>
+				<p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Author')}}: </span> {{ file.author.uname }}</p>
 			</div>			
 			<div class="col-md-1 text-right">
 				<a href="{{ path('kaikmediagallerymodule_admin_modify', {'id': file.id}) }}"><i
@@ -57,11 +57,11 @@
         </div>			
 		</div>
         {% else %}
-        <div class="list-group-item col-md-12">
+        <div class="list-group-item col-md-12 clearfix">
         <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
         </div>
         {% endfor %}
-		<div class="list-group-item col-md-12" style="background: #eee;">
+		<div class="list-group-item col-md-12 clearfix" style="background: #eee;">
 			{% if maxPages > 1 %}
 			<ul class="pagination pagination-sm">
 				{# `«` arrow #}

@@ -39,7 +39,7 @@ class MediaObjMapEntity
     private $obj_id;  
     
     /**
-     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\MediaEntity")
+     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\MediaEntity", inversedBy="mappedobjects")
      * @ORM\JoinColumn(name="media", referencedColumnName="id")
      */
     protected $media;    
@@ -348,5 +348,18 @@ class MediaObjMapEntity
     public function setDeletedBy($deletedBy)
     {
         $this->deletedBy = $deletedBy;
+    }  
+     
+    /**
+     */
+    public function toArray()
+    {
+        $array =array();
+        $array['id'] = $this->id;
+        $array['obj_name'] = $this->obj_name;
+        $array['obj_id'] = $this->obj_id;
+        $array['file'] = $this->media->toArray();
+        $array['author'] = $this->author;
+        return $array;
     }   
 }

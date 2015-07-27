@@ -27,7 +27,14 @@ class MediaObjMapQueryBuilder extends QueryBuilder
     public function filterObj_name($obj_name)
     {
         if ($obj_name !== false) {
-            return $this->andWhere('mo.name = :obj_name')->setParameter('obj_name', $obj_name);
+            return $this->andWhere('mo.obj_name = :obj_name')->setParameter('obj_name', $obj_name);
+        }
+    }
+
+    public function filterObj_id($obj_id)
+    {
+        if ($obj_id !== false) {
+            return $this->andWhere('mo.obj_id = :obj_id')->setParameter('obj_id', $obj_id);
         }
     }
 

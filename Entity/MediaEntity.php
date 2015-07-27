@@ -493,8 +493,10 @@ class MediaEntity
 
             $filename = sha1(uniqid(mt_rand(), true));
             $this->path = $filename . '.' . $this->file->guessExtension();
-            $this->name = $this->file->getClientOriginalName();
             
+            if($this->name == ''){           
+            $this->name = $this->file->getClientOriginalName();
+            }
             $this->ext = $this->file->guessExtension();
             $this->mimeType = $this->file->getMimeType();      
             
@@ -555,6 +557,7 @@ class MediaEntity
         $array['path'] = $this->path;
         $array['author'] = $this->author;
         $array['absolute_path'] = $this->getUploadDir().'/'.$this->path;
+        $array['src'] = 'web/'.$this->getUploadDir().'/'.$this->path;       
         return $array;
     }
 

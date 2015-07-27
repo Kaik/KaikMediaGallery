@@ -4,9 +4,10 @@
  */
 namespace Kaikmedia\GalleryModule;
 
-//use HookUtil;
+use HookUtil;
 use ModUtil;
 use Zikula\Component\HookDispatcher\SubscriberBundle;
+use Zikula\Component\HookDispatcher\ProviderBundle;
 
 class GalleryModuleVersion extends \Zikula_AbstractVersion
 {
@@ -22,13 +23,12 @@ class GalleryModuleVersion extends \Zikula_AbstractVersion
         $meta['securityschema'] = array(
             'KaikmediaGalleryModule::' => '::'
         );
-        /* Not used at the moment - initial state
+        // Not used at the moment - initial state
         $meta['capabilities'] = array(
-            HookUtil::SUBSCRIBER_CAPABLE => array(
-                'enabled' => true
-            )
+            HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
+            HookUtil::PROVIDER_CAPABLE => array('enabled' => true),
         );
-        */
+       
         // Initial state will be changed later
         $meta['securityschema'] = array(
             'KaikmediaGalleryModule::' => 'Gallery Name::Image ID'
@@ -47,26 +47,22 @@ class GalleryModuleVersion extends \Zikula_AbstractVersion
         return $meta;
     }
 
-    /** Not used for inital state
+    /** 
      * Define the hook bundles supported by this module.
      * 
      * @return void
-     
+    */     
     protected function setupHookBundles()
     {
-        $bundle = new SubscriberBundle($this->name, 'subscriber.kaikmediapages.ui_hooks.pages', 'ui_hooks', $this->__('Pages Hooks'));
-        $bundle->addEvent('display_view', 'kaikmediapages.ui_hooks.pages.display_view');
-        $bundle->addEvent('form_edit', 'kaikmediapages.ui_hooks.pages.form_edit');
-        $bundle->addEvent('form_delete', 'kaikmediapages.ui_hooks.pages.form_delete');
-        $bundle->addEvent('validate_edit', 'kaikmediapages.ui_hooks.pages.validate_edit');
-        $bundle->addEvent('validate_delete', 'kaikmediapages.ui_hooks.pages.validate_delete');
-        $bundle->addEvent('process_edit', 'kaikmediapages.ui_hooks.pages.process_edit');
-        $bundle->addEvent('process_delete', 'kaikmediapages.ui_hooks.pages.process_delete');
-        $this->registerHookSubscriberBundle($bundle);
-        // Post Filter Hooks
-        $bundle4 = new SubscriberBundle($this->name, 'subscriber.kaikmediapages.filter_hooks.post', 'filter_hooks', $this->__('Pages page filter'));
-        $bundle4->addEvent('filter', 'kaikmediapages.filter_hooks.pages.filter');
-        $this->registerHookSubscriberBundle($bundle4);
+        $bundle = new ProviderBundle($this->name, 'provider.kaikmediagallery.ui_hooks.media', 'ui_hooks', $this->__('KMGallery media provider'));
+        $bundle->addServiceHandler('display_view', 'Kaikmedia\GalleryModule\Hook\MediaHandlers', 'uiView', 'kaikmediagallery.hooks.media');
+        $bundle->addServiceHandler('form_edit', 'Kaikmedia\GalleryModule\Hook\MediaHandlers', 'uiEdit', 'kaikmediagallery.hooks.media');
+        $bundle->addServiceHandler('form_delete', 'Kaikmedia\GalleryModule\Hook\MediaHandlers', 'uiDelete', 'kaikmediagallery.hooks.media');
+        $bundle->addServiceHandler('validate_edit', 'Kaikmedia\GalleryModule\Hook\MediaHandlers', 'validateEdit', 'kaikmediagallery.hooks.media');
+        $bundle->addServiceHandler('validate_delete', 'Kaikmedia\GalleryModule\Hook\MediaHandlers', 'validateDelete', 'kaikmediagallery.hooks.media');
+        $bundle->addServiceHandler('process_edit', 'Kaikmedia\GalleryModule\Hook\MediaHandlers', 'processEdit', 'kaikmediagallery.hooks.media');
+        $bundle->addServiceHandler('process_delete', 'Kaikmedia\GalleryModule\Hook\MediaHandlers', 'processDelete', 'kaikmediagallery.hooks.media');
+        $this->registerHookProviderBundle($bundle);
     }
-    */
+
 }

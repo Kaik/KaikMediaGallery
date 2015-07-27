@@ -32,6 +32,9 @@ class GalleryModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVar('upload_max_media_size', 0);
         $this->setVar('upload_max_total_size', 0);
         $this->setVar('upload_allowed_ext', '');
+        
+        HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
+        
         return true;
     }
 

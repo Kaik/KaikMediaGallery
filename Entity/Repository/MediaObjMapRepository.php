@@ -109,7 +109,8 @@ class MediaObjMapRepository extends EntityRepository
         $sortorder = isset($args['sortorder']) ? $args['sortorder'] : 'DESC';
         // filter's
         $f['id'] = isset($args['id']) && $args['id'] !== '' ? $args['id'] : false;
-        $f['obj_name'] = isset($args['obj_name']) && $args['obj_name'] !== '' ? $args['obj_name'] : false;       
+        $f['obj_name'] = isset($args['obj_name']) && $args['obj_name'] !== '' ? $args['obj_name'] : false;
+        $f['obj_id'] = isset($args['obj_id']) && $args['obj_id'] !== '' ? $args['obj_id'] : false;
         // search
         $s['search'] = isset($args['search']) && $args['search'] !== '' ? $args['search'] : false;
         $s['search_field'] = isset($args['search_field']) && $args['search_field'] !== '' ? $args['search_field'] : false;
