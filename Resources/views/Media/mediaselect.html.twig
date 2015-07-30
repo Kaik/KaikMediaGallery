@@ -1,0 +1,94 @@
+
+<a href="#" data-toggle="modal" data-target="#gallery"> <i class="fa fa-picture-o"></i> {{ __('Select images') }}</a>
+<div id="gallery" class="modal fade">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header" style="background:#E4F2FF;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"><span class="fa fa-image"></span> {{  __('Gallery')}}</h4>
+          </div>
+          <div class="modal-body">  
+          <div class="row hide" style="background:#E4F2FF;  margin-top: -15px;">  
+          <div class="col-xs-3"><h5>{{ __('Folder') }}</h5></div>
+          <div class="col-xs-9"><h5>{{  __('This page images') }}</h5></div>
+          </div>                    
+          <div class="row"> 
+          <div id="gallery-left-col" class="col-xs-3" style="padding-top:15px;">  
+          <ul class="nav nav-pills">
+                <li role="presentation" class="active">           
+                    <a id="xpage_gallery" href="#page_gallery" aria-controls="page_gallery" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('This page images') }}</a>
+                </li> 
+                <li role="presentation">           
+                    <a id="xpublic_gallery" href="#public_gallery" aria-controls="public_gallery" role="tab" data-toggle="pill"><i class="fa fa-cloud"> </i> {{  __('Public gallery') }}</a>
+                </li> 
+                <li role="presentation">           
+                    <a id="xuser_gallery" href="#user_gallery" aria-controls="user_gallery" role="tab" data-toggle="pill"><i class="fa fa-user"> </i> {{  __('My uploads') }}</a>
+                </li>   
+                <li role="presentation">           
+                    <a id="xaddnew_gallery" href="#addnew_gallery" aria-controls="addnew_gallery" role="tab" data-toggle="pill"><i class="fa fa-upload"> </i> {{  __('Upload image') }}</a>
+                </li>                 
+          </ul>              
+          </div>                              
+        <div id="gallery-right-col" class="col-xs-9" style="padding-top:15px;overflow-x:hidden;overflow-y: auto; height: 600px;">
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="page_gallery">
+            <h4>{{ __('This gallery') }}</h4>
+        	<div class="list-group col-md-12">          
+        		{%for tmedia in thisMedia %}
+        		<div class="list-group-item col-md-12 clearfix">
+        			<div class="col-md-3">
+        				<span class="hidden-md hidden-lg"> {{ __('Name')}}: </span>{{ tmedia.name }}</a>
+        			</div>		
+        		</div>
+                {% else %}
+                <div class="list-group-item col-md-12 clearfix">
+                        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
+                </div>
+                {% endfor %}          
+             </div>             
+             </div>
+            <div role="tabpanel" class="tab-pane" id="public_gallery">
+            <h4>{{ __('Public gallery') }}</h3>            
+        	<div class="list-group col-md-12">          
+        		{%for pmedia in publicMedia %}
+        		<div class="list-group-item col-md-12 clearfix">
+        			<div class="col-md-3">
+        				<span class="hidden-md hidden-lg"> {{ __('Name')}}: </span>{{ pmedia.name }}</a>
+        			</div>		
+        		</div>
+                {% else %}
+                <div class="list-group-item col-md-12 clearfix">
+                        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
+                </div>
+                {% endfor %}          
+             </div>            
+            </div>
+            <div role="tabpanel" class="tab-pane" id="user_gallery">
+            <h4>{{ __('Your gallery') }}</h4>             
+        	<div class="list-group col-md-12">          
+        		{%for umedia in userMedia %}
+        		<div class="list-group-item col-md-12 clearfix">
+        			<div class="col-md-3">
+        				<span class="hidden-md hidden-lg"> {{ __('Name')}}: </span>{{ umedia.name }}</a>
+        			</div>		
+        		</div>
+                {% else %}
+                <div class="list-group-item col-md-12 clearfix">
+                        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
+                </div>
+                {% endfor %}          
+             </div>            
+            </div>
+            <div role="tabpanel" class="tab-pane" id="addnew_gallery">
+            <h4>{{ __('Upload file') }}</h4>             
+            
+            </div>
+          </div>        
+           </div>
+          </div></div>         
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{  __('Done') }}</button>
+          </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal --> 

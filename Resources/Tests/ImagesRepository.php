@@ -1,25 +1,26 @@
 <?php
 /**
- * Copyright (c) KaikMedia.com 2015
+ * Copyright (c) KaikMedia.com 2014
  */
-namespace Kaikmedia\GalleryModule\Entity\Repository;
+namespace Kaikmedia\PagesModule\Entity\Repository;
 
 use ServiceUtil;
 use Doctrine\ORM\EntityRepository;
-use Kaikmedia\GalleryModule\Entity\MediaQueryBuilder;
+use Kaikmedia\PagesModule\Entity\PagesQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class MediaRepository extends EntityRepository
+class ImagesRepository extends EntityRepository
 {
+
     /**
      * Query builder helper
      * 
-     * @return \Kaikmedia\GalleryModule\Entity\GalleryQueryBuilder
+     * @return \Kaikmedia\KmdModule\Entity\CustomersQueryBuilder
      */
     public function build()
     {
         $em = ServiceUtil::getService('doctrine.entitymanager');
-        $qb = new MediaQueryBuilder($em);
+        $qb = new PagesQueryBuilder($em);
         return $qb;
     }
 
@@ -35,8 +36,8 @@ class MediaRepository extends EntityRepository
     public function getOneOrAll($onlyone = false, $f, $s, $sortby, $sortorder, $page = 1, $limit)
     {
         $qb = $this->build();
-        $qb->select('m');
-        $qb->from('Kaikmedia\GalleryModule\Entity\MediaEntity', 'm');
+        $qb->select('i');
+        $qb->from('Kaikmedia\PagesModule\Entity\ImageEntity', 'i');
         // filters
         $qb->addFilters($f);
         // search
@@ -109,9 +110,9 @@ class MediaRepository extends EntityRepository
         $sortorder = isset($args['sortorder']) ? $args['sortorder'] : 'DESC';
         // filter's
         $f['id'] = isset($args['id']) && $args['id'] !== '' ? $args['id'] : false;
-        $f['name'] = isset($args['name']) && $args['name'] !== '' ? $args['name'] : false;
-        $f['author'] = isset($args['author']) && $args['author'] !== '' ? $args['author'] : false;
-        $f['publicdomain'] = isset($args['publicdomain']) && $args['publicdomain'] !== '' ? $args['publicdomain'] : false;       
+        $f['urltitle'] = isset($args['urltitle']) && $args['urltitle'] !== '' ? $args['urltitle'] : false;
+        $f['title'] = isset($args['title']) && $args['title'] !== '' ? $args['title'] : false;
+        
         // search
         $s['search'] = isset($args['search']) && $args['search'] !== '' ? $args['search'] : false;
         $s['search_field'] = isset($args['search_field']) && $args['search_field'] !== '' ? $args['search_field'] : false;
