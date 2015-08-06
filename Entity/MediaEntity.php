@@ -34,9 +34,14 @@ class MediaEntity
     public $file;
     
     /**
-     * @ORM\Column(type="string", length=15)
+     * @ORM\Column(type="string")
      */
-    private $ext;
+    private $size;
+    
+    /**
+     * @ORM\Column(type="integer", length=15)
+     */
+    private $ext;    
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -148,7 +153,26 @@ class MediaEntity
     {
         return $this->id;
     }
-    
+
+    /**
+     *
+     * @return the unknown_type
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     *
+     * @param unknown_type $size            
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+        return $this;
+    }
+     
     /**
      * Set ext
      *
@@ -498,7 +522,8 @@ class MediaEntity
             $this->name = $this->file->getClientOriginalName();
             }
             $this->ext = $this->file->guessExtension();
-            $this->mimeType = $this->file->getMimeType();      
+            $this->mimeType = $this->file->getMimeType();
+            $this->size = $this->file->getClientSize();      
             
         }
     }
@@ -548,6 +573,7 @@ class MediaEntity
     {    
         $array =array();
         $array['id'] = $this->id;
+        $array['size'] = $this->size;        
         $array['ext'] = $this->ext;
         $array['mimeType'] = $this->mimeType;
         $array['name'] = $this->name;

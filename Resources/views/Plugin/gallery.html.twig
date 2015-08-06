@@ -1,6 +1,13 @@
+<script>
+( function($) {
+    $(document).ready(function(){
+            KaikMedia.Gallery.Settings = {{ settings|json_encode|raw }};
+    });
+})(jQuery);
+</script>
 
-<a href="#" data-toggle="modal" data-target="#gallery"> <i class="fa fa-picture-o"></i> {{ __('Select images') }}</a>
-<div id="gallery" class="modal fade">
+<a href="#" data-toggle="modal" data-target="#kmgallery_plugin"> <i class="fa fa-picture-o"></i> {{ __('Select images') }}</a>
+<div id="kmgallery_plugin" class="modal fade">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header" style="background:#E4F2FF;">
@@ -13,25 +20,25 @@
           <div class="col-xs-9"><h5>{{  __('This page images') }}</h5></div>
           </div>                    
           <div class="row"> 
-          <div id="gallery-left-col" class="col-xs-3" style="padding-top:15px;">  
+          <div id="kmgallery_plugin_left_col" class="col-xs-3" style="padding-top:15px;">  
           <ul class="nav nav-pills">
                 <li role="presentation" class="active">           
-                    <a id="xpage_gallery" href="#page_gallery" aria-controls="page_gallery" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('This page images') }}</a>
+                    <a id="kmgallery_plugin_this_gallery_url" href="#kmgallery_plugin_this_gallery" aria-controls="kmgallery_plugin_this_gallery" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('This page images') }}</a>
                 </li> 
                 <li role="presentation">           
-                    <a id="xpublic_gallery" href="#public_gallery" aria-controls="public_gallery" role="tab" data-toggle="pill"><i class="fa fa-cloud"> </i> {{  __('Public gallery') }}</a>
+                    <a id="kmgallery_plugin_public_gallery_url" href="#kmgallery_plugin_public_gallery" aria-controls="kmgallery_plugin_public_gallery" role="tab" data-toggle="pill"><i class="fa fa-cloud"> </i> {{  __('Public gallery') }}</a>
                 </li> 
                 <li role="presentation">           
-                    <a id="xuser_gallery" href="#user_gallery" aria-controls="user_gallery" role="tab" data-toggle="pill"><i class="fa fa-user"> </i> {{  __('My uploads') }}</a>
+                    <a id="kmgallery_plugin_user_gallery_url" href="#kmgallery_plugin_user_gallery" aria-controls="kmgallery_plugin_user_gallery" role="tab" data-toggle="pill"><i class="fa fa-user"> </i> {{  __('My uploads') }}</a>
                 </li>   
                 <li role="presentation">           
-                    <a id="xaddnew_gallery" href="#addnew_gallery" aria-controls="addnew_gallery" role="tab" data-toggle="pill"><i class="fa fa-upload"> </i> {{  __('Upload image') }}</a>
+                    <a id="kmgallery_plugin_upload_url" href="#kmgallery_plugin_upload" aria-controls="kmgallery_plugin_upload" role="tab" data-toggle="pill"><i class="fa fa-upload"> </i> {{  __('Upload image') }}</a>
                 </li>                 
           </ul>              
           </div>                              
-        <div id="gallery-right-col" class="col-xs-9" style="padding-top:15px;overflow-x:hidden;overflow-y: auto; height: 600px;">
+        <div id="kmgallery_plugin_right_col" class="col-xs-9" style="padding-top:15px;overflow-x:hidden;overflow-y: auto; height: 600px;">
           <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="page_gallery">
+            <div role="tabpanel" class="tab-pane active" id="kmgallery_plugin_this_gallery">
             <h4>{{ __('This gallery') }}</h4>
         	<div class="list-group col-md-12">          
         		{%for tmedia in thisMedia %}
@@ -41,13 +48,11 @@
         			</div>		
         		</div>
                 {% else %}
-                <div class="list-group-item col-md-12 clearfix">
                         <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                </div>
                 {% endfor %}          
              </div>             
              </div>
-            <div role="tabpanel" class="tab-pane" id="public_gallery">
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_public_gallery">
             <h4>{{ __('Public gallery') }}</h3>            
         	<div class="list-group col-md-12">          
         		{%for pmedia in publicMedia %}
@@ -57,13 +62,11 @@
         			</div>		
         		</div>
                 {% else %}
-                <div class="list-group-item col-md-12 clearfix">
                         <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                </div>
                 {% endfor %}          
              </div>            
             </div>
-            <div role="tabpanel" class="tab-pane" id="user_gallery">
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_user_gallery">
             <h4>{{ __('Your gallery') }}</h4>             
         	<div class="list-group col-md-12">          
         		{%for umedia in userMedia %}
@@ -73,19 +76,19 @@
         			</div>		
         		</div>
                 {% else %}
-                <div class="list-group-item col-md-12 clearfix">
                         <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                </div>
                 {% endfor %}          
              </div>            
             </div>
-            <div role="tabpanel" class="tab-pane" id="addnew_gallery">
-            <h4>{{ __('Upload file') }}</h4>             
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_upload">
             
-            </div>
+
+          </div>
           </div>        
-           </div>
-          </div></div>         
+          </div>
+          </div>
+          
+          </div>         
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{  __('Done') }}</button>
           </div>
