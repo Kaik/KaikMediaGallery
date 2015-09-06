@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
+use Kaikmedia\GalleryModule\Entity\MediaObjMapEntity as MediaMap;
 use Kaikmedia\GalleryModule\Util\Common as Utils;
 
 /**
@@ -38,7 +39,16 @@ class PluginController extends AbstractController
             throw new AccessDeniedException();
         }
         
-        $thisMedia = false;
+        
+        if ($obj_id !== null){
+        $thisMedia = $this->get('doctrine.entitymanager')
+                            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+                                ->getAll(array('obj_name'=> $obj_name,
+                                                 'obj_id' => $obj_id
+                                ));
+        }else{
+        $thisMedia = null;       
+        }
         $publicMedia = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('publicdomain'=> true));
         $userMedia = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('author'=> UserUtil::getVar('uid')));             
         PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");

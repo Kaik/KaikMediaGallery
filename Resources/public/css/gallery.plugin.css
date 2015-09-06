@@ -1,4 +1,23 @@
+#kmgallery_plugin_center_col {
+	padding-top: 40px;
+	overflow-x:hidden;
+	overflow-y: auto;
+	border-left: 1px solid #eee;  
+	border-right: 1px solid #eee;
+	height: 600px;
+}
+
 .rounded_box {
 	padding: 10px;
 	border-radius :5px;
 }
+
+.gallery_title {
+    position: fixed;
+    top: 65px;
+    background-color: #fff;
+    /* width: 100%; */
+    z-index: 1000;
+    padding-right: 10px;    
+}
+

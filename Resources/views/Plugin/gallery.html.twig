@@ -5,25 +5,22 @@
     });
 })(jQuery);
 </script>
-
+<input type="hidden" name="__upload_token" value="{{ csrf_token('media') }}">
 <a href="#" data-toggle="modal" data-target="#kmgallery_plugin"> <i class="fa fa-picture-o"></i> {{ __('Select images') }}</a>
 <div id="kmgallery_plugin" class="modal fade">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-lg" style="width: 90%;">
         <div class="modal-content">
           <div class="modal-header" style="background:#E4F2FF;">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title"><span class="fa fa-image"></span> {{  __('Gallery')}}</h4>
+            <h4 class="modal-title"><span class="fa fa-image"></span> {{  __('Media manager')}}</h4>
           </div>
-          <div class="modal-body">  
-          <div class="row hide" style="background:#E4F2FF;  margin-top: -15px;">  
-          <div class="col-xs-3"><h5>{{ __('Folder') }}</h5></div>
-          <div class="col-xs-9"><h5>{{  __('This page images') }}</h5></div>
-          </div>                    
+          <div class="modal-body">                  
           <div class="row"> 
-          <div id="kmgallery_plugin_left_col" class="col-xs-3" style="padding-top:15px;">  
-          <ul class="nav nav-pills">
+          <div id="kmgallery_plugin_left_col" class="col-xs-2">
+          <div><h4>{{ __('Menu') }}</h4></div>  
+          <ul class="nav nav-pills nav-stacked">
                 <li role="presentation" class="active">           
-                    <a id="kmgallery_plugin_this_gallery_url" href="#kmgallery_plugin_this_gallery" aria-controls="kmgallery_plugin_this_gallery" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('This page images') }}</a>
+                    <a id="kmgallery_plugin_this_gallery_url" href="#kmgallery_plugin_this_gallery" aria-controls="kmgallery_plugin_this_gallery" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Selected media') }}</a>
                 </li> 
                 <li role="presentation">           
                     <a id="kmgallery_plugin_public_gallery_url" href="#kmgallery_plugin_public_gallery" aria-controls="kmgallery_plugin_public_gallery" role="tab" data-toggle="pill"><i class="fa fa-cloud"> </i> {{  __('Public gallery') }}</a>
@@ -32,62 +29,72 @@
                     <a id="kmgallery_plugin_user_gallery_url" href="#kmgallery_plugin_user_gallery" aria-controls="kmgallery_plugin_user_gallery" role="tab" data-toggle="pill"><i class="fa fa-user"> </i> {{  __('My uploads') }}</a>
                 </li>   
                 <li role="presentation">           
-                    <a id="kmgallery_plugin_upload_url" href="#kmgallery_plugin_upload" aria-controls="kmgallery_plugin_upload" role="tab" data-toggle="pill"><i class="fa fa-upload"> </i> {{  __('Upload image') }}</a>
+                    <a id="kmgallery_plugin_upload_url" href="#kmgallery_plugin_this_gallery" aria-controls="kmgallery_plugin_this_gallery" role="tab" data-toggle="pill"><i class="fa fa-upload"> </i> {{  __('Upload image') }}</a>
                 </li>                 
           </ul>              
           </div>                              
-        <div id="kmgallery_plugin_right_col" class="col-xs-9" style="padding-top:15px;overflow-x:hidden;overflow-y: auto; height: 600px;">
+        <div id="kmgallery_plugin_center_col" class="col-xs-8" >       
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="kmgallery_plugin_this_gallery">
-            <h4>{{ __('This gallery') }}</h4>
-        	<div class="list-group col-md-12">          
+               <div class="gallery_title"><h4>{{ __('Selected media') }}</h4></div>       
         		{%for tmedia in thisMedia %}
-        		<div class="list-group-item col-md-12 clearfix">
-        			<div class="col-md-3">
-        				<span class="hidden-md hidden-lg"> {{ __('Name')}}: </span>{{ tmedia.name }}</a>
-        			</div>		
-        		</div>
+                <div class="col-md-3">
+                    <a href="#" class="thumbnail">
+                      {% if tmedia.media.path  %}        
+                      <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ tmedia.media.path }}" />
+                      {% else %}
+                       <span class="fa fa-exclamation-triangle fa-2x"> <span/>
+                       {{ __('File path is empty!') }}           
+                      {% endif %}
+                    </a>
+                </div>         		
                 {% else %}
                         <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                {% endfor %}          
-             </div>             
-             </div>
+                {% endfor %}
+                
+                <div id="kmgallery_plugin_upload"> </div>                           
+            </div>
             <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_public_gallery">
-            <h4>{{ __('Public gallery') }}</h3>            
-        	<div class="list-group col-md-12">          
+              <div class="gallery_title"><h4>{{ __('Public gallery') }}</h4> </div>                   
         		{%for pmedia in publicMedia %}
-        		<div class="list-group-item col-md-12 clearfix">
-        			<div class="col-md-3">
-        				<span class="hidden-md hidden-lg"> {{ __('Name')}}: </span>{{ pmedia.name }}</a>
-        			</div>		
-        		</div>
+                <div class="col-md-3">
+                    <a href="#" class="thumbnail">
+                      {% if pmedia.path  %}        
+                      <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ pmedia.path }}" />
+                      {% else %}
+                       <span class="fa fa-exclamation-triangle fa-2x"> <span/>
+                       {{ __('File path is empty!') }}           
+                      {% endif %}
+                    </a>
+                </div>  
                 {% else %}
                         <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                {% endfor %}          
-             </div>            
+                {% endfor %}                    
             </div>
             <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_user_gallery">
-            <h4>{{ __('Your gallery') }}</h4>             
-        	<div class="list-group col-md-12">          
+              <div class="gallery_title""><h4>{{ __('Your gallery') }}</h4></div>                     
         		{%for umedia in userMedia %}
-        		<div class="list-group-item col-md-12 clearfix">
-        			<div class="col-md-3">
-        				<span class="hidden-md hidden-lg"> {{ __('Name')}}: </span>{{ umedia.name }}</a>
-        			</div>		
-        		</div>
+                <div class="col-md-3">
+                    <a href="#" class="thumbnail">
+                      {% if umedia.path  %}        
+                      <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ umedia.path }}" />
+                      {% else %}
+                       <span class="fa fa-exclamation-triangle fa-2x"> <span/>
+                       {{ __('File path is empty!') }}           
+                      {% endif %}
+                    </a>
+                </div> 
                 {% else %}
                         <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                {% endfor %}          
-             </div>            
+                {% endfor %}                    
             </div>
-            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_upload">
-            
-
-          </div>
           </div>        
           </div>
-          </div>
           
+          <div id="kmgallery_plugin_right_col" class="col-xs-2">  
+            <div><h4>{{ __('Image data') }}</h4></div>             
+          </div>                      
+          </div>         
           </div>         
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{  __('Done') }}</button>

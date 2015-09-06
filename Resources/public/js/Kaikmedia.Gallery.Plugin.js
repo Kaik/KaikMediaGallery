@@ -29,7 +29,7 @@ KaikMedia.Gallery.Plugin = {};
                 $('<form />', { action: 'sharer.php', method: 'POST', enctype: 'multipart/form-data' }).append(
                 	$('<div />' ,{ id: 'upload_box', class: 'col-md-12 rounded_box bg-info' }).append(
                 			$('<div />' ,{ id: 'upload_icon_box', class: 'col-md-2' }).append(	
-                					$('<span />', { class: 'fa fa-upload fa-2x' })),		
+                					$('<span />', { class: 'fa fa-download fa-2x' })),		
                 			$('<div />' ,{ id: 'upload_input_box', class: 'col-md-10' }).append(	                					
                 			$('<input />', { id: 'upload_input', type: 'file' }))
                     )
@@ -51,26 +51,28 @@ KaikMedia.Gallery.Plugin = {};
     	if(validation === true ){
         	
        	console.log('upload');
-       	/*
+       	
             var data = new FormData();
-            var token = $newLi.find('input[name="upload_token"]').val();
+            var token = $('input[name="__upload_token"]').val();
             console.log(token);
-            data.append('images[name]', 'test');
-            data.append('images[description]', 'lalala');
-            data.append('images[promoted]', false);
-            data.append('images[path]', 'testpath');
-            data.append('images[legal]', 'testlegal');
-            data.append('images[publicdomain]', false);            
-            data.append('images[file]',files[0]);
-            data.append('images[_token]',token);            
+            data.append('media[name]', 'test');
+            data.append('media[description]', 'lalala');
+            //data.append('media[path]', 'testpath');
+            data.append('media[legal]', 'testlegal');
+            data.append('media[publicdomain]', false);            
+            data.append('media[file]', file);
+            data.append('media[_token]',token);            
             $.ajax({
                 type: 'POST',
                 data: data,
-                url: Routing.generate('kaikmediapagesmodule_galleryajax_add'),
+                url: Routing.generate('kaikmediagallerymodule_upload_newmedia'),
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: function(data){
+                	
+                	console.log(data);
+                	/*
                 	var file = data.file;
                 	//remove elements
                 	
@@ -100,10 +102,11 @@ KaikMedia.Gallery.Plugin = {};
                     //listener
                     KaikMedia.Pages.Manager.enablePasteListener($newLi);  
                     //expand
-                    $newLi.removeClass("col-xs-4 col-md-3 new_element").addClass("col-xs-12").css("background","#eee");                    
+                    $newLi.removeClass("col-xs-4 col-md-3 new_element").addClass("col-xs-12").css("background","#eee");      
+                    */              
                 }
             });            
-            */
+            
     		
     	}else{
     	//remove form 	

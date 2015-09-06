@@ -34,12 +34,12 @@ class MediaEntity
     public $file;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     private $size;
     
     /**
-     * @ORM\Column(type="integer", length=15)
+     * @ORM\Column(type="string", length=15)
      */
     private $ext;    
 
