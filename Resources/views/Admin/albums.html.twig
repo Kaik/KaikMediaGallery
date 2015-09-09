@@ -1,0 +1,35 @@
+<script>
+( function($) {
+    $(document).ready(function(){
+            KaikMedia.Gallery.AlbumTree.TreeData = {{ albumTree|json_encode|raw }};
+    });
+})(jQuery);
+</script>
+{{ render(controller('ZikulaAdminModule:Admin:adminheader')) }}
+<h3>
+	<span class="fa fa-folder"></span> {{ __('Albums')}}
+</h3>
+<div class="container-fluid">
+<div class="row">
+ <div class="col-md-6">
+    <h4>{{ __('Albums tree') }}</h4>
+    <div id="kmgallery_albumTree"> 
+          
+   </div>
+ </div>
+ <div class="col-md-6">
+    <div id="kmgallery_albumBox"> 
+     {% include "KaikmediaGalleryModule:Album:display.details.html.twig" %}  
+    </div>
+</div> 
+ 
+         
+</div>
+{{ render(controller('ZikulaAdminModule:Admin:adminfooter')) }}
+
+{% javascripts '@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.AlbumTree.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% stylesheets '@KaikmediaGalleryModule/Resources/public/css/albums.css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}

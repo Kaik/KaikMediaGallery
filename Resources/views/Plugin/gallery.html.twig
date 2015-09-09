@@ -39,7 +39,7 @@
                <div class="gallery_title"><h4>{{ __('Selected media') }}</h4></div>       
         		{%for tmedia in thisMedia %}
                 <div class="col-md-3">
-                    <a href="#" class="thumbnail">
+                    <a href="#" class="mediaselect thumbnail" data-id="{{ tmedia.id }}" data-selected="1">
                       {% if tmedia.media.path  %}        
                       <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ tmedia.media.path }}" />
                       {% else %}
@@ -58,7 +58,7 @@
               <div class="gallery_title"><h4>{{ __('Public gallery') }}</h4> </div>                   
         		{%for pmedia in publicMedia %}
                 <div class="col-md-3">
-                    <a href="#" class="thumbnail">
+                    <a href="#" class="mediaselect thumbnail" data-id="{{ pmedia.id }}" data-selected="0">
                       {% if pmedia.path  %}        
                       <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ pmedia.path }}" />
                       {% else %}
@@ -75,7 +75,7 @@
               <div class="gallery_title""><h4>{{ __('Your gallery') }}</h4></div>                     
         		{%for umedia in userMedia %}
                 <div class="col-md-3">
-                    <a href="#" class="thumbnail">
+                    <a href="#" class="mediaselect thumbnail" data-id="{{ umedia.id }}" data-selected="0">
                       {% if umedia.path  %}        
                       <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ umedia.path }}" />
                       {% else %}

@@ -3,4 +3,8 @@ services:
         class: Kaikmedia\GalleryModule\Form\Type\MediaType
         tags:
             - { name: form.type, alias: media }
-            
+    gallery.form.type.album:
+        class: Kaikmedia\GalleryModule\Form\Type\AlbumType
+        tags:
+            - { name: form.type, alias: album }
+                       

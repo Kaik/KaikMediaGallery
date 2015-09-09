@@ -7,13 +7,58 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 KaikMedia.Gallery.Plugin = {};
 
 ( function($) {
+	
+	KaikMedia.Gallery.Plugin.selected = [];
     
     KaikMedia.Gallery.Plugin.init = function ()
     {
+      $("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);
+      
+      $('#kmgallery_plugin').find('a.mediaselect').each(function() {
+    	  if($(this).data('selected') == '1'){
+    		  	$(this).css('background-color','#eee');
+    			KaikMedia.Gallery.Plugin.selected.push($(this).data('id'));    		  
+    	  }   
+    	  
+      $(this).on('click', function(e) {
+    		  e.preventDefault();
+        	  KaikMedia.Gallery.Plugin.toggleSelect($(this));
+    		});    	  
+      });
+      
+      $("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);                
+      
       $('#kmgallery_plugin_upload_url').on('click', function(e) {
     	  KaikMedia.Gallery.Plugin.addFileForm();
   		});
     };
+    
+    KaikMedia.Gallery.Plugin.toggleSelect = function (el)
+    {   
+  	  if(el.data('selected') == '1'){
+  		  	//console.log('unselect');	
+	  		var id = el.data('id');	 
+	  		for(var i = KaikMedia.Gallery.Plugin.selected.length - 1; i >= 0; i--) {
+	  		    if(KaikMedia.Gallery.Plugin.selected[i] === el.data('id')) {
+	  		    	KaikMedia.Gallery.Plugin.selected.splice(i, 1);
+	  		    }
+	  		}	  			  			  		
+	  		$("#kmgallery_plugin").find("[data-id='" + id + "']").each(function() {
+	  			$(this).css('background-color','#fff').data('selected', '0');
+	  		});
+	  		$("#kmgallery_plugin_this_gallery").find("[data-id='" + id + "']").parent().remove();	  		
+	  }else{
+		  	console.log('select');
+  		  	el.css('background-color','#eee');
+  		  	el.data('selected', '1');
+			KaikMedia.Gallery.Plugin.selected.push(el.data('id'));
+			el.parent().clone(true, true).appendTo("#kmgallery_plugin_this_gallery");
+	  }
+
+      $("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);    	  
+      console.log($("input[name='pageform[images]']").val());  
+    	
+    };    
     
     KaikMedia.Gallery.Plugin.addFileForm = function ()
     {     	

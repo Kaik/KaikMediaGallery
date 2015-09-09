@@ -9,6 +9,7 @@ use System;
 use SecurityUtil;
 use ServiceUtil;
 use UserUtil;
+use PageUtil;
 use Zikula\Core\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
+use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
 
 /**
  * @Route("/admin")
@@ -202,7 +204,50 @@ class AdminController extends AbstractController
             'settings' => ModUtil::getVar($this->name)
         ));
     }
+    
 
+    /**
+     * @Route("/albums")
+     * the main administration function
+     *
+     * @return RedirectResponse
+     */
+    public function albumsAction(Request $request)
+    {
+        // Security check
+        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+      
+        $repo = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\AlbumEntity');               
+        $albumTree = $repo->getAlbumJsTree();
+        $album = $repo->find(1);        
+        
+        PageUtil::addVar('javascript', "/web/jstree/dist/jstree.min.js");
+        PageUtil::addVar('stylesheet', "/web/jstree/dist/themes/default/style.min.css");
+    
+        $request->attributes->set('_legacy', true); // forces template to render inside old theme
+        return $this->render('KaikmediaGalleryModule:Admin:albums.html.twig', array(
+            'album' => $album,
+            'albumTree' => $albumTree,
+            'settings' => ModUtil::getVar($this->name)
+        ));
+    }    
+
+    
+    /*   
+    $food = $repo->findOneByTitle('Top');
+    
+    $fruits = new Album();
+    $fruits->setTitle('Modules');
+    $fruits->setParent($food);
+    
+    $this->get('doctrine.entitymanager')->persist($food);
+    $this->get('doctrine.entitymanager')->persist($fruits);
+    
+    $this->get('doctrine.entitymanager')->flush();   
+    */
+    
     /**
      * @Route("/mediaobjmap/{page}", requirements={"page" = "\d*"}, defaults={"page" = 1})
      * the main administration function

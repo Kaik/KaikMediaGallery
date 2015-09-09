@@ -1,0 +1,28 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+    <h3>
+    {% if album.id is defined %}
+        <span class="fa fa-pencil"></span>
+        {{ __('Modify album')}}
+    {% else %}    
+        <span class="fa fa-plus"></span>
+        {{ __('Add album')}}        
+    {% endif %}    
+    </h3>
+<div class="row">
+    {{ getstatusmsg() }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+	{{ form_label(form.title) }} 
+    {{ form_widget(form.title) }}
+    {{ form_label(form.description) }} 
+    {{ form_widget(form.description) }}
+    {{ form_label(form.author) }} 
+    {{ form_widget(form.author) }}                
+    {{ form_label(form.parent) }} 
+    {{ form_widget(form.parent) }}    
+	<div class="col-md-12 text-right">
+	{{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+	</div>
+	{{ form_end(form) }} 
+</div>
