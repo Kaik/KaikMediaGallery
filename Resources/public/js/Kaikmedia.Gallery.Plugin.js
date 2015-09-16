@@ -13,7 +13,15 @@ KaikMedia.Gallery.Plugin = {};
     KaikMedia.Gallery.Plugin.init = function ()
     {
       $("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);
-      
+
+      $('#kmgallery_plugin').find('a.mediaselect').each(function() {
+	      $(this).on('click', function(e) {
+	    		  e.preventDefault();
+	        	  KaikMedia.Gallery.Plugin.show($(this));
+	      });    	  
+      });
+     
+      /*
       $('#kmgallery_plugin').find('a.mediaselect').each(function() {
     	  if($(this).data('selected') == '1'){
     		  	$(this).css('background-color','#eee');
@@ -31,7 +39,46 @@ KaikMedia.Gallery.Plugin = {};
       $('#kmgallery_plugin_upload_url').on('click', function(e) {
     	  KaikMedia.Gallery.Plugin.addFileForm();
   		});
+  		
+  		*/
     };
+    
+    KaikMedia.Gallery.Plugin.show = function (el)
+    {   
+    	var pars = {
+    			id:	el.data('id'),
+    			mid: el.data('mid')
+    			
+    	};
+		$('#kmgallery_plugin_right_col').prepend("<i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
+        $.ajax({
+            type: "GET",
+            url: Routing.generate('kaikmediagallerymodule_mediaajax_get'),
+            data: pars
+        }).success(function(result) {
+        	console.log(result);
+        	
+            var template = result.template;
+            $('#kmgallery_plugin_right_col').html(template);
+            /*
+            KaikMedia.Gallery.AlbumTree.albumBox.html(template);            
+            $('#album_save').click(function(e){
+            	e.preventDefault();
+            	var form = $('form[name="album"]').serialize();	
+            	//console.log(form)
+                KaikMedia.Gallery.AlbumTree.saveAlbum(pars.id,form);
+            })  
+            
+                    */
+        }).error(function(result) {
+            alert(result.status + ': ' + result.statusText);
+        }).always(function() {
+            $('#temp-spinner').remove();
+            
+        });
+        
+        
+    };    
     
     KaikMedia.Gallery.Plugin.toggleSelect = function (el)
     {   
@@ -46,13 +93,13 @@ KaikMedia.Gallery.Plugin = {};
 	  		$("#kmgallery_plugin").find("[data-id='" + id + "']").each(function() {
 	  			$(this).css('background-color','#fff').data('selected', '0');
 	  		});
-	  		$("#kmgallery_plugin_this_gallery").find("[data-id='" + id + "']").parent().remove();	  		
+	  		//$("#kmgallery_plugin_this_gallery").find("[data-id='" + id + "']").parent().remove();	  		
 	  }else{
 		  	console.log('select');
   		  	el.css('background-color','#eee');
   		  	el.data('selected', '1');
 			KaikMedia.Gallery.Plugin.selected.push(el.data('id'));
-			el.parent().clone(true, true).appendTo("#kmgallery_plugin_this_gallery");
+			//el.parent().clone(true, true).appendTo("#kmgallery_plugin_this_gallery");
 	  }
 
       $("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);    	  

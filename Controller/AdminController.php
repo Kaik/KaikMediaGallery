@@ -10,6 +10,7 @@ use SecurityUtil;
 use ServiceUtil;
 use UserUtil;
 use PageUtil;
+use HookUtil;
 use Zikula\Core\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -335,6 +336,77 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
             'thisPage' => $a['page'],
             'maxPages' => ceil($media->count() / $a['limit'])
+        ));
+    }
+    
+    /**
+     * @Route("/objpreferences")
+     *
+     * @return Response symfony response object
+     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
+     */
+    public function objpreferencesAction(Request $request)
+    {
+        // Security check
+        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+        
+        $settings = ModUtil::getVar($this->name);
+                 
+        $hookSubscribers = HookUtil::getHookSubscribers();
+        $modulelist = array();
+        foreach ($hookSubscribers as $module) {
+            $modulelist[$module['name']] = $module['displayname'];
+            
+            /*
+             * Settings 
+             * 
+             * 
+             * {#855 ▼
+  +"gallery": {#857 ▼
+    +"enabled": "0"
+  }
+  +"album": {#858 ▼
+    +"enabled": "0"
+  }
+  +"icon": {#859 ▼
+    +"enabled": "0"
+    +"width": ""
+    +"height": ""
+  }
+  +"image": {#860 ▼
+    +"enabled": "0"
+    +"width": ""
+    +"height": ""
+  }
+  +"media": {#861 ▼
+    +"enabled": "0"
+    +"width": ""
+    +"height": ""
+  }
+  +"upload": {#862 ▼
+    +"enabled": "0"
+    +"allowed": ""
+    +"total": ""
+  }
+  +"user": {#863 ▼
+    +"enabled": "0"
+    +"allowed": ""
+    +"total": ""
+  }
+}
+             * 
+             * 
+             */
+            
+        }
+        
+        $request->attributes->set('_legacy', true); // forces template to render inside old them
+        return $this->render('KaikmediaGalleryModule:Admin:objpreferences.html.twig', array(
+           // 'form' => $form->createView()
+            'moduleList' => $modulelist,
+            'settings' => $settings
         ));
     }
 

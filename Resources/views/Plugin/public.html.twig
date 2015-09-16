@@ -1,0 +1,6 @@
+<div class="gallery_title"><h4>{{ __('Public gallery') }}</h4> </div>                   
+    {%for pmedia in public %}
+     <div class="col-md-2">   {% include "KaikmediaGalleryModule:Media:media.html.twig" with {'settings': settings, 'media':false, 'file':pmedia}  %}  </div>
+    {% else %}
+        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
+    {% endfor %}                    

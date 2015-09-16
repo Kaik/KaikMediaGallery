@@ -5,6 +5,7 @@
     });
 })(jQuery);
 </script>
+{% set modulesettings = attribute(settings.obj_settings, obj_name) %}
 <input type="hidden" name="__upload_token" value="{{ csrf_token('media') }}">
 <a href="#" data-toggle="modal" data-target="#kmgallery_plugin"> <i class="fa fa-picture-o"></i> {{ __('Select images') }}</a>
 <div id="kmgallery_plugin" class="modal fade">
@@ -19,84 +20,74 @@
           <div id="kmgallery_plugin_left_col" class="col-xs-2">
           <div><h4>{{ __('Menu') }}</h4></div>  
           <ul class="nav nav-pills nav-stacked">
-                <li role="presentation" class="active">           
-                    <a id="kmgallery_plugin_this_gallery_url" href="#kmgallery_plugin_this_gallery" aria-controls="kmgallery_plugin_this_gallery" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Selected media') }}</a>
-                </li> 
+            {% if modulesettings.icon.enabled %} 
                 <li role="presentation">           
-                    <a id="kmgallery_plugin_public_gallery_url" href="#kmgallery_plugin_public_gallery" aria-controls="kmgallery_plugin_public_gallery" role="tab" data-toggle="pill"><i class="fa fa-cloud"> </i> {{  __('Public gallery') }}</a>
-                </li> 
+                    <a id="kmgallery_plugin_icon_select_pill" href="#kmgallery_plugin_icon_select" aria-controls="kmgallery_plugin_icon_select" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Select icon') }}</a>
+                </li>                         
+            {% endif %}          
+            {% if modulesettings.image.enabled %} 
                 <li role="presentation">           
-                    <a id="kmgallery_plugin_user_gallery_url" href="#kmgallery_plugin_user_gallery" aria-controls="kmgallery_plugin_user_gallery" role="tab" data-toggle="pill"><i class="fa fa-user"> </i> {{  __('My uploads') }}</a>
-                </li>   
+                    <a id="kmgallery_plugin_image_select_pill" href="#kmgallery_plugin_image_select" aria-controls="kmgallery_plugin_image_select" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Select image') }}</a>
+                </li>                         
+            {% endif %}  
+            {% if modulesettings.media.enabled %} 
                 <li role="presentation">           
-                    <a id="kmgallery_plugin_upload_url" href="#kmgallery_plugin_this_gallery" aria-controls="kmgallery_plugin_this_gallery" role="tab" data-toggle="pill"><i class="fa fa-upload"> </i> {{  __('Upload image') }}</a>
-                </li>                 
+                    <a id="kmgallery_plugin_media_select_pill" href="#kmgallery_plugin_media_select" aria-controls="kmgallery_plugin_media_select" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Select media') }}</a>
+                </li>                         
+            {% endif %}
+            {% if modulesettings.public.enabled %} 
+                <li role="presentation">           
+                    <a id="kmgallery_plugin_public_select_pill" href="#kmgallery_plugin_public_select" aria-controls="kmgallery_plugin_public_select" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Public gallery') }}</a>
+                </li>                         
+            {% endif %}
+            {% if modulesettings.user.enabled %} 
+                <li role="presentation">           
+                    <a id="kmgallery_plugin_user_select_pill" href="#kmgallery_plugin_user_select" aria-controls="kmgallery_plugin_user_select" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Your uploads') }}</a>
+                </li>                         
+            {% endif %}
+            {% if modulesettings.upload.enabled %} 
+                <li role="presentation">           
+                    <a id="kmgallery_plugin_upload_select_pill" href="#kmgallery_plugin_upload_select" aria-controls="kmgallery_plugin_upload_select" role="tab" data-toggle="pill"><i class="fa fa-file"> </i> {{  __('Upload') }}</a>
+                </li>                         
+            {% endif %}                                                      
           </ul>              
           </div>                              
         <div id="kmgallery_plugin_center_col" class="col-xs-8" >       
           <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="kmgallery_plugin_this_gallery">
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_icon_select">
+               <div class="gallery_title"><h4>{{ __('Selected icon') }}</h4></div>       
+                {% include "KaikmediaGalleryModule:Plugin:icon.html.twig" %}                           
+            </div>
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_image_select">
+               <div class="gallery_title"><h4>{{ __('Selected image') }}</h4></div>       
+                {% include "KaikmediaGalleryModule:Plugin:image.html.twig" %}                           
+            </div>            
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_media_select">
                <div class="gallery_title"><h4>{{ __('Selected media') }}</h4></div>       
-        		{%for tmedia in thisMedia %}
-                <div class="col-md-3">
-                    <a href="#" class="mediaselect thumbnail" data-id="{{ tmedia.id }}" data-selected="1">
-                      {% if tmedia.media.path  %}        
-                      <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ tmedia.media.path }}" />
-                      {% else %}
-                       <span class="fa fa-exclamation-triangle fa-2x"> <span/>
-                       {{ __('File path is empty!') }}           
-                      {% endif %}
-                    </a>
-                </div>         		
-                {% else %}
-                        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                {% endfor %}
-                
-                <div id="kmgallery_plugin_upload"> </div>                           
+                {% include "KaikmediaGalleryModule:Plugin:media.html.twig" %}                           
             </div>
-            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_public_gallery">
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_public_select">
               <div class="gallery_title"><h4>{{ __('Public gallery') }}</h4> </div>                   
-        		{%for pmedia in publicMedia %}
-                <div class="col-md-3">
-                    <a href="#" class="mediaselect thumbnail" data-id="{{ pmedia.id }}" data-selected="0">
-                      {% if pmedia.path  %}        
-                      <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ pmedia.path }}" />
-                      {% else %}
-                       <span class="fa fa-exclamation-triangle fa-2x"> <span/>
-                       {{ __('File path is empty!') }}           
-                      {% endif %}
-                    </a>
-                </div>  
-                {% else %}
-                        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                {% endfor %}                    
+                {% include "KaikmediaGalleryModule:Plugin:public.html.twig" %} 
             </div>
-            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_user_gallery">
-              <div class="gallery_title""><h4>{{ __('Your gallery') }}</h4></div>                     
-        		{%for umedia in userMedia %}
-                <div class="col-md-3">
-                    <a href="#" class="mediaselect thumbnail" data-id="{{ umedia.id }}" data-selected="0">
-                      {% if umedia.path  %}        
-                      <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.upload_dir ~ '/' ~ umedia.path }}" />
-                      {% else %}
-                       <span class="fa fa-exclamation-triangle fa-2x"> <span/>
-                       {{ __('File path is empty!') }}           
-                      {% endif %}
-                    </a>
-                </div> 
-                {% else %}
-                        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-                {% endfor %}                    
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_user_select">
+              <div class="gallery_title""><h4>{{ __('Your gallery') }}</h4></div> 
+                {% include "KaikmediaGalleryModule:Plugin:user.html.twig" %}                     
+            </div>
+            <div role="tabpanel" class="tab-pane" id="kmgallery_plugin_upload_select">
+              <div class="gallery_title""><h4>{{ __('Upload') }}</h4></div> 
+                {% include "KaikmediaGalleryModule:Plugin:upload.html.twig" %}                     
             </div>
           </div>        
-          </div>
-          
+          </div>          
           <div id="kmgallery_plugin_right_col" class="col-xs-2">  
-            <div><h4>{{ __('Image data') }}</h4></div>             
+            <div><h4>{{ __('Image data') }}</h4></div> 
+          {% include "KaikmediaGalleryModule:Plugin:info.html.twig" %}         
           </div>                      
           </div>         
           </div>         
           <div class="modal-footer">
+          {{ __('Selected') }}          
             <button type="button" class="btn btn-default" data-dismiss="modal">{{  __('Done') }}</button>
           </div>
         </div><!-- /.modal-content -->

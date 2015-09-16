@@ -2,7 +2,7 @@
 /**
  * Copyright (c) KaikMedia.com 2014
  */
-namespace Kaikmedia\GalleryModule\Util;
+namespace Kaikmedia\GalleryModule\Manager;
 
 use ModUtil;
 use ServiceUtil;
@@ -10,7 +10,7 @@ use System;
 use UserUtil;
 use Doctrine\ORM\EntityManager;
 
-class MediaRelations
+class Relations
 {
     /**
      * @var \Doctrine\ORM\QueryBuilder

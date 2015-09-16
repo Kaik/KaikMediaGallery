@@ -5,9 +5,10 @@
 namespace Kaikmedia\GalleryModule\Manager;
 
 use ServiceUtil;
+use SecurityUtil;
 use UserUtil;
-use Kaikmedia\GalleryModule\Manager\MediaRelations;
-
+use Kaikmedia\GalleryModule\Manager\Relations;
+use Doctrine\ORM\EntityManager;
 
 class Plugin
 {     
@@ -23,7 +24,7 @@ class Plugin
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
-    
+        $this->name = 'KaikmediaGalleryModule';
     }
     
     /**
@@ -36,7 +37,7 @@ class Plugin
      *
      * @return RedirectResponse
      */
-    public function assignMedia($obj_name = null, $obj_id = null, $media_arr = array())
+    public function assignMedia($obj_name = null, $obj_id = null, $media_str = null)
     {
         // Security check
         if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
@@ -51,11 +52,13 @@ class Plugin
             return null;
         }
         
-        if (is_empty($media_arr)){
+        if ($media_str == null){
             return null;
         }     
-
-        $mediaManager = new MediaRelations($this->container->get('doctrine.entitymanager'));
+        
+        $media_arr = split(',',$media_str);
+        
+        $mediaManager = new Relations($this->em);
         $result = array();
         foreach($media_arr as $media) {
             $result[] = $mediaManager->addNew($obj_name,$obj_id,$media);

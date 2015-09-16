@@ -43,6 +43,9 @@ class AdminApi extends \Zikula_AbstractApi
             $links[] = array(
                 'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_preferences'),'text' => $this->__('Settings'),'title' => $this->__('Adjust module settings'),'icon' => 'wrench'
             );
+            $links[] = array(
+                'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_objpreferences'),'text' => $this->__('Objects presets'),'title' => $this->__('Here you can view gallery presets for attached objects'),'icon' => 'toggle-on'
+            );            
         }
         return $links;
     }

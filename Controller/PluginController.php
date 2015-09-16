@@ -39,21 +39,26 @@ class PluginController extends AbstractController
             throw new AccessDeniedException();
         }
         
+        $settings = ModUtil::getVar($this->name);
+
         
         if ($obj_id !== null){
-        $thisMedia = $this->get('doctrine.entitymanager')
-                            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
-                                ->getAll(array('obj_name'=> $obj_name,
-                                                 'obj_id' => $obj_id
-                                ));
+            $icon = false;
+            $image = false;
+            $media = $this->get('doctrine.entitymanager')
+                                ->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+                                    ->getAll(array('obj_name'=> $obj_name,
+                                                     'obj_id' => $obj_id ));
         }else{
-        $thisMedia = null;       
+            $icon = false;
+            $image = false;
+            $media = false;      
         }
-        $publicMedia = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('publicdomain'=> true));
-        $userMedia = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('author'=> UserUtil::getVar('uid')));             
+        $public = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('publicdomain'=> true));
+        $user = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('author'=> UserUtil::getVar('uid')));             
         PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
         PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
-        $settings = ModUtil::getVar($this->name);
+
         $settings['php_limit'] = Utils::getUploadLimit();
         $settings['user_total'] = Utils::getUserTotalUpload();        
         $settings['upload_allowed_ext'] = explode(',', $settings['upload_allowed_ext']);         
@@ -61,10 +66,12 @@ class PluginController extends AbstractController
         return $this->render('KaikmediaGalleryModule:Plugin:gallery.html.twig', array(
             'settings' => $settings,
             'obj_name' => $obj_name,
-            'obj_id'     => $obj_id,
-            'publicMedia' => $publicMedia,
-            'thisMedia'   => $thisMedia,
-            'userMedia'   => $userMedia
+            'obj_id'   => $obj_id,
+            'icon'     => $icon,
+            'image'    => $image,
+            'media'    => $media,
+            'public'   => $public,
+            'user'     => $user
         ));
     }
 }
