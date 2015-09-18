@@ -1,4 +1,3 @@
-<div class="gallery_title""><h4>{{ __('Your gallery') }}</h4></div>                     
 {%for umedia in user %}
  <div class="col-md-2"> {% include "KaikmediaGalleryModule:Media:media.html.twig" with {'settings': settings, 'media':false, 'file':umedia}  %}  </div>
 {% else %}

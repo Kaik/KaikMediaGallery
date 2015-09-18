@@ -1,5 +1,20 @@
+
+#kmgallery_plugin_public_select {
+padding-top:10px;	
+	
+}
+
+#kmgallery_plugin_user_select {
+padding-top:10px;	
+	
+}
+
+#kmgallery_plugin_upload_select {
+padding-top:10px;	
+	
+}
+
 #kmgallery_plugin_center_col {
-	padding-top: 40px;
 	overflow-x:hidden;
 	overflow-y: auto;
 	border-left: 1px solid #eee;  
@@ -7,17 +22,25 @@
 	height: 600px;
 }
 
+.file_item {
+	height:150px;
+	overflow:hidden;
+}
+
+.file_item img{
+    display: block;
+    max-width: 300%;
+    /* height: auto; */	
+}
+
+
+
 .rounded_box {
 	padding: 10px;
 	border-radius :5px;
 }
 
 .gallery_title {
-    position: fixed;
-    top: 65px;
-    background-color: #fff;
-    /* width: 100%; */
-    z-index: 1000;
-    padding-right: 10px;    
+ 
 }
 

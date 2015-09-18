@@ -7,20 +7,28 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 KaikMedia.Gallery.Plugin = {};
 
 ( function($) {
-	
+
+	KaikMedia.Gallery.Plugin.icon = [];
+	KaikMedia.Gallery.Plugin.image = [];
+	KaikMedia.Gallery.Plugin.media = [];
+	//todo remove
 	KaikMedia.Gallery.Plugin.selected = [];
     
     KaikMedia.Gallery.Plugin.init = function ()
-    {
-      $("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);
+    {    	
+    	
 
-      $('#kmgallery_plugin').find('a.mediaselect').each(function() {
+      $('#kmgallery_plugin').find('a.mediainfo').each(function() {
 	      $(this).on('click', function(e) {
 	    		  e.preventDefault();
-	        	  KaikMedia.Gallery.Plugin.show($(this));
+	        	  KaikMedia.Gallery.Plugin.mediainfo($(this));
 	      });    	  
       });
      
+      
+      
+      //$("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);
+      
       /*
       $('#kmgallery_plugin').find('a.mediaselect').each(function() {
     	  if($(this).data('selected') == '1'){
@@ -43,23 +51,22 @@ KaikMedia.Gallery.Plugin = {};
   		*/
     };
     
-    KaikMedia.Gallery.Plugin.show = function (el)
+    KaikMedia.Gallery.Plugin.mediainfo = function (el)
     {   
     	var pars = {
     			id:	el.data('id'),
-    			mid: el.data('mid')
-    			
+    			mid: el.data('mid')		
     	};
-		$('#kmgallery_plugin_right_col').prepend("<i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
+		$('#kmgallery_plugin_mediainfo').prepend("<i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
         $.ajax({
             type: "GET",
-            url: Routing.generate('kaikmediagallerymodule_mediaajax_get'),
+            url: Routing.generate('kaikmediagallerymodule_pluginajax_mediainfo'),
             data: pars
         }).success(function(result) {
         	console.log(result);
         	
             var template = result.template;
-            $('#kmgallery_plugin_right_col').html(template);
+            $('#kmgallery_plugin_mediainfo').html(template);
             /*
             KaikMedia.Gallery.AlbumTree.albumBox.html(template);            
             $('#album_save').click(function(e){
@@ -106,6 +113,12 @@ KaikMedia.Gallery.Plugin = {};
       console.log($("input[name='pageform[images]']").val());  
     	
     };    
+    
+    
+    
+    
+   
+    
     
     KaikMedia.Gallery.Plugin.addFileForm = function ()
     {     	
