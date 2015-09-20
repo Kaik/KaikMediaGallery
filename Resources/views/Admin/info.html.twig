@@ -1,4 +1,4 @@
- {{ render(controller('ZikulaAdminModule:Admin:adminheader')) }}
+{% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
 <h3>
 	<span class="fa fa-info"></span> {{ __('Informations and statistics')}}
 </h3>
@@ -38,4 +38,4 @@
 </div> 
  
 </div>
-{{ render(controller('ZikulaAdminModule:Admin:adminfooter')) }}
+{% include "KaikmediaGalleryModule:Admin:footer.html.twig" %} 

@@ -1,11 +1,26 @@
-<div><h4>{{ __('Image data') }}</h4></div> 
-            
+{% if media is defined %}
 
 
 
 
 
 
+{% elseif file is defined %}
 
 
-{{ dump() }} 
+		<div><h4>{{ __('Name') }}</h4></div> 
+        {% include "KaikmediaGalleryModule:Media:file.html.twig" with {'settings': settings, 'file':file}  %}              
+		<div class="">
+			<p>{{ file.name }}</p>
+			<div class="btn-group-vertical" role="group" aria-label="...">
+			  <button type="button" class="btn btn-default">{{ __('Add as icon') }}</button>
+			  <button type="button" class="btn btn-default">{{ __('Add as image') }}</button>
+			  <button type="button" class="btn btn-default">{{ __('Add to media') }}</button>
+			</div>			
+		</div>
+
+
+{% endif %}
+
+
+{{ dump() }}

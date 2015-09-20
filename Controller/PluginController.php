@@ -22,6 +22,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
 use Kaikmedia\GalleryModule\Entity\MediaObjMapEntity as MediaMap;
 use Kaikmedia\GalleryModule\Util\Common as Utils;
+use Kaikmedia\GalleryModule\Util\Settings as Settings;
 
 /**
  */
@@ -32,39 +33,58 @@ class PluginController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function galleryAction(Request $request, $obj_name = null, $obj_id = null)
+    public function galleryAction(Request $request, $obj_name = null, $obj_id = null, $mode = 'all')
     {
         // Security check
         if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         
-        $settings = ModUtil::getVar($this->name);
+        $settings = new Settings();
 
-        
-        if ($obj_id !== null){
-            $icon = false;
-            $image = false;
-            $media = $this->get('doctrine.entitymanager')
-                                ->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
-                                    ->getAll(array('obj_name'=> $obj_name,
-                                                     'obj_id' => $obj_id ));
+        if ($obj_id == null){       	
+        	$icon = false;
+        	$image = false;
+        	$media = false;        	
         }else{
-            $icon = false;
-            $image = false;
-            $media = false;      
+
+        	$icon = $this->get('doctrine.entitymanager')
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+        	->getOneBy(array('obj_name'=> $obj_name,
+        			'type' => 'icon',
+        			'obj_id' => $obj_id ));
+        	
+        	
+        	$image = $this->get('doctrine.entitymanager')
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+        	->getOneBy(array('obj_name'=> $obj_name,
+        			'type' => 'image',
+        			'obj_id' => $obj_id ));
+        	
+        	
+        	$media = $this->get('doctrine.entitymanager')
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+        	->getAll(array('obj_name'=> $obj_name,
+        			'type' => 'media',
+        			'obj_id' => $obj_id ));   
         }
+        
+        
         $public = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('publicdomain'=> true));
+        
+        
         $user = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('author'=> UserUtil::getVar('uid')));             
+        
+        
+        
+        
         PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
         PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
-
-        $settings['php_limit'] = Utils::getUploadLimit();
-        $settings['user_total'] = Utils::getUserTotalUpload();        
-        $settings['upload_allowed_ext'] = explode(',', $settings['upload_allowed_ext']);         
+      
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Plugin:gallery.html.twig', array(
-            'settings' => $settings,
+        	'mode'     => $mode,
+            'settings' => $settings->getSettings(),
             'obj_name' => $obj_name,
             'obj_id'   => $obj_id,
             'icon'     => $icon,

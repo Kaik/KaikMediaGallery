@@ -1,1 +1,8 @@
-<div class="gallery_title"><h4>{{ __('Selected image') }}</h4></div>  
+{% if image.media is defined %}
+		        {% include "KaikmediaGalleryModule:Media:media.html.twig" with {'settings': settings, 'file':image.media, 'media': image }  %}              
+		<div class="">
+		<p>{{ image.media.name }}</p>
+		</div>
+{% else %}
+        <p class="alert alert-info text-center"> {{ __('No image selected') }} </p>
+{% endif %}

@@ -1,0 +1,14 @@
+
+ {{ render(controller('ZikulaAdminModule:Admin:adminheader')) }}
+ 
+{#
+
+Remove default admin header and use own 
+ 
+<a href="#"> <i class="fa fa-pict"></i> {{ __('Back to administration') }}</a>
+<h1>
+	<span class="fa fa-image"></span> {{ __('Kaikmedia Gallery')}}
+</h1>
+ {% include "KaikmediaGalleryModule:Admin:menu.html.twig" %}  
+ 
+ #}

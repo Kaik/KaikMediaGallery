@@ -44,8 +44,8 @@ class AdminajaxController extends AbstractController
                
         $obj_json = $request->request->get('settings', false);
         
-        $settings_arr = json_decode($obj_json);
-        ModUtil::setVar($this->name, 'obj_settings', $settings_arr);
+        $settings_arr = json_decode($obj_json, true);
+        ModUtil::setVars($this->name, $settings_arr);
         
         $response = new Response(json_encode($result = array(
             'response' => $settings_arr

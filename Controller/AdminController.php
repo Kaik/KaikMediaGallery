@@ -338,77 +338,7 @@ class AdminController extends AbstractController
             'maxPages' => ceil($media->count() / $a['limit'])
         ));
     }
-    
-    /**
-     * @Route("/objpreferences")
-     *
-     * @return Response symfony response object
-     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
-     */
-    public function objpreferencesAction(Request $request)
-    {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
-        
-        $settings = ModUtil::getVar($this->name);
-                 
-        $hookSubscribers = HookUtil::getHookSubscribers();
-        $modulelist = array();
-        foreach ($hookSubscribers as $module) {
-            $modulelist[$module['name']] = $module['displayname'];
-            
-            /*
-             * Settings 
-             * 
-             * 
-             * {#855 ▼
-  +"gallery": {#857 ▼
-    +"enabled": "0"
-  }
-  +"album": {#858 ▼
-    +"enabled": "0"
-  }
-  +"icon": {#859 ▼
-    +"enabled": "0"
-    +"width": ""
-    +"height": ""
-  }
-  +"image": {#860 ▼
-    +"enabled": "0"
-    +"width": ""
-    +"height": ""
-  }
-  +"media": {#861 ▼
-    +"enabled": "0"
-    +"width": ""
-    +"height": ""
-  }
-  +"upload": {#862 ▼
-    +"enabled": "0"
-    +"allowed": ""
-    +"total": ""
-  }
-  +"user": {#863 ▼
-    +"enabled": "0"
-    +"allowed": ""
-    +"total": ""
-  }
-}
-             * 
-             * 
-             */
-            
-        }
-        
-        $request->attributes->set('_legacy', true); // forces template to render inside old them
-        return $this->render('KaikmediaGalleryModule:Admin:objpreferences.html.twig', array(
-           // 'form' => $form->createView()
-            'moduleList' => $modulelist,
-            'settings' => $settings
-        ));
-    }
+     
 
     /**
      * @Route("/preferences")
@@ -423,29 +353,27 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
                
-        $mod_vars = ModUtil::getVar($this->name);
-        
-        $form = $this->createFormBuilder($mod_vars)
-            ->add('itemsperpage', 'integer', array('label' => 'Items per page'))
-            ->add('upload_dir', 'text')
-            ->add('upload_max_media_size', 'text')
-            ->add('upload_max_total_size', 'text')
-            ->add('upload_allowed_ext', 'text')
-            ->add('save', 'submit', array('label' => 'Save'))
-            ->getForm();
-        
-        $form->handleRequest($request);
-        
-        if ($form->isValid()) {
-            $data = $form->getData();
-            foreach ($data as $key => $value) {
-                ModUtil::setVar($this->name, $key, $value);
-            }
+        // Security check
+        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
         }
+        
+        $settings = ModUtil::getVar($this->name);
+                 
+        $hookSubscribers = HookUtil::getHookSubscribers();
+        $modulelist = array();
+        foreach ($hookSubscribers as $module) {
+            $modulelist[$module['name']] = $module['displayname'];
+        }
+        
+        $settingslist = array('KaikmediaGalleryModule' => $modulelist['KaikmediaGalleryModule']) + $modulelist;
+        
         
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:preferences.html.twig', array(
-             'form' => $form->createView()
+           // 'form' => $form->createView()
+            'moduleList' => $settingslist,
+            'settings' => $settings
         ));
     }
 }

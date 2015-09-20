@@ -1,0 +1,148 @@
+           	
+                     {# Module Features list container#}
+           	<div class="col-md-12 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
+           	{# Features list row#}
+			<div class="row">
+			
+           	<div class="col-md-12 {% if modulesettings.album.enabled== '0' %}hide {% endif %}">
+           	<div class="row">  	
+           	
+           	
+           	
+           	
+				<div class="col-md-2">			
+			<small>{{ __('Album')}}</small>
+			<div class="btn-group btn-xs" data-toggle="buttons">
+                  <label class="btn btn-xs {% if modulesettings.album.enabled == '0' %}active btn-success {% else %} btn-success {% endif %}">
+                    <input type="radio" name="{{ modulename }}_album_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.album.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+                  </label>
+                  <label class="btn btn-xs {% if modulesettings.album.enabled == '1' %}active btn-success {% else %} btn-success {% endif %}">
+                    <input type="radio" name="{{ modulename }}_album_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.album.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+                  </label>
+            </div> 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            </div>
+            <div class="{% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
+			<small>{{ __('Public')}}</small>
+			<div class="btn-group btn-xs" data-toggle="buttons">
+                  <label class="btn btn-xs {% if modulesettings.public.enabled == '0' %}active btn-success {% else %} btn-success {% endif %}">
+                    <input type="radio" name="{{ modulename }}_public_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.public.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+                  </label>
+                  <label class="btn btn-xs {% if modulesettings.public.enabled == '1' %}active btn-success {% else %} btn-success {% endif %}">
+                    <input type="radio" name="{{ modulename }}_public_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.public.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+                  </label>
+            </div> 
+            </div>                        
+			</div>			
+			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
+			<small>{{ __('Icon')}}</small>
+			<div class="btn-group btn-xs" data-toggle="buttons">
+                  <label class="btn btn-xs {% if modulesettings.icon.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_icon_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.icon.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+                  </label>
+                  <label class="btn btn-xs {% if modulesettings.icon.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_icon_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.icon.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+                  </label>
+            </div>
+            <div class="form-group {% if modulesettings.icon.enabled == '0' %}hide {% endif %}">
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_width" value="{{ modulesettings.icon.width }}" placeholder="width">
+                </label>
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_height" value="{{ modulesettings.icon.height }}" placeholder="height">
+                </label>
+            </div>
+            
+            
+			</div>	
+			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
+			<small>{{ __('Image')}}</small>
+			<div class="btn-group btn-xs" data-toggle="buttons">
+                  <label class="btn btn-xs {% if modulesettings.image.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_image_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.image.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+                  </label>
+                  <label class="btn btn-xs {% if modulesettings.image.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_image_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.image.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+                  </label>
+            </div>
+            <div class="form-group">
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_width"  value="{{ modulesettings.image.width }}" placeholder="width">
+                </label>
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_height"  value="{{ modulesettings.image.height }}" placeholder="height">
+                </label>
+            </div>
+			</div>	
+			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
+			<small>{{ __('Media')}}</small>
+			<div class="btn-group btn-xs" data-toggle="buttons">
+                  <label class="btn btn-xs {% if modulesettings.media.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_media_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.media.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+                  </label>
+                  <label class="btn btn-xs {% if modulesettings.media.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_media_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.media.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+                  </label>
+            </div>
+            <div class="form-group">
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_width"  value="{{ modulesettings.media.width }}" placeholder="width">
+                </label>
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_height"  value="{{ modulesettings.media.height }}" placeholder="height">
+                </label>
+            </div>
+			</div>				
+			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
+			<small>{{ __('Upload')}}</small>
+			<div class="btn-group btn-xs" data-toggle="buttons">
+                  <label class="btn btn-xs {% if modulesettings.upload.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_upload_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.upload.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+                  </label>
+                  <label class="btn btn-xs {% if modulesettings.upload.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_upload_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.upload.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+                  </label>
+            </div>
+            <div class="form-group">
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_allowed"  value="{{ modulesettings.upload.allowed }}" placeholder="allowed">
+                </label>
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_total"  value="{{ modulesettings.upload.total }}" placeholder="total">
+                </label>
+            </div>
+			</div>			
+			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
+			<small>{{ __('User')}}</small>
+			<div class="btn-group btn-xs" data-toggle="buttons">
+                  <label class="btn btn-xs {% if modulesettings.user.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_user_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.user.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+                  </label>
+                  <label class="btn btn-xs {% if modulesettings.user.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+                    <input type="radio" name="{{ modulename }}_user_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.user.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+                  </label>
+            </div>
+            <div class="form-group">
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_user_allowed"  value="{{ modulesettings.user.allowed }}" placeholder="allowed">
+                </label>
+                <label >
+                <input type="text" class="form-control input-sm" name="{{ modulename }}_user_total"  value="{{ modulesettings.user.total }}" placeholder="total">
+                </label>
+            </div>
+            
+			</div>	
+			</div>	

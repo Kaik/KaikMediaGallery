@@ -37,6 +37,13 @@ class MediaObjMapQueryBuilder extends QueryBuilder
             return $this->andWhere('mo.obj_id = :obj_id')->setParameter('obj_id', $obj_id);
         }
     }
+    
+    public function filterType($type)
+    {
+    	if ($type !== false) {
+    		return $this->andWhere('mo.type = :type')->setParameter('type', $type);
+    	}
+    }   
 
     public function filterAuthor($author)
     {

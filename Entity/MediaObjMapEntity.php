@@ -45,6 +45,11 @@ class MediaObjMapEntity
     protected $media;    
 
     /**
+     * @ORM\Column(type="string", length=150)
+     */
+    private $type = 'media';    
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="author", referencedColumnName="uid")
      */
@@ -177,6 +182,27 @@ class MediaObjMapEntity
         $this->media = $media;
         return $this;
     }
+    
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+    	return $this->type;
+    }
+    
+    /**
+     * Set type
+     *
+     * @param string $type
+     */
+    public function setType($type)
+    {
+    	$this->type = $type;
+    	return $this;
+    }    
      
     /**
      * Set author

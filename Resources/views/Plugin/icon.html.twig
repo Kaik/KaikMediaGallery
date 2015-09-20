@@ -1,1 +1,8 @@
-<div class="gallery_title"><h4>{{ __('Selected icon') }}</h4></div>  
+{% if icon.media is defined %}
+        {% include "KaikmediaGalleryModule:Media:media.html.twig" with {'settings': settings, 'file':icon.media, 'media': icon }  %}              
+		<div class="">
+		<p><strong>{{ __('Name') }}:</strong>{{ icon.media.name }}</p>
+		</div>
+{% else %}
+        <p class="alert alert-info text-center"> {{ __('No icon selected') }} </p>
+{% endif %}

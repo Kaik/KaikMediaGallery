@@ -1,8 +1,8 @@
 {% if media == false %}
-{% set media = {'id': false} %}
+{% set media = {'id': false,'type':false} %}
 {% endif %}
-<div class="media-{{ media.id }} file-{{ file.id }}">
-   <a href="#" class="mediainfo" data-mid="{{ media.id }}" data-id="{{ file.id }}" data-type="">
+<div class="media-{{ media.id }} type-{{ media.type }}">
+   <a href="#" class="mediainfo" data-mid="{{ media.id }}" data-id="{{ file.id }}" data-type="{{ media.type }}">
         {% include "KaikmediaGalleryModule:Media:file.html.twig" with {'settings': settings, 'file':file}  %}  
     </a>
 </div>         		

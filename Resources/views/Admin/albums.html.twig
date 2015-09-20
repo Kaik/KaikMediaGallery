@@ -5,7 +5,7 @@
     });
 })(jQuery);
 </script>
-{{ render(controller('ZikulaAdminModule:Admin:adminheader')) }}
+{% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
 <h3>
 	<span class="fa fa-folder"></span> {{ __('Albums')}}
 </h3>
@@ -25,7 +25,7 @@
  
          
 </div>
-{{ render(controller('ZikulaAdminModule:Admin:adminfooter')) }}
+{% include "KaikmediaGalleryModule:Admin:footer.html.twig" %} 
 
 {% javascripts '@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.AlbumTree.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>

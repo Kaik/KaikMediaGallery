@@ -1,7 +1,10 @@
-{{ render(controller('ZikulaAdminModule:Admin:adminheader')) }}
+{% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
 
- <h3><span class="fa fa-wrench"></span> {{ __('Obj settings')}}</h3>   
+ <h3><span class="fa fa-wrench"></span> {{ __('Gallery settings and features')}}</h3>   
  {{ getstatusmsg() }}       
+ 
+
+ 
 <div class="container-fluid">
 <form id="objpreferences">
     <div class="row">
@@ -11,145 +14,411 @@
 			<div class="col-md-1 pull-right text-right"><a class="btn" id="save_button" href="#" role="button"><i class="fa fa-floppy-o"></i> {{ __('Save')}}</a></div>
 		</div>
 		{%for modulename,module in moduleList %}
-		{% set modulesettings = attribute(settings.obj_settings, modulename) %}
-		<div class="list-group-item col-md-12 clearfix">
-			<div class="col-md-2">
-                    {{ modulename }}
-			</div>
-			<div class="col-md-10">
-			<div class="row text-right">
-			<div class="col-md-2">
-			<small>{{ __('Enabled')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.gallery.enabled == '0' %}active btn-success {% else %} btn-success {% endif %}">
-                    <input type="radio" name="{{ modulename }}_gallery_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.gallery.enabled== '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.gallery.enabled == '1' %}active btn-success {% else %} btn-success {% endif %}">
-                    <input type="radio" name="{{ modulename }}_gallery_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.gallery.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
+		{% set modulesettings = attribute(settings, modulename) %}
+		{# Modules list#}
+		<div class="list-group-item col-md-12 clearfix {% if settings.KaikmediaGalleryModule.gallery.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" {% if modulename == 'KaikmediaGalleryModule' %}style="background: #FFFAD5;"{% endif %}>
+			
+		{# Module list row#}
+			<div class="col-md-12">
+			<div class="row">		
+				<div class="col-md-2">
+	                  <h4>  {{ module }} {% if modulename == 'KaikmediaGalleryModule' %} <small>{{ __('Default settings') }}</small> {% endif %}</h4>
+				</div>
+				<div class="col-md-10 text-right">
+					{% if modulename == 'KaikmediaGalleryModule' %} {{ __('Gallery enabled')}} {% else %}<small>{{ __('Gallery features enabled')}}</small>{% endif %}
+					<div class="btn-group btn-xs" data-toggle="buttons">
+		                  <label class="btn btn-xs {% if modulesettings.gallery.enabled == '0' %}active btn-success {% else %} btn-success {% endif %}">
+		                    <input type="radio" name="{{ modulename }}_gallery_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.gallery.enabled== '0' %}checked {% endif %}> {{ __('Off') }}
+		                  </label>
+		                  <label class="btn btn-xs {% if modulesettings.gallery.enabled == '1' %}active btn-success {% else %} btn-success {% endif %}">
+		                    <input type="radio" name="{{ modulename }}_gallery_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.gallery.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+		                  </label>		                  
+		            	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_features" {% if modulesettings.gallery.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>		                  
+		            </div>
+	            </div>
             </div>
-            <div class="{% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
-			<small>{{ __('Album')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.album.enabled == '0' %}active btn-success {% else %} btn-success {% endif %}">
-                    <input type="radio" name="{{ modulename }}_album_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.album.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.album.enabled == '1' %}active btn-success {% else %} btn-success {% endif %}">
-                    <input type="radio" name="{{ modulename }}_album_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.album.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
-            </div> 
             </div>
-            <div class="{% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
-			<small>{{ __('Public')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.public.enabled == '0' %}active btn-success {% else %} btn-success {% endif %}">
-                    <input type="radio" name="{{ modulename }}_public_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.public.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.public.enabled == '1' %}active btn-success {% else %} btn-success {% endif %}">
-                    <input type="radio" name="{{ modulename }}_public_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.public.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
-            </div> 
-            </div>                        
-			</div>			
-			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
-			<small>{{ __('Icon')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.icon.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_icon_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.icon.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.icon.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_icon_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.icon.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
-            </div>
-            <div class="form-group {% if modulesettings.icon.enabled == '0' %}hide {% endif %}">
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_width" value="{{ modulesettings.icon.width }}" placeholder="width">
-                </label>
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_height" value="{{ modulesettings.icon.height }}" placeholder="height">
-                </label>
-            </div>
+		{# features list row#}
+			<div id="{{ modulename }}_features" class="col-md-12 collapse">
+			{# Feature icon #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.icon.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">					
+				  <div class="row">
+					<div class="col-md-12 text-right">				
+						<span>{{ __('Icon feature')}}</span>
+						{# Feature icon on/off#}	
+						<div class="btn-group btn-xs" data-toggle="buttons">
+			                  <label class="btn btn-xs {% if modulesettings.icon.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_icon_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.icon.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  </label>
+			                  <label class="btn btn-xs {% if modulesettings.icon.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_icon_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.icon.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  </label>
+							 <button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_icon" {% if settings.KaikmediaGalleryModule.icon.enabled == '0' or modulesettings.icon.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>			                  
+			            </div>	
+					</div>	
+												
+					{# Feature icon settings#}	
+					<div id="{{ modulename }}_feature_icon" class="col-md-12 collapse">					
+					<div class="row bg-info">
+						<div class="col-md-12" style="padding-top:5px;">																		
+				           
+				            <div class="btn-xs form-group col-md-2 pull-right">			           					             
+					            <label > {{ __('Width') }} 	
+					            <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_width" value="{{ modulesettings.icon.width }}">
+								</label>				            
+					        </div>
+					        
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Height') }} 	
+					            <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_height" value="{{ modulesettings.icon.height }}">
+					            </label>				            
+					        </div>	            	
+
+				            <div class="btn-xs form-group col-md-2 pull-right">				            		            
+					            <label > {{ __('Allowed extensions') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_extensions" value="{% if modulesettings.icon.extensions is defined %}{{ modulesettings.icon.extensions }}{% endif %}">
+				                </label>
+					        </div>
+					     	
+					     	<div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Allowed mimetypes') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_mimetypes" value="{% if modulesettings.icon.mimetypes is defined %}{{ modulesettings.icon.mimetypes }}{% endif %}">
+				                </label>			                
+				            </div>	
+				            	
+				            <div class="btn-xs form-group col-md-2 hide pull-right">
+					            <label > {{ __('Per page') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_perpage" value="{% if modulesettings.icon.perpage is defined %}{{ modulesettings.icon.perpage }}{% endif %}">
+				                </label>
+					        </div>
+					            
+				            <div class="btn-xs form-group col-md-2 hide pull-right">	
+					            <label > {{ __('Total items allowed') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_maxitems" value="{% if modulesettings.icon.maxitems is defined %}{{ modulesettings.icon.maxitems }}{% endif %}">
+				                </label>					                
+				            </div>					            				
+								            
+	            		</div> 				
+					  </div>	                  		                  		
+            		</div> 		
+					{# Feature icon settings end #}	            		           				
+				  </div>			  
+				</div>
+				{# Feature icon end #}	
+											
+				{# Feature image #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.image.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">					
+				  <div class="row">
+					<div class="col-md-12 text-right">				
+						<span>{{ __('Image feature')}}</span>
+						{# Feature image on/off#}	
+						<div class="btn-group btn-xs" data-toggle="buttons">
+			                  <label class="btn btn-xs {% if modulesettings.image.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_image_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.image.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  </label>
+			                  <label class="btn btn-xs {% if modulesettings.image.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_image_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.image.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  </label>
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_image" {% if settings.KaikmediaGalleryModule.image.enabled == '0' or modulesettings.image.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>			                  		                  
+			            </div>													
+					</div>	
+												
+					{# Feature image settings#}	
+					<div id="{{ modulename }}_feature_image" class="col-md-12 collapse">					
+					<div class="row  bg-info">
+						<div class="col-md-12" style="padding-top:5px;">																		
+				           
+				            <div class="btn-xs form-group col-md-2 pull-right">			           					             
+					                <label > {{ __('Width') }} 	
+					                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_width" value="{{ modulesettings.image.width }}">
+									</label>				            
+					        </div>
+					        
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					                <label > {{ __('Height') }} 	
+					                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_height" value="{{ modulesettings.image.height }}">
+					            	</label>				            					                     	
+				            </div>
+
+				            <div class="btn-xs form-group col-md-2 pull-right">				            		            
+					                <label > {{ __('Allowed extensions') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_extensions" value="{% if modulesettings.image.extensions is defined %}{{ modulesettings.image.extensions }}{% endif %}">
+				                </label>
+					        </div>
+					        
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Allowed mimetypes') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_mimetypes" value="{% if modulesettings.image.mimetypes is defined %}{{ modulesettings.image.mimetypes }}{% endif %}">
+				                </label>				                
+				            </div>	
+				            	
+				            <div class="btn-xs form-group col-md-2 pull-right hide">
+					            <label > {{ __('Per page') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_perpage" value="{% if modulesettings.image.perpage is defined %}{{ modulesettings.image.perpage }}{% endif %}">
+				                </label>
+					        </div>
+					            
+				            <div class="btn-xs form-group col-md-2 pull-right hide">	
+					            <label > {{ __('Total allowed') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_maxitems" value="{% if modulesettings.image.maxitems is defined %}{{ modulesettings.image.maxitems }}{% endif %}">
+				                </label>				                
+				            </div>					            				
+								            
+	            		</div> 				
+					  </div>	                  		                  		
+            		</div> 		
+					{# Feature image settings end #}	            		           				
+				  </div>			  
+				</div>				
+				{# Feature image settings end #}				
+				
+				
+				{# Feature media #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.media.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">						
+				  <div class="row">
+					<div class="col-md-12 text-right">				
+						<span>{{ __('Media feature')}}</span>
+						{# Feature media on/off#}	
+						<div class="btn-group btn-xs" data-toggle="buttons">
+			                  <label class="btn btn-xs {% if modulesettings.media.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_media_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.media.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  </label>
+			                  <label class="btn btn-xs {% if modulesettings.media.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_media_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.media.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  </label>
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_media" {% if settings.KaikmediaGalleryModule.media.enabled == '0' or modulesettings.media.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>			                  
+			            </div>													
+					</div>	
+												
+					{# Feature media settings#}	
+					<div id="{{ modulename }}_feature_media" class="col-md-12 collapse">				
+					<div class="row bg-info">
+						<div class="col-md-12" style="padding-top:5px;">																						           
+				            <div class="btn-xs form-group col-md-2 pull-right hide">			           					             
+					                <label > {{ __('Width') }} 	
+					                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_width" value="{{ modulesettings.media.width }}">
+									</label>				            
+					        </div>
+					            
+				            <div class="btn-xs form-group col-md-2 pull-right hide">
+					            <label > {{ __('Height') }} 	
+					            <input type="text" class="form-control input-sm" name="{{ modulename }}_media_height" value="{{ modulesettings.media.height }}">
+					           	</label>				                       	
+				            </div>
+
+				            <div class="btn-xs form-group col-md-2 pull-right">				            		            
+					            <label > {{ __('Allowed extensions') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_extensions" value="{% if modulesettings.media.extensions is defined %}{{ modulesettings.media.extensions }}{% endif %}">
+				                </label>				                
+					        </div>
+
+				            <div class="btn-xs form-group col-md-2 pull-right">		
+					            <label > {{ __('Allowed mimetypes') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_mimetypes" value="{% if modulesettings.media.mimetypes is defined %}{{ modulesettings.media.mimetypes }}{% endif %}">
+				                </label>				                
+				            </div>	
+				            	
+				            <div class="btn-xs form-group col-md-2 pull-right">
+					            <label > {{ __('Per page') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_perpage" value="{% if modulesettings.media.perpage is defined %}{{ modulesettings.media.perpage }}{% endif %}">
+				                </label>
+					        </div>
+					    	<div class="btn-xs form-group col-md-2 pull-right">		  
+					            <label > {{ __('Total allowed') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_maxitems" value="{% if modulesettings.media.maxitems is defined %}{{ modulesettings.media.maxitems }}{% endif %}">
+				                </label>					                
+				            </div>					            				
+								            
+	            		</div> 				
+					  </div>	                  		                  		
+            		</div> 		
+					{# Feature media settings end #}	            		           				
+				  </div>			  
+				</div>				
+				{# Feature media end #}				
+
+				
+				{# Feature upload #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.upload.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">						
+				  <div class="row">
+					<div class="col-md-12 text-right">				
+						<span>{{ __('Upload feature')}}</span>
+						{# Feature upload on/off#}	
+						<div class="btn-group btn-xs" data-toggle="buttons">
+			                  <label class="btn btn-xs {% if modulesettings.upload.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_upload_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.upload.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  </label>
+			                  <label class="btn btn-xs {% if modulesettings.upload.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_upload_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.upload.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  </label>
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_upload" {% if settings.KaikmediaGalleryModule.upload.enabled == '0' or modulesettings.upload.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>				                  		                  
+			            </div>													
+					</div>	
+												
+					{# Feature upload settings#}	
+					<div id="{{ modulename }}_feature_upload" class="col-md-12 collapse">				
+					<div class="row bg-info">
+						<div class="col-md-12" style="padding-top:5px;">																		
+				           
+				            <div class="btn-xs form-group col-md-2 pull-right">			           					             
+					             <label > {{ __('Directory') }} 	
+					             <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_dir" value="{% if modulesettings.upload.dir is defined %}{{ modulesettings.upload.dir }}{% endif %}">
+								</label>				            
+					        </div>
+					        
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					             <label > {{ __('Single max size') }} 	
+					             <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_singlemax" value="{% if modulesettings.upload.singlemax is defined %}{{ modulesettings.upload.singlemax }}{% endif %}">
+					           	 </label>				                       	
+				            </div>
+
+				            <div class="btn-xs form-group col-md-2 pull-right">				            		            
+					            <label > {{ __('Allowed extensions') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_extensions" value="{% if modulesettings.upload.extensions is defined %}{{ modulesettings.upload.extensions }}{% endif %}">
+				                </label>
+					        </div>
+					        
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Allowed mimetypes') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_mimetypes" value="{% if modulesettings.upload.mimetypes is defined %}{{ modulesettings.upload.mimetypes }}{% endif %}">
+				                </label>				                
+				            </div>	
+				            	
+				            <div class="btn-xs form-group col-md-2 hide pull-right">
+					            <label > {{ __('Per page') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_perpage" value="{% if modulesettings.upload.perpage is defined %}{{ modulesettings.upload.perpage }}{% endif %}">
+				                </label>
+					        </div>
+					            
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Total allowed') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_maxitems" value="{% if modulesettings.upload.maxitems is defined %}{{ modulesettings.upload.maxitems }}{% endif %}">
+				                </label>			                
+				            </div>					            				
+								            
+	            		</div> 				
+					  </div>	                  		                  		
+            		</div> 		
+					{# Feature upload settings end #}	            		           				
+				  </div>			  
+				</div>				
+				{# Feature upload end #}				
+
+				
+				{# Feature user upload #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.user.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">						
+				  <div class="row">
+					<div class="col-md-12 text-right">				
+						<span>{{ __('User uploads gallery')}}</span>
+						{# Feature user on/off#}	
+						<div class="btn-group btn-xs" data-toggle="buttons">
+			                  <label class="btn btn-xs {% if modulesettings.user.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_user_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.user.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  </label>
+			                  <label class="btn btn-xs {% if modulesettings.user.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_user_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.user.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  </label>
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_user" {% if settings.KaikmediaGalleryModule.user.enabled == '0' or modulesettings.user.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>				                  			                  
+			            </div>													
+					</div>	
+												
+					{# Feature user settings#}	
+					<div id="{{ modulename }}_feature_user" class="col-md-12 collapse">				
+					<div class="row bg-info">
+						<div class="col-md-12" style="padding-top:5px;">																		
+				           				            	
+				            <div class="btn-xs form-group col-md-2 pull-right">
+					            <label > {{ __('Per page') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_user_perpage" value="{% if modulesettings.user.perpage is defined %}{{ modulesettings.user.perpage }}{% endif %}">
+				                </label>			                
+				            </div>					            				
+								            
+	            		</div> 				
+					  </div>	                  		                  		
+            		</div> 		
+					{# Feature upload settings end #}	            		           				
+				  </div>			  
+				</div>				
+
+				{# Feature user upload end #}				
+
+				
+				{# Feature public #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.public.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">					
+				  <div class="row">
+					<div class="col-md-12 text-right">				
+						<span>{{ __('Public gallery')}}</span>
+						{# Feature user on/off#}	
+						<div class="btn-group btn-xs" data-toggle="buttons">
+			                  <label class="btn btn-xs {% if modulesettings.public.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_public_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.public.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  </label>
+			                  <label class="btn btn-xs {% if modulesettings.public.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_public_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.public.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  </label>
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_public" {% if settings.KaikmediaGalleryModule.public.enabled == '0' or modulesettings.public.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>				                  
+			            </div>													
+					</div>	
+												
+					{# Feature public settings#}	
+					<div id="{{ modulename }}_feature_public" class="col-md-12 collapse">				
+					<div class="row bg-info">
+						<div class="col-md-12" style="padding-top:5px;">																		
+
+				            <div class="btn-xs form-group col-md-2 pull-right">
+					            <label > {{ __('Per page') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_public_perpage" value="{% if modulesettings.public.perpage is defined %}{{ modulesettings.public.perpage }}{% endif %}">
+				                </label>			                
+				            </div>					            				
+								            
+	            		</div> 				
+					  </div>	                  		                  		
+            		</div> 		
+					{# Feature public settings end #}	            		           				
+				  </div>			  
+				</div>				
+				{# Feature public end #}				
+
+				
+				{# Feature album #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.album.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">						
+				  <div class="row">
+					<div class="col-md-12 text-right">				
+						<span>{{ __('Album feature')}}</span>
+						{# Feature album on/off#}	
+						<div class="btn-group btn-xs" data-toggle="buttons">
+			                  <label class="btn btn-xs {% if modulesettings.album.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_album_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.album.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  </label>
+			                  <label class="btn btn-xs {% if modulesettings.album.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_album_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.album.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  </label>
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_album" {% if settings.KaikmediaGalleryModule.album.enabled == '0' or modulesettings.album.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>				                  
+			            </div>													
+					</div>	
+												
+					{# Feature album settings#}	
+					<div id="{{ modulename }}_feature_album" class="col-md-12 collapse">				
+					<div class="row bg-info">
+						<div class="col-md-12" style="padding-top:5px;">																		
+
+				            <div class="btn-xs form-group col-md-2 pull-right">
+			                
+				            </div>					            				
+								            
+	            		</div> 				
+					  </div>	                  		                  		
+            		</div> 		
+					{# Feature slbum settings end #}	            		           				
+				  </div>			  
+				</div>				
+				{# Feature album end#}				
+				
+				
+		{# functions list row end#}				
+            </div>            
             
-            
-			</div>	
-			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
-			<small>{{ __('Image')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.image.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_image_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.image.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.image.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_image_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.image.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
-            </div>
-            <div class="form-group">
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_width"  value="{{ modulesettings.image.width }}" placeholder="width">
-                </label>
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_height"  value="{{ modulesettings.image.height }}" placeholder="height">
-                </label>
-            </div>
-			</div>	
-			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
-			<small>{{ __('Media')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.media.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_media_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.media.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.media.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_media_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.media.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
-            </div>
-            <div class="form-group">
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_width"  value="{{ modulesettings.media.width }}" placeholder="width">
-                </label>
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_height"  value="{{ modulesettings.media.height }}" placeholder="height">
-                </label>
-            </div>
-			</div>				
-			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
-			<small>{{ __('Upload')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.upload.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_upload_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.upload.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.upload.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_upload_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.upload.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
-            </div>
-            <div class="form-group">
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_allowed"  value="{{ modulesettings.upload.allowed }}" placeholder="allowed">
-                </label>
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_total"  value="{{ modulesettings.upload.total }}" placeholder="total">
-                </label>
-            </div>
-			</div>			
-			<div class="col-md-2 {% if modulesettings.gallery.enabled== '0' %}hide {% endif %}">
-			<small>{{ __('User')}}</small>
-			<div class="btn-group btn-xs" data-toggle="buttons">
-                  <label class="btn btn-xs {% if modulesettings.user.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_user_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.user.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
-                  </label>
-                  <label class="btn btn-xs {% if modulesettings.user.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
-                    <input type="radio" name="{{ modulename }}_user_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.user.enabled == '1' %}checked {% endif %}> {{ __('On') }}
-                  </label>
-            </div>
-            <div class="form-group">
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_user_allowed"  value="{{ modulesettings.user.allowed }}" placeholder="allowed">
-                </label>
-                <label >
-                <input type="text" class="form-control input-sm" name="{{ modulename }}_user_total"  value="{{ modulesettings.user.total }}" placeholder="total">
-                </label>
-            </div>
-			</div>	
-			</div>	
-			</div>	
+ 		{# module list rowend#}           
 		</div>
         {% else %}
         <div class="list-group-item col-md-12 clearfix">
@@ -168,4 +437,5 @@
 {% endstylesheets %}
 
 </div>      
-{{ render(controller('ZikulaAdminModule:Admin:adminfooter')) }}
+
+{% include "KaikmediaGalleryModule:Admin:footer.html.twig" %} 

@@ -1,4 +1,4 @@
- {{ render(controller('ZikulaAdminModule:Admin:adminheader')) }}
+{% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
  {% form_theme form 'bootstrap_3_layout.html.twig' %}
     <h3><span class="fa fa-sitemap"></span>
         {{ __('Media to objects mappin')}}
@@ -76,4 +76,4 @@
 	</div>
 	</div>
 </div>
-{{ render(controller('ZikulaAdminModule:Admin:adminfooter')) }}
+{% include "KaikmediaGalleryModule:Admin:footer.html.twig" %} 
