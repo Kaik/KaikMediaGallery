@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
-use Kaikmedia\GalleryModule\Entity\MediaObjMapEntity as MediaMap;
+use Kaikmedia\GalleryModule\Entity\MediaRelationsEntity as MediaRelation;
 use Kaikmedia\GalleryModule\Util\Common as Utils;
 use Kaikmedia\GalleryModule\Util\Settings as Settings;
 
@@ -33,7 +33,7 @@ class PluginController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function galleryAction(Request $request, $obj_name = null, $obj_id = null, $mode = 'all')
+    public function galleryAction(Request $request, $obj_name = null, $obj_reference = null, $mode = 'info')
     {
         // Security check
         if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
@@ -42,31 +42,33 @@ class PluginController extends AbstractController
         
         $settings = new Settings();
 
-        if ($obj_id == null){       	
+        if ($obj_reference == null){   
+        	
         	$icon = false;
-        	$image = false;
-        	$media = false;        	
+        	$featured = false;
+        	$additional = false;        
+        	
         }else{
 
         	$icon = $this->get('doctrine.entitymanager')
-        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
         	->getOneBy(array('obj_name'=> $obj_name,
         			'type' => 'icon',
-        			'obj_id' => $obj_id ));
+        			'obj_reference' => $obj_reference ));
         	
         	
-        	$image = $this->get('doctrine.entitymanager')
-        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+        	$featured = $this->get('doctrine.entitymanager')
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
         	->getOneBy(array('obj_name'=> $obj_name,
-        			'type' => 'image',
-        			'obj_id' => $obj_id ));
+        			'type' => 'featured',
+        			'obj_reference' => $obj_reference ));
         	
         	
-        	$media = $this->get('doctrine.entitymanager')
-        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+        	$additional = $this->get('doctrine.entitymanager')
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
         	->getAll(array('obj_name'=> $obj_name,
-        			'type' => 'media',
-        			'obj_id' => $obj_id ));   
+        			'type' => 'additional',
+        			'obj_reference' => $obj_reference ));
         }
         
         
@@ -74,9 +76,7 @@ class PluginController extends AbstractController
         
         
         $user = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('author'=> UserUtil::getVar('uid')));             
-        
-        
-        
+               
         
         PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
         PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
@@ -86,12 +86,12 @@ class PluginController extends AbstractController
         	'mode'     => $mode,
             'settings' => $settings->getSettings(),
             'obj_name' => $obj_name,
-            'obj_id'   => $obj_id,
-            'icon'     => $icon,
-            'image'    => $image,
-            'media'    => $media,
-            'public'   => $public,
-            'user'     => $user
+            'obj_reference'   => $obj_reference,
+            'icon'     		=> $icon,
+            'featured'    	=> $featured,
+            'additional'    => $additional,
+            'public'   		=> $public,
+            'user'     		=> $user
         ));
     }
 }

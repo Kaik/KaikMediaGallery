@@ -1,7 +1,0 @@
-{% if media is defined %}    
-	 {%for tmedia in media %}
-	 <div class="col-md-12"> {% include "KaikmediaGalleryModule:Media:media.html.twig" with {'settings': settings, 'media':tmedia, 'file': tmedia.media}  %}  </div>                       		
-	 {% endfor %}
-{% else %}
-        <p class="alert alert-info text-center"> {{ __('No media selected') }} </p>
-{% endif %}

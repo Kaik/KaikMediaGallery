@@ -127,9 +127,9 @@ class MediaEntity
     private $deletedBy;
     
     /**
-     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\MediaObjMapEntity", mappedBy="media")
+     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\MediaRelationsEntity", mappedBy="original")
      */
-    protected $mappedobjects;    
+    protected $relations;    
     
     /**
      * constructor
@@ -141,7 +141,7 @@ class MediaEntity
             'uid' => UserUtil::getVar('uid')
         ));
         $this->publicdomian = 0;       
-        $this->mappedobjects = new ArrayCollection();
+        $this->relations = new ArrayCollection();
     }    
     
     /**
@@ -591,18 +591,18 @@ class MediaEntity
      *
      * @return object array
      */
-    public function getMappedobjects()
+    public function getRelations()
     {
-        return $this->mappedobjects;
+        return $this->relations;
     }
 
     /**
      *
-     * @param object array $mappedobjects            
+     * @param object array $relations            
      */
-    public function setMappedobjects($mappedobjects)
+    public function setRelations($relations)
     {
-        $this->mappedobjects = $mappedobjects;
+        $this->relations = $relations;
         return $this;
     }
      

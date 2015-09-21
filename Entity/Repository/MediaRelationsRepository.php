@@ -6,20 +6,20 @@ namespace Kaikmedia\GalleryModule\Entity\Repository;
 
 use ServiceUtil;
 use Doctrine\ORM\EntityRepository;
-use Kaikmedia\GalleryModule\Entity\MediaObjMapQueryBuilder;
+use Kaikmedia\GalleryModule\Entity\MediaRelationsQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class MediaObjMapRepository extends EntityRepository
+class MediaRelationsRepository extends EntityRepository
 {
     /**
      * Query builder helper
      * 
-     * @return \Kaikmedia\GalleryModule\Entity\MediaObjMapQueryBuilder
+     * @return \Kaikmedia\GalleryModule\Entity\MediaRelationsQueryBuilder
      */
     public function build()
     {
         $em = ServiceUtil::getService('doctrine.entitymanager');
-        $qb = new MediaObjMapQueryBuilder($em);
+        $qb = new MediaRelationsQueryBuilder($em);
         return $qb;
     }
 
@@ -36,7 +36,7 @@ class MediaObjMapRepository extends EntityRepository
     {
         $qb = $this->build();
         $qb->select('mo');
-        $qb->from('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity', 'mo');
+        $qb->from('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity', 'mo');
         // filters
         $qb->addFilters($f);
         // search

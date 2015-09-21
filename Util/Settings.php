@@ -72,16 +72,27 @@ class Settings
 	private function _mergeSettings()
 	{
 		
-	$current = ModUtil::getVar($this->name);	
+	$data = ModUtil::getVar($this->name);	
+	/*
+	$dataFix = array();
+	
+	foreach($data as $module => $features){
+
+		$dataFix[$module] = $this->getDefault();
+		
+	}
+	
+	*/
+	$current = $data;	
 	$_default = $current[$this->name];
 	unset($current[$this->name]);
 	
 	$done_settings = array();
 	
 	foreach($current as $module => $features){
-		foreach($features as $feature_name => $feature_settings){
-			foreach($feature_settings as $feature_setting_name => $feature_setting_value){				
-				switch ($feature_setting_name) {
+		foreach($features as $feature_name => $feature_settings){	
+			foreach($feature_settings as $feature_setting_name => $feature_setting_value){								
+				switch ($feature_setting_name) {					
 					case 'enabled':
 						$done_settings[$module][$feature_name][$feature_setting_name] = $_default[$feature_name][$feature_setting_name] == "0" ? $_default[$feature_name][$feature_setting_name] : $feature_setting_value;
 						break;
@@ -97,12 +108,79 @@ class Settings
 			
 			}		
 		}
-	}
+	}	
 	
 	$done_settings = array('KaikmediaGalleryModule' => $_default) + $done_settings;
 	
 	$this->settings = $done_settings; 
 		
+	}
+	
+	public function getDefault()
+	{
+		
+		$default = array (
+				'gallery' =>
+				array (
+						'enabled' => '1',
+				),
+				'icon' =>
+				array (
+						'enabled' => '1',
+						'width' => '100',
+						'height' => '100',
+						'extensions' => 'png,jpg',
+						'mimetypes' => 'image',
+						'perpage' => '',
+						'maxitems' => '',
+				),
+				'featured' =>
+				array (
+						'enabled' => '1',
+						'width' => '1000',
+						'height' => '1000',
+						'extensions' => 'png,jpg',
+						'mimetypes' => 'image',
+						'perpage' => '',
+						'maxitems' => '',
+				),
+				'additional' =>
+				array (
+						'enabled' => '1',
+						'width' => '',
+						'height' => '',
+						'extensions' => 'png,jpg',
+						'mimetypes' => 'image',
+						'perpage' => '40',
+						'maxitems' => '10',
+				),
+				'upload' =>
+				array (
+						'enabled' => '1',
+						'dir' => 'kmgallery',
+						'singlemax' => '0',
+						'extensions' => 'png,jpg',
+						'mimetypes' => 'image',
+						'perpage' => '',
+						'maxitems' => '10',
+				),
+				'user' =>
+				array (
+						'enabled' => '1',
+						'perpage' => '40',
+				),
+				'public' =>
+				array (
+						'enabled' => '1',
+						'perpage' => '40',
+				),
+				'album' =>
+				array (
+						'enabled' => '1',
+				),
+		);
+	
+		return $default;
 	}
 	
 }

@@ -54,39 +54,45 @@ class PluginajaxController extends AbstractController
             throw new AccessDeniedException();
         }
     
-        $id = $request->query->get('id', false);
-        $mid = $request->query->get('mid', false);
-        
-        if ($mid != false){
-            // Get parameters from whatever input we need.
-            $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-            $media = $this->entityManager
-            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
-            ->find($mid);
-            
-            $template = $this->renderView('KaikmediaGalleryModule:Plugin:info.html.twig', array(
-                'media' => $media,
-                'file' => $media->getMedia(),
-                'settings' => ModUtil::getVar($this->name)
-            ));            
-            
-        }elseif ($id != false){
-            // Get parameters from whatever input we need.
-            $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-            $file = $this->entityManager
-            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
-            ->find($id);
-            
-            $template = $this->renderView('KaikmediaGalleryModule:Plugin:info.html.twig', array(
-                'media' => false,
-                'file' => $file,
-                'settings' => ModUtil::getVar($this->name)
-            ));            
-            
-        }else {
-                      
+        $original_id = $request->query->get('original', false);
+        $relation_id = $request->query->get('relation', false);
+        if($relation_id == '0'){
+        	$relation_id = false;
         }
-
+        
+        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');        
+        
+        
+        if ($relation_id != false){
+            // Get parameters from whatever input we need.
+            $relation = $this->entityManager
+            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+            ->find($relation_id);
+            
+            $template = $this->renderView('KaikmediaGalleryModule:Plugin:selected.html.twig', array(
+                'relation' => $relation,
+                'original' => $relation->getOriginal(),
+                'settings' => ModUtil::getVar($this->name)
+            ));            
+            
+        }elseif ($original_id != false){
+            // Get parameters from whatever input we need.
+            $original = $this->entityManager
+            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
+            ->find($original_id);
+            
+            $template = $this->renderView('KaikmediaGalleryModule:Plugin:selected.html.twig', array(
+                'relation' => false,
+                'original' => $original,
+                'settings' => ModUtil::getVar($this->name)
+            ));                        
+        }else {
+        	$template = $this->renderView('KaikmediaGalleryModule:Plugin:selected.html.twig', array(
+        			'relation' => false,
+        			'original' => false,
+        			'settings' => ModUtil::getVar($this->name)
+        	));        	        	
+        }       
     
         $response = new Response(json_encode(array('template' => $template)));
         $response->headers->set('Content-Type', 'application/json');

@@ -8,66 +8,176 @@ KaikMedia.Gallery.Plugin = {};
 
 ( function($) {
 	
+	var mode = 'info';
+	
 	KaikMedia.Gallery.Plugin.icon = [];
-	KaikMedia.Gallery.Plugin.image = [];
-	KaikMedia.Gallery.Plugin.media = [];	
+	KaikMedia.Gallery.Plugin.featured = [];
+	KaikMedia.Gallery.Plugin.additional = [];	
 	
 	KaikMedia.Gallery.Plugin.selected = [];
     
     KaikMedia.Gallery.Plugin.init = function ()
     {    	
-  	
-    console.log(KaikMedia.Gallery.Settings.mode);	
-    	
-    	
-    	
-    	
-    	/*
-    	$('#kmgallery_plugin_menu').find('a').each(function(){
+    	KaikMedia.Gallery.Plugin.loadSelected();
+    	//console.log(KaikMedia.Gallery.Settings);
+    	/* set origins according to settings */
+    	if(KaikMedia.Gallery.Settings.user.enabled){
+    		$('#kmgallery_plugin_user_pill').parent('.origins').addClass('active');
+    		$('#kmgallery_plugin_user_box').addClass('active');    		
+    	}else if(KaikMedia.Gallery.Settings.public.enabled){
+    		$('#kmgallery_plugin_public_pill').parent('.origins').addClass('active');    		
+    		$('#kmgallery_plugin_public_box').addClass('active');      		    		
+    	}else if(KaikMedia.Gallery.Settings.upload.enabled){
+    		$('#kmgallery_plugin_upload_pill').parent('.origins').addClass('active');    		
+    		$('#kmgallery_plugin_upload_box').addClass('active');      			
+    	}
+    	  	
+    	/* modal auto reset mode on close  */
+    	$('#kmgallery_plugin').on('hide.bs.modal', function (event) {
+	        KaikMedia.Gallery.Plugin.switchView('reset');   		    		
+    	});
+    		
+    	/* bind selected media previews on click */
+		$('#kmgallery_plugin_selected_previews').find('a').each(function(){
 		      $(this).on('click', function(e) {
-	    		  //e.preventDefault();
-	        	  mode = ($(this).data('mode'));
-	        	  console.log(mode);
+	  		  e.preventDefault();
+		      	  var options = {'single': 1,
+		      		  			 'type': $(this).data('type'),
+		      		  			 'original': $(this).data('original'),
+		      		  			 'relation':$(this).data('relation')
+		      	  };
+	      	  //console.log(type);
+	      	  KaikMedia.Gallery.Plugin.openManager(options);	      	  
 		      }); 
-    	});     	
-    	//console.log(KaikMedia.Gallery.Plugin.media);  
-    	
-	    $('#kmgallery_plugin').find('a.mediainfo').each(function() {
+		});     
+		
+    	/* bind mode switch */
+		$('#kmgallery_plugin_mode').find('a').each(function(){
+		      $(this).on('click', function(e) {
+		        KaikMedia.Gallery.Plugin.switchView($(this).data('mode'));   		    	  
+		      }); 				
+		});	
+		
+    	/* bind media details load on click  */    	
+	    $('#kmgallery_plugin').find('a.media-information').each(function() {
+	    	  $(this).children('.original').removeClass('current');
 		      $(this).on('click', function(e) {
 		    		  e.preventDefault();
-		        	  KaikMedia.Gallery.Plugin.mediainfo($(this));
+		        	  KaikMedia.Gallery.Plugin.loadInfo($(this));
 		      });    	  
-	    });     	
-    	
-	    $('#kmgallery_plugin_icon_select').find('a.mediainfo').each(function() {
-	    	KaikMedia.Gallery.Plugin.icon.push($(this).data('id'));	  
+	    }); 		
+		
+    	/* bind hover action   */    	
+	    $('#kmgallery_plugin').find('a.media-toggle').each(function() {	    
+		    $(this).hover(
+		    function () {
+		        $(this).children('.media-icon').removeClass('fa-check-circle').addClass("fa-minus");		        
+		     },
+			function () {
+			        $(this).children('.media-icon').removeClass('fa-minus').addClass("fa-check-circle");		        
+			 }		    
+		    );
 	    });
 	    
-	    $('#kmgallery_plugin_image_select').find('a.mediainfo').each(function() {
-	    	KaikMedia.Gallery.Plugin.image.push($(this).data('id'));	  	  
-	    });    	    
-	    
-	    $('#kmgallery_plugin_media_select').find('a.mediainfo').each(function() {
-	    	KaikMedia.Gallery.Plugin.media.push($(this).data('id'));
-		    $('#kmgallery_plugin_center_col').find('div.file-' + $(this).data('id')).each(function() {
-			    $(this).addClass('selected');	    	
-		    });   	
-	    });    
-	    
-    	console.log(KaikMedia.Gallery.Plugin.icon);    	    	    	
-    	console.log(KaikMedia.Gallery.Plugin.image);  
-    	console.log(KaikMedia.Gallery.Plugin.media);  
-    	console.log(mode);  
-    	*/
     };
     
-    KaikMedia.Gallery.Plugin.mediainfo = function (el)
+    KaikMedia.Gallery.Plugin.loadSelected = function ()
+    {        
+    
+    $('#kmgallery_plugin_icon_box').find('a.media-information').each(function() {
+    	KaikMedia.Gallery.Plugin.icon.push($(this).data('original'));
+    	$('#kmgallery_plugin').find('a.item-toggle-' + $(this).data('original')).each(function(){
+    		$(this).removeClass('hide');
+    	});	     	
+    });
+    
+    $('#kmgallery_plugin_featured_box').find('a.media-information').each(function() {
+    	KaikMedia.Gallery.Plugin.featured.push($(this).data('original'));
+    	$('#kmgallery_plugin').find('a.item-toggle-' + $(this).data('original')).each(function(){
+    		$(this).removeClass('hide');
+    	});	     	
+    });    	    
+    
+    $('#kmgallery_plugin_additional_box').find('a.media-information').each(function() {
+    	KaikMedia.Gallery.Plugin.additional.push($(this).data('original'));    	
+    	$('#kmgallery_plugin').find('a.item-toggle-' + $(this).data('original')).each(function(){
+    		$(this).removeClass('hide');
+    	});	    
+    });    
+    
+	console.log(KaikMedia.Gallery.Plugin.icon);    	    	    	
+	console.log(KaikMedia.Gallery.Plugin.featured);  
+	console.log(KaikMedia.Gallery.Plugin.additional);  
+    
+	
+    };
+    
+    
+    KaikMedia.Gallery.Plugin.openManager = function (options)
+    {    		 	   	
+    	console.log(options);
+    	
+    	if (options.single){
+			$('#kmgallery_plugin_mode').find('.mode').each(function(){
+				$(this).addClass('hide');
+    			$(this).removeClass('active');    				
+			});			
+			
+    		if(options.type){   		   			
+	        	$('.mode-' + options.type).addClass('active');    			
+	        	$('.mode-' + options.type).removeClass('hide');
+	        	$('#kmgallery_plugin_left_col').find('.tab-pane').each(function(){
+	        		$(this).removeClass('active');        	
+	        	});   
+	        	
+	        	$('#kmgallery_plugin_' + options.type + '_box').addClass('active');	        	
+	        	KaikMedia.Gallery.Plugin.switchView(options.type);       	
+    		};   		
+    	}else{   		
+    	/* Defautl  */	
+
+    		
+    	}    	
+    	$('#kmgallery_plugin').modal('show');    	
+    };    
+    
+ 
+    
+    KaikMedia.Gallery.Plugin.switchView = function (type)
+    {     	
+    	if(type === 'reset'){
+			$('#kmgallery_plugin_mode').find('.mode').each(function(){
+    			$(this).removeClass('hide');
+               	$('#kmgallery_plugin_action_button').html('Save changes');
+    		});      		    		
+    	}else {   		
+	    	$('#kmgallery_plugin').find('a.media-toggle').each(function(){
+	    		$(this).addClass('hide');
+	    	});
+	    	
+    	    $('#kmgallery_plugin_'+ type +'_box').find('a.media-information').each(function() {
+    	    	$('#kmgallery_plugin').find('a.item-toggle-' + $(this).data('original')).each(function(){
+    	    		$(this).removeClass('hide');
+    	    	});	     	
+    	    });    		
+   		
+    		$('#kmgallery_plugin_action_button').html('Save ' + type);        		
+    	}	
+    }; 
+    
+    
+    KaikMedia.Gallery.Plugin.loadInfo = function (el)
     {   
+    	/* bind media details load on click  */    	
+	    $('#kmgallery_plugin').find('a.media-information').each(function() {
+	    	  $(this).children('.original').removeClass('current'); 	  
+	    });       	
+    	el.children('.original').addClass('current');
     	var pars = {
-    			id:	el.data('id'),
-    			mid: el.data('mid')		
+    			original: el.data('original'),
+    			relation: el.data('relation')		
     	};
-		$('#kmgallery_plugin_mediainfo').prepend("<i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
+		$('#kmgallery_plugin_selected_box').prepend("<i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
         $.ajax({
             type: "GET",
             url: Routing.generate('kaikmediagallerymodule_pluginajax_mediainfo'),
@@ -76,7 +186,7 @@ KaikMedia.Gallery.Plugin = {};
         	console.log(result);
         	
             var template = result.template;
-            $('#kmgallery_plugin_mediainfo').html(template);
+            $('#kmgallery_plugin_selected_box').html(template);
             /*
             KaikMedia.Gallery.AlbumTree.albumBox.html(template);            
             $('#album_save').click(function(e){
@@ -94,186 +204,8 @@ KaikMedia.Gallery.Plugin = {};
         });       
     };    
     
-    KaikMedia.Gallery.Plugin.toggleSelect = function (el)
-    {   
-    	
-      /*
-  	  if(el.data('selected') == '1'){
-  		  	//console.log('unselect');	
-	  		var id = el.data('id');	 
-	  		for(var i = KaikMedia.Gallery.Plugin.selected.length - 1; i >= 0; i--) {
-	  		    if(KaikMedia.Gallery.Plugin.selected[i] === el.data('id')) {
-	  		    	KaikMedia.Gallery.Plugin.selected.splice(i, 1);
-	  		    }
-	  		}	  			  			  		
-	  		$("#kmgallery_plugin").find("[data-id='" + id + "']").each(function() {
-	  			$(this).css('background-color','#fff').data('selected', '0');
-	  		});
-	  		//$("#kmgallery_plugin_this_gallery").find("[data-id='" + id + "']").parent().remove();	  		
-	  }else{
-		  	console.log('select');
-  		  	el.css('background-color','#eee');
-  		  	el.data('selected', '1');
-			KaikMedia.Gallery.Plugin.selected.push(el.data('id'));
-			//el.parent().clone(true, true).appendTo("#kmgallery_plugin_this_gallery");
-	  }
-
-      $("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);    	  
-      console.log($("input[name='pageform[images]']").val());  
-    	*/
-    };    
-    
-    
-    
-    
-   
-    
-    
-    KaikMedia.Gallery.Plugin.addFileForm = function ()
-    {     	
-    	if(KaikMedia.Gallery.Settings.upload_max_total_size > 0 && parseInt(KaikMedia.Gallery.Settings.user_total) > parseInt(KaikMedia.Gallery.Settings.upload_max_total_size)){
-    		$('#kmgallery_plugin_upload').append(  				
-                    $('<div />' ,{ id: 'upload_too_big', class: 'col-md-12 rounded_box bg-danger' }).append(
-                 		   $('<p />').append('You have exceeded total allowed space. Delete unused files and try again.'))   
-             )
-          return;   // to do add allowed amount displayed
-    	}
-    	
-    	$('#kmgallery_plugin_upload').empty().append(
-                $('<form />', { action: 'sharer.php', method: 'POST', enctype: 'multipart/form-data' }).append(
-                	$('<div />' ,{ id: 'upload_box', class: 'col-md-12 rounded_box bg-info' }).append(
-                			$('<div />' ,{ id: 'upload_icon_box', class: 'col-md-2' }).append(	
-                					$('<span />', { class: 'fa fa-download fa-2x' })),		
-                			$('<div />' ,{ id: 'upload_input_box', class: 'col-md-10' }).append(	                					
-                			$('<input />', { id: 'upload_input', type: 'file' }))
-                    )
-                )
-         )
-            
-        $('#upload_input').change(function() {  
-        	$('#kmgallery_plugin_upload').empty();
-            KaikMedia.Gallery.Plugin.FileUpload($(this));         	                         
-        });                                   
-    };
-    
-    KaikMedia.Gallery.Plugin.FileUpload = function (files)
-    { 
-    	var file = files[0].files[0];
-    	//add ext/mimetype validation
-    	var validation = KaikMedia.Gallery.Plugin.FileValidation(file);
-    	
-    	if(validation === true ){
-        	
-       	console.log('upload');
-       	
-            var data = new FormData();
-            var token = $('input[name="__upload_token"]').val();
-            console.log(token);
-            data.append('media[name]', 'test');
-            data.append('media[description]', 'lalala');
-            //data.append('media[path]', 'testpath');
-            data.append('media[legal]', 'testlegal');
-            data.append('media[publicdomain]', false);            
-            data.append('media[file]', file);
-            data.append('media[_token]',token);            
-            $.ajax({
-                type: 'POST',
-                data: data,
-                url: Routing.generate('kaikmediagallerymodule_upload_newmedia'),
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(data){
-                	
-                	console.log(data);
-                	/*
-                	var file = data.file;
-                	//remove elements
-                	
-                	//hide upload
-                    $newLi.find('.upload_icon').toggleClass("hide");
-                    $newLi.find('.upload_file').toggleClass("hide"); 
-                	//fill new element form with data
-                    //thumbnail 
-                	$newLi.find('.thumbnail').prepend($('<img>',{id:'image'+file.id ,src: data.homeurl+'/web/'+file.absolute_path}))
-                	$newLi.find('.thumbnail').toggleClass("hide");
-                    $newLi.find('.thumbnail').css("height","auto");  
-                	$newLi.find('.thumbnail').addClass("col-xs-4");
-                	//fields
-                	$newLi.find('.name input').val(file.name);                  	
-                	$newLi.find('.path input').val(file.path);
-                	$newLi.find('.description input').val(file.description);
-                	$newLi.find('.legal input').val(file.legal);
-                	$newLi.find('.publicdomain input').val(file.publicdomain);
-                	$newLi.find('.promoted input').val(file.promoted); 
-                	//show
-                    $newLi.find('.image_data').toggleClass("hide");
-                    // enable menu options
-                    KaikMedia.Pages.Manager.enableMenu($newLi);  
-                	$newLi.find('.expand').html("<i class='fa fa-check fa-2x'> </i>" ).toggleClass("hide");
-                    $newLi.find('.edit').toggleClass("hide");
-                    $newLi.find('.delete').toggleClass("hide");
-                    //listener
-                    KaikMedia.Pages.Manager.enablePasteListener($newLi);  
-                    //expand
-                    $newLi.removeClass("col-xs-4 col-md-3 new_element").addClass("col-xs-12").css("background","#eee");      
-                    */              
-                }
-            });            
-            
-    		
-    	}else{
-    	//remove form 	
-    		$('#kmgallery_plugin_upload').append(    				
-                   $('<div />' ,{ id: 'upload_too_big', class: 'col-md-12 rounded_box bg-danger' }).append(
-                		   $('<p />').append(validation))   
-            )   		   		
-    	}
-    };
-    
-    KaikMedia.Gallery.Plugin.FileValidation = function (file)
-    {     	
-    	//media max size on/off this is first important check
-    	if(KaikMedia.Gallery.Settings.upload_max_media_size > 0 && KaikMedia.Gallery.Settings.upload_max_media_size < file.size || KaikMedia.Gallery.Settings.php_limit > 0 && KaikMedia.Gallery.Settings.php_limit < file.size){
-    		$('#kmgallery_plugin_upload').append(
-                    KaikMedia.Gallery.Plugin.addFileForm()
-            )        
-    		return 'File is too big. Please chose another one.';
-    	}	
-    		
-    	if(KaikMedia.Gallery.Settings.upload_max_total_size > 0 && parseInt(KaikMedia.Gallery.Settings.user_total) + file.size > parseInt(KaikMedia.Gallery.Settings.upload_max_total_size)){
-            return 'You have exceeded total allowed space. Delete unused files and try again.';
-    	}
-    	   	
-    	return true;
-    };    
         
     $(document).ready(function() {
         KaikMedia.Gallery.Plugin.init();
     });
 })(jQuery);
-
-
-
-//$("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);
-
-/*
-$('#kmgallery_plugin').find('a.mediaselect').each(function() {
-	  if($(this).data('selected') == '1'){
-		  	$(this).css('background-color','#eee');
-			KaikMedia.Gallery.Plugin.selected.push($(this).data('id'));    		  
-	  }   
-	  
-$(this).on('click', function(e) {
-		  e.preventDefault();
-  	  KaikMedia.Gallery.Plugin.toggleSelect($(this));
-		});    	  
-});
-
-$("input[name='pageform[images]']").val(KaikMedia.Gallery.Plugin.selected);                
-
-$('#kmgallery_plugin_upload_url').on('click', function(e) {
-	  KaikMedia.Gallery.Plugin.addFileForm();
-	});
-	
-	*/

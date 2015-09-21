@@ -1,8 +1,17 @@
-{% if icon.media is defined %}
-        {% include "KaikmediaGalleryModule:Media:media.html.twig" with {'settings': settings, 'file':icon.media, 'media': icon }  %}              
-		<div class="">
-		<p><strong>{{ __('Name') }}:</strong>{{ icon.media.name }}</p>
-		</div>
+{% if icon is not empty and icon.original is defined %}
+    {% include "KaikmediaGalleryModule:Plugin:item.html.twig" with {'settings': settings, 'original':icon.original, 'relation': icon, 'css': 'col-md-12' }  %}                 
+	{% if icon.details is defined %}      
+			<div class="">
+			<p><strong>{{ __('Name') }}:</strong>{{ icon.details.name }}</p>
+			</div>
+	{% else %}
+			<div class="">
+			<p><strong>{{ __('Name') }}:</strong>{{ icon.original.name }}</p>
+			</div>
+	{% endif %}         
 {% else %}
-        <p class="alert alert-info text-center"> {{ __('No icon selected') }} </p>
+        <p class="alert alert-warning text-center"> {{ __('No icon selected') }} </p>
 {% endif %}
+
+
+

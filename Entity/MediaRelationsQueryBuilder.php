@@ -8,11 +8,11 @@ use UserUtil;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Description of MediaQueryBuilder
+ * Description of MediaRelationsQueryBuilder
  * 
  * @author Kaik
  */
-class MediaObjMapQueryBuilder extends QueryBuilder
+class MediaRelationsQueryBuilder extends QueryBuilder
 {
 
     public function filterId($id)
@@ -31,10 +31,10 @@ class MediaObjMapQueryBuilder extends QueryBuilder
         }
     }
 
-    public function filterObj_id($obj_id)
+    public function filterObj_reference($obj_reference)
     {
-        if ($obj_id !== false) {
-            return $this->andWhere('mo.obj_id = :obj_id')->setParameter('obj_id', $obj_id);
+        if ($obj_reference !== false) {
+            return $this->andWhere('mo.obj_reference = :obj_reference')->setParameter('obj_reference', $obj_reference);
         }
     }
     

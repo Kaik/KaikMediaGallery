@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
+use Kaikmedia\GalleryModule\Util\Settings as Settings;
 
 /**
  * @Route("/admin")
@@ -73,34 +74,8 @@ class AdminController extends AbstractController
         if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        /*
-         $a = array();
-         // Get startnum and perpage parameter for pager
-         $a['page'] = $page;
-         $a['limit'] = $request->query->get('limit', 15);
-         $a['title'] = $request->query->get('title', false);
-         $a['online'] = $request->query->get('online', false);
-         $filters = array();
-         $form = $this->createForm('pagesfilterform', $filters, array(
-         'action' => $this->get('router')
-         ->generate('kaikmediapagesmodule_admin_manager', array(), RouterInterface::ABSOLUTE_URL),
-         'limit' => $a['limit'],
-         'title' => $a['title'],
-         'online' => $a['online']
-         ));
-         $form->handleRequest($request);
     
-         if ($form->isValid()) {
-         $data = $form->getData();
-         $a['limit'] = $data['limit'] ? $data['limit'] : $a['limit'];
-         $a['title'] = $data['title'] ? $data['title'] : $a['title'];
-         $a['online'] = $data['online'] ? $data['online'] : $a['online'];
-         }
-    
-         // Get parameters from whatever input we need.
-         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-         $pages = $this->entityManager->getRepository('Kaikmedia\PagesModule\Entity\PagesEntity')->getAll($a);
-         */
+
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:info.html.twig', array(
             //    'ZUserLoggedIn' => \UserUtil::isLoggedIn(),
@@ -250,12 +225,12 @@ class AdminController extends AbstractController
     */
     
     /**
-     * @Route("/mediaobjmap/{page}", requirements={"page" = "\d*"}, defaults={"page" = 1})
+     * @Route("/mediarelations/{page}", requirements={"page" = "\d*"}, defaults={"page" = 1})
      * the main administration function
      *
      * @return RedirectResponse
      */
-    public function mediaobjmapAction(Request $request, $page)
+    public function mediarelationsAction(Request $request, $page)
     {
         // Security check
         if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
@@ -282,15 +257,15 @@ class AdminController extends AbstractController
         }
     
         // Get parameters from whatever input we need.
-        $mediaobjmap = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')->getAll($a);
+        $mediarelations = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')->getAll($a);
     
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
-        return $this->render('KaikmediaGalleryModule:Admin:mediaobjmap.html.twig', array(
-            'mediaobjmap' => $mediaobjmap,
+        return $this->render('KaikmediaGalleryModule:Admin:mediarelations.html.twig', array(
+            'mediarelations' => $mediarelations,
             'settings' => ModUtil::getVar($this->name),
             'form' => $form->createView(),
             'thisPage' => $a['page'],
-            'maxPages' => ceil($mediaobjmap->count() / $a['limit'])
+            'maxPages' => ceil($mediarelations->count() / $a['limit'])
         ));
     }    
     
@@ -352,13 +327,9 @@ class AdminController extends AbstractController
         if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-               
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
         
-        $settings = ModUtil::getVar($this->name);
+        $settings = new Settings();
+        //$settings = ModUtil::getVar($this->name);
                  
         $hookSubscribers = HookUtil::getHookSubscribers();
         $modulelist = array();
@@ -373,7 +344,7 @@ class AdminController extends AbstractController
         return $this->render('KaikmediaGalleryModule:Admin:preferences.html.twig', array(
            // 'form' => $form->createView()
             'moduleList' => $settingslist,
-            'settings' => $settings
+            'settings' => $settings->getSettings()
         ));
     }
 }

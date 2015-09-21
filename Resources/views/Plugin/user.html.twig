@@ -1,5 +1,5 @@
-{%for umedia in user %}
- <div class="col-md-2"> {% include "KaikmediaGalleryModule:Media:media.html.twig" with {'settings': settings, 'media':false, 'file':umedia}  %}  </div>
+{%for userItem in user %}
+ {% include "KaikmediaGalleryModule:Plugin:item.html.twig" with {'settings': settings, 'relation':false, 'original':userItem, 'css': 'col-md-2'}  %}
 {% else %}
 <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
 {% endfor %}           

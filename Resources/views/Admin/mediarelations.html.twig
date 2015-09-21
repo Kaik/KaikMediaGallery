@@ -1,7 +1,7 @@
 {% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
  {% form_theme form 'bootstrap_3_layout.html.twig' %}
-    <h3><span class="fa fa-sitemap"></span>
-        {{ __('Media to objects mappin')}}
+    <h3><span class="fa fa-share-alt"></span>
+        {{ __('Media relations')}}
     </h3>
 <div class="container-fluid">
     <div class="row">
@@ -26,30 +26,30 @@
     		    <div class="col-md-2">{{ __('Author')}}</div>
     			<div class="col-md-1 pull-right text-right">{{ __('Options')}}</div>
 		</div>
-		{%for mediaobject in mediaobjmap %}
+		{%for relation in mediarelations %}
 		<div class="list-group-item col-md-12">
     			<div class="col-md-3">
-    				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': mediaobject.id}) }}">{{ mediaobject.obj_name }}</a>
+    				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': relation.id}) }}">{{ relation.obj_name }}</a>
     			</div>
     			<div class="col-md-1">
-    				{{ mediaobject.obj_id }}
+    				{{ relation.obj_reference }}
     			</div>			
     			<div class="col-md-2">
-    			    {{ mediaobject.media.id }}	
+    			    {{ relation.original.id }}	
     			</div>
     			<div class="col-md-2">
-    				<p class="list-group-item-text">{{ mediaobject.createdAt|date('d/m/Y') }}</p>
+    				<p class="list-group-item-text">{{ relation.createdAt|date('d/m/Y') }}</p>
     			</div>			
     			<div class="col-md-2">
-    				<p class="list-group-item-text">{{ mediaobject.author.uname }}</p>
+    				<p class="list-group-item-text">{{ relation.author.uname }}</p>
     			</div>			
     			<div class="col-md-2 text-right">
-    				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': mediaobject.id}) }}"><i
+    				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': relation.id}) }}"><i
     					class="fa fa-pencil"></i></a>
-    				<a data-toggle="collapse" data-target="#mediaobject-details-{{ mediaobject.id }}"  href="#" > <i class="fa fa-angle-down fa-1x" title="{{  __('Read') }}"> </i></a> 			
+    				<a data-toggle="collapse" data-target="#mediaobject-details-{{ relation.id }}"  href="#" > <i class="fa fa-angle-down fa-1x" title="{{  __('Read') }}"> </i></a> 			
     			</div>   			
-    			<div id="mediaobject-details-{{ mediaobject.id }}" class="row collapse">
-                {% include "KaikmediaGalleryModule:Admin:file.details.html.twig" with {'file': mediaobject.media, 'settings': settings} %}  
+    			<div id="mediaobject-details-{{ relation.id }}" class="row collapse">
+                {% include "KaikmediaGalleryModule:Admin:file.details.html.twig" with {'file': relation.original, 'settings': settings} %}  
                 </div>   			
 		</div>
         {% else %}

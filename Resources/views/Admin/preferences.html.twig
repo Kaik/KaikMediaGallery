@@ -2,9 +2,7 @@
 
  <h3><span class="fa fa-wrench"></span> {{ __('Gallery settings and features')}}</h3>   
  {{ getstatusmsg() }}       
- 
 
- 
 <div class="container-fluid">
 <form id="objpreferences">
     <div class="row">
@@ -106,136 +104,136 @@
 				</div>
 				{# Feature icon end #}	
 											
-				{# Feature image #}
-				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.image.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">					
+				{# Feature featured #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.featured.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">					
 				  <div class="row">
 					<div class="col-md-12 text-right">				
-						<span>{{ __('Image feature')}}</span>
-						{# Feature image on/off#}	
+						<span>{{ __('Featured media')}}</span>
+						{# Feature featured on/off#}	
 						<div class="btn-group btn-xs" data-toggle="buttons">
-			                  <label class="btn btn-xs {% if modulesettings.image.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
-			                    <input type="radio" name="{{ modulename }}_image_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.image.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  <label class="btn btn-xs {% if modulesettings.featured.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_featured_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.featured.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
 			                  </label>
-			                  <label class="btn btn-xs {% if modulesettings.image.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
-			                    <input type="radio" name="{{ modulename }}_image_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.image.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  <label class="btn btn-xs {% if modulesettings.featured.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_featured_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.featured.enabled == '1' %}checked {% endif %}> {{ __('On') }}
 			                  </label>
-							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_image" {% if settings.KaikmediaGalleryModule.image.enabled == '0' or modulesettings.image.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>			                  		                  
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_featured" {% if settings.KaikmediaGalleryModule.featured.enabled == '0' or modulesettings.featured.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>			                  		                  
 			            </div>													
 					</div>	
 												
-					{# Feature image settings#}	
-					<div id="{{ modulename }}_feature_image" class="col-md-12 collapse">					
+					{# Feature featured settings#}	
+					<div id="{{ modulename }}_feature_featured" class="col-md-12 collapse">					
 					<div class="row  bg-info">
 						<div class="col-md-12" style="padding-top:5px;">																		
 				           
 				            <div class="btn-xs form-group col-md-2 pull-right">			           					             
 					                <label > {{ __('Width') }} 	
-					                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_width" value="{{ modulesettings.image.width }}">
+					                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_width" value="{{ modulesettings.featured.width }}">
 									</label>				            
 					        </div>
 					        
 				            <div class="btn-xs form-group col-md-2 pull-right">	
 					                <label > {{ __('Height') }} 	
-					                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_height" value="{{ modulesettings.image.height }}">
+					                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_height" value="{{ modulesettings.featured.height }}">
 					            	</label>				            					                     	
 				            </div>
 
 				            <div class="btn-xs form-group col-md-2 pull-right">				            		            
 					                <label > {{ __('Allowed extensions') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_extensions" value="{% if modulesettings.image.extensions is defined %}{{ modulesettings.image.extensions }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_extensions" value="{% if modulesettings.featured.extensions is defined %}{{ modulesettings.featured.extensions }}{% endif %}">
 				                </label>
 					        </div>
 					        
 				            <div class="btn-xs form-group col-md-2 pull-right">	
 					            <label > {{ __('Allowed mimetypes') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_mimetypes" value="{% if modulesettings.image.mimetypes is defined %}{{ modulesettings.image.mimetypes }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_mimetypes" value="{% if modulesettings.featured.mimetypes is defined %}{{ modulesettings.featured.mimetypes }}{% endif %}">
 				                </label>				                
 				            </div>	
 				            	
 				            <div class="btn-xs form-group col-md-2 pull-right hide">
 					            <label > {{ __('Per page') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_perpage" value="{% if modulesettings.image.perpage is defined %}{{ modulesettings.image.perpage }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_perpage" value="{% if modulesettings.featured.perpage is defined %}{{ modulesettings.featured.perpage }}{% endif %}">
 				                </label>
 					        </div>
 					            
 				            <div class="btn-xs form-group col-md-2 pull-right hide">	
 					            <label > {{ __('Total allowed') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_image_maxitems" value="{% if modulesettings.image.maxitems is defined %}{{ modulesettings.image.maxitems }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_maxitems" value="{% if modulesettings.featured.maxitems is defined %}{{ modulesettings.featured.maxitems }}{% endif %}">
 				                </label>				                
 				            </div>					            				
 								            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		
-					{# Feature image settings end #}	            		           				
+					{# Feature featured settings end #}	            		           				
 				  </div>			  
 				</div>				
-				{# Feature image settings end #}				
+				{# Feature featured settings end #}				
 				
 				
-				{# Feature media #}
-				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.media.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">						
+				{# Feature additional #}
+				<div class="col-md-12 {% if settings.KaikmediaGalleryModule.additional.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">						
 				  <div class="row">
 					<div class="col-md-12 text-right">				
-						<span>{{ __('Media feature')}}</span>
-						{# Feature media on/off#}	
+						<span>{{ __('Additional media')}}</span>
+						{# Feature additional on/off#}	
 						<div class="btn-group btn-xs" data-toggle="buttons">
-			                  <label class="btn btn-xs {% if modulesettings.media.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
-			                    <input type="radio" name="{{ modulename }}_media_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.media.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
+			                  <label class="btn btn-xs {% if modulesettings.additional.enabled == '0' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_additional_enabled" id="option1" autocomplete="off" value="0" {% if modulesettings.additional.enabled == '0' %}checked {% endif %}> {{ __('Off') }}
 			                  </label>
-			                  <label class="btn btn-xs {% if modulesettings.media.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
-			                    <input type="radio" name="{{ modulename }}_media_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.media.enabled == '1' %}checked {% endif %}> {{ __('On') }}
+			                  <label class="btn btn-xs {% if modulesettings.additional.enabled == '1' %}active btn-primary {% else %} btn-primary {% endif %}">
+			                    <input type="radio" name="{{ modulename }}_additional_enabled" id="option2" autocomplete="off" value="1" {% if modulesettings.additional.enabled == '1' %}checked {% endif %}> {{ __('On') }}
 			                  </label>
-							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_media" {% if settings.KaikmediaGalleryModule.media.enabled == '0' or modulesettings.media.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>			                  
+							 	<button class="btn btn-xs" data-toggle="collapse" data-target="#{{ modulename }}_feature_additional" {% if settings.KaikmediaGalleryModule.additional.enabled == '0' or modulesettings.additional.enabled == '0' %}disabled="disabled" {% endif %} ><i class="fa fa-cog"></i></button>			                  
 			            </div>													
 					</div>	
 												
-					{# Feature media settings#}	
-					<div id="{{ modulename }}_feature_media" class="col-md-12 collapse">				
+					{# Feature additional settings#}	
+					<div id="{{ modulename }}_feature_additional" class="col-md-12 collapse">				
 					<div class="row bg-info">
 						<div class="col-md-12" style="padding-top:5px;">																						           
 				            <div class="btn-xs form-group col-md-2 pull-right hide">			           					             
 					                <label > {{ __('Width') }} 	
-					                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_width" value="{{ modulesettings.media.width }}">
+					                <input type="text" class="form-control input-sm" name="{{ modulename }}_additional_width" value="{{ modulesettings.additional.width }}">
 									</label>				            
 					        </div>
 					            
 				            <div class="btn-xs form-group col-md-2 pull-right hide">
 					            <label > {{ __('Height') }} 	
-					            <input type="text" class="form-control input-sm" name="{{ modulename }}_media_height" value="{{ modulesettings.media.height }}">
+					            <input type="text" class="form-control input-sm" name="{{ modulename }}_additional_height" value="{{ modulesettings.additional.height }}">
 					           	</label>				                       	
 				            </div>
 
 				            <div class="btn-xs form-group col-md-2 pull-right">				            		            
 					            <label > {{ __('Allowed extensions') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_extensions" value="{% if modulesettings.media.extensions is defined %}{{ modulesettings.media.extensions }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_additional_extensions" value="{% if modulesettings.additional.extensions is defined %}{{ modulesettings.additional.extensions }}{% endif %}">
 				                </label>				                
 					        </div>
 
 				            <div class="btn-xs form-group col-md-2 pull-right">		
 					            <label > {{ __('Allowed mimetypes') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_mimetypes" value="{% if modulesettings.media.mimetypes is defined %}{{ modulesettings.media.mimetypes }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_additional_mimetypes" value="{% if modulesettings.additional.mimetypes is defined %}{{ modulesettings.additional.mimetypes }}{% endif %}">
 				                </label>				                
 				            </div>	
 				            	
 				            <div class="btn-xs form-group col-md-2 pull-right">
 					            <label > {{ __('Per page') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_perpage" value="{% if modulesettings.media.perpage is defined %}{{ modulesettings.media.perpage }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_additional_perpage" value="{% if modulesettings.additional.perpage is defined %}{{ modulesettings.additional.perpage }}{% endif %}">
 				                </label>
 					        </div>
 					    	<div class="btn-xs form-group col-md-2 pull-right">		  
 					            <label > {{ __('Total allowed') }} 	
-				                <input type="text" class="form-control input-sm" name="{{ modulename }}_media_maxitems" value="{% if modulesettings.media.maxitems is defined %}{{ modulesettings.media.maxitems }}{% endif %}">
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_additional_maxitems" value="{% if modulesettings.additional.maxitems is defined %}{{ modulesettings.additional.maxitems }}{% endif %}">
 				                </label>					                
 				            </div>					            				
 								            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		
-					{# Feature media settings end #}	            		           				
+					{# Feature additional settings end #}	            		           				
 				  </div>			  
 				</div>				
-				{# Feature media end #}				
+				{# Feature additional end #}				
 
 				
 				{# Feature upload #}

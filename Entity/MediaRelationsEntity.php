@@ -12,11 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Media
- * @ORM\Table(name="kmgallery_mediaobjmap")
- * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\MediaObjMapRepository")
+ * @ORM\Table(name="kmgallery_mediarelations")
+ * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\MediaRelationsRepository")
  * 
  */
-class MediaObjMapEntity
+class MediaRelationsEntity
 {
 
     /**
@@ -36,18 +36,18 @@ class MediaObjMapEntity
     /**
      * @ORM\Column(type="integer", length=60, nullable=false)
      */
-    private $obj_id;  
+    private $obj_reference;  
     
     /**
-     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\MediaEntity", inversedBy="mappedobjects")
-     * @ORM\JoinColumn(name="media", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\MediaEntity", inversedBy="relations")
+     * @ORM\JoinColumn(name="original", referencedColumnName="id")
      */
-    protected $media;    
+    protected $original;    
 
     /**
      * @ORM\Column(type="string", length=150)
      */
-    private $type = 'media';    
+    private $type = 'additional';    
     
     /**
      * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
@@ -142,44 +142,44 @@ class MediaObjMapEntity
     }
 
     /**
-     * Get obj_id
+     * Get obj_reference
      *
      * @return integer
      */
-    public function getObj_id()
+    public function getObj_reference()
     {
-        return $this->obj_id;
+        return $this->obj_reference;
     }
 
     /**
-     * Set obj_id
+     * Set obj_reference
      * 
-     * @param integer $obj_id            
+     * @param integer $obj_reference            
      */
-    public function setObj_id($obj_id)
+    public function setObj_reference($obj_reference)
     {
-        $this->obj_id = $obj_id;
+        $this->obj_reference = $obj_reference;
         return $this;
     }
 
     /**
-     * Get media
+     * Get original
      * 
-     * @return object $media
+     * @return object $original
      */
-    public function getMedia()
+    public function getOriginal()
     {
-        return $this->media;
+        return $this->original;
     }
 
     /**
-     * Set media
+     * Set original
      *
-     * @param object $media            
+     * @param object $original            
      */
-    public function setMedia($media)
+    public function setOriginal($original)
     {
-        $this->media = $media;
+        $this->original = $original;
         return $this;
     }
     
@@ -383,8 +383,8 @@ class MediaObjMapEntity
         $array =array();
         $array['id'] = $this->id;
         $array['obj_name'] = $this->obj_name;
-        $array['obj_id'] = $this->obj_id;
-        $array['file'] = $this->media->toArray();
+        $array['obj_reference'] = $this->obj_reference;
+        $array['file'] = $this->original->toArray();
         $array['author'] = $this->author;
         return $array;
     }   

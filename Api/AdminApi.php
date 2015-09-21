@@ -39,10 +39,10 @@ class AdminApi extends \Zikula_AbstractApi
             );
             
             $links[] = array(
-            		'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_mediaobjmap'),'text' => $this->__('Media to objects map'),'title' => $this->__('Media object map manager'),'icon' => 'share-alt '
+            		'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_mediarelations'),'text' => $this->__('Media relations'),'title' => $this->__('Media object map manager'),'icon' => 'share-alt '
             );
             $links[] = array(
-            		'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_mediastore'),'text' => $this->__('Media store'),'title' => $this->__('Media store manager'),'icon' => 'hdd-o'
+            		'url' => $this->get('router')->generate('kaikmediagallerymodule_admin_mediastore'),'text' => $this->__('Media'),'title' => $this->__('Media store manager'),'icon' => 'hdd-o'
             );
              
             $links[] = array(
