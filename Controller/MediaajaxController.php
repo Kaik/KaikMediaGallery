@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity;
+use Kaikmedia\GalleryModule\Util\Settings as Settings;
 
 /**
  * @Route("/ajax/media")
@@ -54,36 +55,36 @@ class MediaajaxController extends AbstractController
             throw new AccessDeniedException();
         }
     
-        $id = $request->query->get('id', false);
-        $mid = $request->query->get('mid', false);
+        $original_id = $request->query->get('original', false);
+        $relation_id = $request->query->get('relation', false);
         
-        if ($mid != false){
-            // Get parameters from whatever input we need.
-            $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-            $media = $this->entityManager
-            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
-            ->find($mid);
+        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');        
+        
+        if ($relation_id != false){
+            $relation = $this->entityManager
+            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+            ->find($relation_id);
             
             $template = $this->renderView('KaikmediaGalleryModule:Media:media.html.twig', array(
-                'media' => $media,
-                'file' => $media->getMedia(),
+                'relation' => $relation,
+                'original' => $relation->getOriginal(),
                 'settings' => ModUtil::getVar($this->name)
             ));            
             
-        }elseif ($id != false){
-            // Get parameters from whatever input we need.
-            $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-            $file = $this->entityManager
+        }elseif ($original_id != false){
+            $original = $this->entityManager
             ->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
-            ->find($id);
+            ->find($original_id);
             
             $template = $this->renderView('KaikmediaGalleryModule:Media:media.html.twig', array(
-                'media' => false,
-                'file' => $file,
+                'relation' => false,
+                'original' => $original,
                 'settings' => ModUtil::getVar($this->name)
             ));            
             
         }else {
+        	
+        	//not found $template
                       
         }
 
@@ -94,7 +95,7 @@ class MediaajaxController extends AbstractController
     } 
     
     /**
-     * @Route("/edit/{id}", options={"expose"=true})
+     * @Route("/edit/", options={"expose"=true})
      * @Method({"GET", "POST"})
      * Modify aplicant information.
      *
@@ -110,31 +111,77 @@ class MediaajaxController extends AbstractController
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function editAction(Request $request, $id = null)
+    public function editAction(Request $request)
     {
         // Security check
         if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
            
+              
+        $original_id = $request->query->get('original', false);
+        $relation_id = $request->query->get('relation', false);        
+        
+        
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');       
         
-        if($id == null){
-            // create new album
-            $album = new AlbumEntity();            
-            $parentId = $request->request->get('parent', 1);            
-            $parent = $this->entityManager
-            ->getRepository('Kaikmedia\GalleryModule\Entity\AlbumEntity')
-            ->find($parentId);            
-            $album->setParent($parent);
+        if ($relation_id != false){
+        	$relation = $this->entityManager
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+        	->find($relation_id);
+        
+        	//error if not found
+        	
+        	$options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
+        	$relation_form = $this->createForm('media_relation', $relation, $options);        	       	
+        	
+        	$template = $this->renderView('KaikmediaGalleryModule:Media:modify.relation.html.twig', array(
+        			'form' => $relation_form->createView(),
+        			'relation' => $relation,
+        			'original' => $relation->getOriginal(),
+        			'settings' => ModUtil::getVar($this->name)
+        	));
+        
+        }elseif ($original_id != false){
+        	$original = $this->entityManager
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
+        	->find($original_id);
+        	
+        	//error if not found
+        		
+        	$options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
+        	$original_form = $this->createForm('media', $original, $options);
+        	 
+        	       	
+        	$template = $this->renderView('KaikmediaGalleryModule:Media:modify.media.html.twig', array(
+        			'form'=> $original_form->createView(),
+        			'relation' => false,
+        			'original' => $original,
+        			'settings' => ModUtil::getVar($this->name)
+        	));
+        
+        }else {
+        	 
+        	//not found $template
+        
+        }
+        
+       
+        $response = new Response(json_encode(array('template' => $template)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+        
+        
+        /*
+        if($original == null){
+
         }else{
             $album = $this->entityManager
             ->getRepository('Kaikmedia\GalleryModule\Entity\AlbumEntity')
             ->find($id);
         }
         
-        $options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
-        $form = $this->createForm('album', $album, $options);
+
 
         if ($request->getMethod() == "POST"){
             $form->handleRequest($request);
@@ -167,9 +214,7 @@ class MediaajaxController extends AbstractController
            $template = $this->renderView('KaikmediaGalleryModule:Album:modify.album.html.twig', array(
                         'form' => $form->createView(),
                         'album' => $album));               
-           $response = new Response(json_encode(array('template' => $template)));
-           $response->headers->set('Content-Type', 'application/json');
-        return $response;           
+         */
     }
 
     public function postInitialize()

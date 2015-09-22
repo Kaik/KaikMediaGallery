@@ -3,6 +3,14 @@ services:
         class: Kaikmedia\GalleryModule\Form\Type\MediaType
         tags:
             - { name: form.type, alias: media }
+    gallery.form.type.media_relation:
+        class: Kaikmedia\GalleryModule\Form\Type\MediaRelationType
+        tags:
+            - { name: form.type, alias: media_relation }
+    gallery.form.type.media_relation_data:
+        class: Kaikmedia\GalleryModule\Form\Type\MediaRelationDataType
+        tags:
+            - { name: form.type, alias: media_relation_data }
     gallery.form.type.album:
         class: Kaikmedia\GalleryModule\Form\Type\AlbumType
         tags:

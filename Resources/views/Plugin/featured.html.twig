@@ -1,14 +1,5 @@
 {% if featured is not empty and featured.original is defined %}
 	{% include "KaikmediaGalleryModule:Plugin:item.html.twig" with {'settings': settings, 'original':featured.original, 'relation': featured, 'css': 'col-md-12' }  %}              
-	{% if featured.details is defined %}      
-			<div class="">
-			<p><strong>{{ __('Name') }}:</strong>{{ featured.details.name }}</p>
-			</div>
-	{% else %}
-			<div class="">
-			<p><strong>{{ __('Name') }}:</strong>{{ featured.original.name }}</p>
-			</div>
-	{% endif %}  
 {% else %}
         <p class="alert alert-info text-center"> {{ __('No featured media selected') }} </p>
 {% endif %}

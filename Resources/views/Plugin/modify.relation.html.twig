@@ -1,0 +1,20 @@
+ {#% form_theme form 'bootstrap_3_layout.html.twig' %*#}
+<div class="container-fluid">
+    {{ getstatusmsg() }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="row">
+	<div class="col-md-12">
+	<div>
+	<p><small><strong>{{ form_label(form.type) }}</strong> {{ form_widget(form.type, {'attr': {'class': 'not-input' }}) }}</small></p>	
+    <div class="tags">
+        {# iterate over each existing tag and render its only field: name #}
+        {% for detail in form.details %}
+	<p><small><strong>{{ form_widget(detail.name, {'attr': {'class': 'not-input' }}) }}</strong> {{ form_widget(detail.value, {'attr': {'class': '' }}) }}</small></p>	
+        {% endfor %}
+    </div>					
+	</div>
+	</div>
+	</div>
+	{{ form_end(form) }} 
+</div>

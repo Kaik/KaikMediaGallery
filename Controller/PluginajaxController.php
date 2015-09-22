@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity;
+use Kaikmedia\GalleryModule\Util\Settings as Settings;
 
 /**
  * @Route("/ajax/plugin")
@@ -59,41 +60,50 @@ class PluginajaxController extends AbstractController
         if($relation_id == '0'){
         	$relation_id = false;
         }
-        
-        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');        
-        
+              
+        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         
         if ($relation_id != false){
-            // Get parameters from whatever input we need.
-            $relation = $this->entityManager
-            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
-            ->find($relation_id);
-            
-            $template = $this->renderView('KaikmediaGalleryModule:Plugin:selected.html.twig', array(
-                'relation' => $relation,
-                'original' => $relation->getOriginal(),
-                'settings' => ModUtil::getVar($this->name)
-            ));            
-            
-        }elseif ($original_id != false){
-            // Get parameters from whatever input we need.
-            $original = $this->entityManager
-            ->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
-            ->find($original_id);
-            
-            $template = $this->renderView('KaikmediaGalleryModule:Plugin:selected.html.twig', array(
-                'relation' => false,
-                'original' => $original,
-                'settings' => ModUtil::getVar($this->name)
-            ));                        
-        }else {
+        	$relation = $this->entityManager
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+        	->find($relation_id);
+        
+        	//error if not found
+        	 
+        	$options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
+        	$relation_form = $this->createForm('media_relation', $relation, $options);
+        	 
         	$template = $this->renderView('KaikmediaGalleryModule:Plugin:selected.html.twig', array(
-        			'relation' => false,
-        			'original' => false,
+        			'form' => $relation_form->createView(),
+        			'relation' => $relation,
+        			'original' => $relation->getOriginal(),
         			'settings' => ModUtil::getVar($this->name)
-        	));        	        	
-        }       
-    
+        	));
+        
+        }elseif ($original_id != false){
+        	$original = $this->entityManager
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
+        	->find($original_id);
+        	 
+        	//error if not found
+        
+        	$options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
+        	$original_form = $this->createForm('media', $original, $options);
+                		
+        	$template = $this->renderView('KaikmediaGalleryModule:Plugin:selected.html.twig', array(
+        			'form'=> $original_form->createView(),
+        			'relation' => false,
+        			'original' => $original,
+        			'settings' => ModUtil::getVar($this->name)
+        	));
+        
+        }else {
+        
+        	//not found $template
+        
+        }
+        
+         
         $response = new Response(json_encode(array('template' => $template)));
         $response->headers->set('Content-Type', 'application/json');
         return $response;

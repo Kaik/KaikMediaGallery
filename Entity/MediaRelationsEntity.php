@@ -9,7 +9,8 @@ use UserUtil;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity as MediaRelationData;
 /**
  * Media
  * @ORM\Table(name="kmgallery_mediarelations")
@@ -100,6 +101,11 @@ class MediaRelationsEntity
     private $deletedBy;
     
     /**
+     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity", mappedBy="relation")
+     */
+    protected $details;    
+    
+    /**
      * constructor
      */
     public function __construct()
@@ -108,6 +114,8 @@ class MediaRelationsEntity
         $this->author = $em->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy(array(
             'uid' => UserUtil::getVar('uid')
         ));
+        
+        $this->details = new ArrayCollection();        
     }    
     
     /**
@@ -125,7 +133,7 @@ class MediaRelationsEntity
      *
      * @return string
      */
-    public function getObj_Name()
+    public function getObjName()
     {
         return $this->obj_name;
     }
@@ -133,9 +141,9 @@ class MediaRelationsEntity
     /**
      * Set obj_name
      *
-     * @param string $obj_name            
+     * @param string $objname            
      */
-    public function setObj_Name($obj_name)
+    public function setObjName($obj_name)
     {
         $this->obj_name = $obj_name;
         return $this;
@@ -374,7 +382,45 @@ class MediaRelationsEntity
     public function setDeletedBy($deletedBy)
     {
         $this->deletedBy = $deletedBy;
-    }  
+    } 
+    
+    /**
+     * Get details
+     *
+     * @return array collection
+     */
+    public function getDetails()
+    {
+    	if (count($this->details) > 0){		
+    		return $this->details;    		
+    	}
+    	
+    	$details = new ArrayCollection();
+    	
+    	$name = new MediaRelationData();
+    	$name->setName('name');
+    	$name->setValue($this->original->getName());
+    	$name->setDisplay(1);
+    	$details->add($name);
+    	
+    	$description = new MediaRelationData();
+    	$name->setName('description');
+    	$name->setValue($this->original->getDescription());    	  	
+    	$name->setDisplay(1);
+    	$details->add($name);
+		
+    	return $details;
+    }
+    
+    /**
+     * Set details
+     *
+     * @return integer
+     */
+    public function setDetails($details)
+    {
+    	$this->details = $details;
+    }    
      
     /**
      */
@@ -384,7 +430,7 @@ class MediaRelationsEntity
         $array['id'] = $this->id;
         $array['obj_name'] = $this->obj_name;
         $array['obj_reference'] = $this->obj_reference;
-        $array['file'] = $this->original->toArray();
+        $array['original_arr'] = $this->original->toArray();
         $array['author'] = $this->author;
         return $array;
     }   

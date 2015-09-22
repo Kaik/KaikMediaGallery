@@ -77,7 +77,16 @@ padding-top:10px;
     background: #fff;
 }
 
-
+.not-input {
+    background: none;
+    padding-left: 0px;
+    outline: none;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;	
+	
+}
 
 /*
 .media_item {

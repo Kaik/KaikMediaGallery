@@ -1,43 +1,27 @@
-{% if relations is defined or original is defined %}
-
-
-
+{% if relation is defined or original is defined %}
 	{% if original is defined %}
 		<div class="col-md-12 item">
-		{% include "KaikmediaGalleryModule:Plugin:original.html.twig" with {'settings': settings, 'original':original}  %}  
+			{% include "KaikmediaGalleryModule:Plugin:original.html.twig" with {'settings': settings, 'original':original}  %}  
 		</div>
 		<div class="col-md-12 details">
-		<p><small><strong>{{ __('Name') }}:</strong> {{ original.name }} </small></p>		
-		<p><small><strong>{{ __('Size') }}:</strong> {{ original.size }} </small></p>
-		<p><small><strong>{{ __('File') }}:</strong> {{ original.path }} </small></p>
-		<p><small><strong>{{ __('Mime Type') }}:</strong> {{ original.mimeType }} </small></p>
-		<p><small><strong>{{ __('Extension') }}:</strong> {{ original.ext }} </small></p>
-		<p><small><strong>{{ __('Public') }}:</strong> {{ original.publicdomain }} </small></p>
-		<p><small><strong>{{ __('Legal') }}:</strong> {{ original.legal }} </small></p>	
-		<p><small><strong>{{ __('Author') }}:</strong> {{ original.author.uname }} </small></p>	
-		<p><small><strong>{{ __('Description') }}:</strong> {{ original.description }} </small></p>						
+					
 		</div>
-		
-		
-		<div class="col-md-12 relation">
+		{% if relation is defined and relation == false %}
+			{% include "KaikmediaGalleryModule:Plugin:modify.media.html.twig" with {'settings': settings, 'original':original}  %}  		
+			
+		{% endif %}	
+	{% endif %}
+		{% if relation is defined and relation != false %}
+			{% include "KaikmediaGalleryModule:Plugin:modify.relation.html.twig" with {'settings': settings, 'original':original}  %}  		
+		{% endif %}
+
+		<div class="col-md-12 relation hide">
 			<div class="btn-group-vertical" role="group" aria-label="...">
 						  <button type="button" class="btn btn-default">{{ __('Select as icon') }}</button>
 						  <button type="button" class="btn btn-default">{{ __('Select as featured') }}</button>
 						  <button type="button" class="btn btn-default">{{ __('Select as additional') }}</button>
 			</div>			
-		</div>		
-		
-		
-		
-	{% endif %}
-
-
-	{% if relations is defined %}
-	
-	
-	
-	{% endif %}
-
+		</div>	
 
 
 {% else %}
