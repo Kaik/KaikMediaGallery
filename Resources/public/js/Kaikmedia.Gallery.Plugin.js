@@ -34,6 +34,7 @@ KaikMedia.Gallery.Plugin = {};
     	  	
     	/* modal auto reset mode on close  */
     	$('#kmgallery_plugin').on('hide.bs.modal', function (event) {
+    		//add data reset for origins
 	        KaikMedia.Gallery.Plugin.switchView('reset');   		    		
     	});
     		
@@ -42,11 +43,11 @@ KaikMedia.Gallery.Plugin = {};
 		      $(this).on('click', function(e) {
 	  		  e.preventDefault();
 		      	  var options = {'single': 1,
-		      		  			 'type': $(this).data('type'),
-		      		  			 'original': $(this).data('original'),
-		      		  			 'relation':$(this).data('relation')
+		      		  			 'type': $(this).attr('data-type'),
+		      		  			 'original': $(this).attr('data-original'),
+		      		  			 'relation':$(this).attr('data-relation')
 		      	  };
-	      	  //console.log(type);
+	      	  //console.log(options);
 	      	  KaikMedia.Gallery.Plugin.openManager(options);	      	  
 		      }); 
 		});     
@@ -54,7 +55,7 @@ KaikMedia.Gallery.Plugin = {};
     	/* bind mode switch */
 		$('#kmgallery_plugin_mode').find('a').each(function(){
 		      $(this).on('click', function(e) {
-		        KaikMedia.Gallery.Plugin.switchView($(this).data('mode'));   		    	  
+		        KaikMedia.Gallery.Plugin.switchView($(this).attr('data-mode'));   		    	  
 		      }); 				
 		});	
 		
@@ -85,28 +86,25 @@ KaikMedia.Gallery.Plugin = {};
     {        
     
     $('#kmgallery_plugin_icon_box').find('a.media-information').each(function() {
-    	KaikMedia.Gallery.Plugin.icon.push($(this).data('original'));    	
+    	KaikMedia.Gallery.Plugin.icon.push($(this).attr('data-original'));    	
     });
     
     $('#kmgallery_plugin_featured_box').find('a.media-information').each(function() {
-    	KaikMedia.Gallery.Plugin.featured.push($(this).data('original'));     	
+    	KaikMedia.Gallery.Plugin.featured.push($(this).attr('data-original'));     	
     });    	    
     
     $('#kmgallery_plugin_additional_box').find('a.media-information').each(function() {
-    	KaikMedia.Gallery.Plugin.additional.push($(this).data('original'));    	    
+    	KaikMedia.Gallery.Plugin.additional.push($(this).attr('data-original'));    	    
     });    
-    
-	//console.log(KaikMedia.Gallery.Plugin.icon);    	    	    	
-	//console.log(KaikMedia.Gallery.Plugin.featured);  
-	//console.log(KaikMedia.Gallery.Plugin.additional);  
-    
 	
+    console.log(KaikMedia.Gallery.Plugin.additional);
+    
     };
     
     
     KaikMedia.Gallery.Plugin.openManager = function (options)
     {    		 	   	
-    	console.log(options);
+    	//console.log(options);
     	
     	if (options.single){
 			$('#kmgallery_plugin_mode').find('.mode').each(function(){
@@ -144,23 +142,28 @@ KaikMedia.Gallery.Plugin = {};
     	}else {   		
 	    	$('#kmgallery_plugin').find('a.media-toggle').each(function(){
 	    		$(this).addClass('hide');
+	    		
 	    	});
-	    	
-	    	var original_id = 0;
-	    	var original_relation = 0;	    	
+	    	//reset attr
+	    	$('#kmgallery_plugin_center_col').find('a.media-information').each(function(){
+	    		$(this).attr('data-relation', '0');
+	    		
+	    	});	    	
+	    		    	   	    	
+	    	var relation = 0;	    	
 	    	
     	    $('#kmgallery_plugin_'+ type +'_box').find('a.media-information').each(function() {
-	    	    	original_id = $(this).data('original');
-	    	    	original_relation = $(this).data('relation');
-	    	    	console.log(original_relation);
-	    	    	$('#kmgallery_plugin').find('a.item-information-' + original_id).each(function(){
-	    	    		//$(this).removeClass('hide');  	    	
-	    	    		console.log($(this));
-	    	    		console.log(original_relation);
-	    	    		$(this).attr("data-relation", original_relation);
+    	    	
+	    	    	relation = $(this).attr('data-relation');
+	    	    		    	    	//console.log(relation);
+	    	    	//change data according to feature type/name
+	    	    	$('#kmgallery_plugin_center_col').find('a.item-information-' + $(this).attr('data-original')).each(function(){	    	    		
+	    	    		$(this).attr('data-relation', relation);
 	    	    	});	     	    	
     	    	
-	    	    	$('#kmgallery_plugin').find('a.item-toggle-' + $(this).data('original')).each(function(){
+	    	    	
+	    	    	//change mark icon accordingly 
+	    	    	$('#kmgallery_plugin').find('a.item-toggle-' + $(this).attr('data-original')).each(function(){
 	    	    		$(this).removeClass('hide');
 	    	    	});	     	
     	    });    		
@@ -178,8 +181,8 @@ KaikMedia.Gallery.Plugin = {};
 	    });       	
     	el.children('.original').addClass('current');
     	var pars = {
-    			original: el.data('original'),
-    			relation: el.data('relation')		
+    			original: el.attr('data-original'),
+    			relation: el.attr('data-relation')		
     	};
 		$('#kmgallery_plugin_selected_box').prepend("<i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
         $.ajax({

@@ -38,7 +38,7 @@ class MediaRelationDataEntity
      * @ORM\Column(type="text", nullable=false)
      */
     private $value;  
-    
+        
     /**
      * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\MediaRelationsEntity", inversedBy="details")
      * @ORM\JoinColumn(name="relation", referencedColumnName="id")
@@ -54,10 +54,12 @@ class MediaRelationDataEntity
     /**
      * constructor
      */
-    public function __construct()
+    public function __construct($name, $value, $display ,$relation)
     {
-
-    	
+    	$this->name = $name;
+    	$this->value = $value;
+    	$this->relation = $relation;
+    	$this->display = $display;
    
     }    
     
@@ -163,7 +165,7 @@ class MediaRelationDataEntity
         $array['id'] = $this->id;
         $array['name'] = $this->name;
         $array['value'] = $this->value;
-        $array['relation'] = $this->relation->toArray();
+        $array['relation'] = $this->relation->getId();
         $array['display'] = $this->display;
         return $array;
     }   

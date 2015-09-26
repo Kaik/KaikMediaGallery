@@ -18,7 +18,7 @@ class MediaRelationType extends AbstractType
            
         $builder->add('details','collection', array(
         		'type' => new MediaRelationDataType(),
-        		'prototype' => true,
+        		'prototype' => false,
         		'by_reference' => false,
         		'allow_add'          => false,
         		'allow_delete'       => false

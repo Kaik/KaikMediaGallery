@@ -1,9 +1,9 @@
-{% if relation == false %}
+{% if relation == '' %}
 {% set relation = {'id': 0,'type':'unrelated'} %}
 {% endif %}
 <div class="{{ css }} type-{{ relation.type }} item">
 	<a href="#" class="media-information item-information-{{ original.id }}" data-relation="{{ relation.id }}" data-original="{{ original.id }}" data-type="{{ relation.type }}">
-				{% include "KaikmediaGalleryModule:Plugin:original.html.twig" with {'settings': settings, 'original':original}  %}  
+				{% include "KaikmediaGalleryModule:Plugin:item.original.html.twig" with {'settings': settings, 'original':original}  %}  
 	</a>
 	<a href="#" class="media-toggle btn hide item-toggle-{{ original.id }}" data-relation="{{ relation.id }}" data-original="{{ original.id }}" data-type="{{ relation.type }}">
 				<i class="media-icon fa fa-check-circle fa-2x"></i>

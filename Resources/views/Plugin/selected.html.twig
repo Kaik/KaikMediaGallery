@@ -1,18 +1,24 @@
 {% if relation is defined or original is defined %}
 	{% if original is defined %}
-		<div class="col-md-12 item">
-			{% include "KaikmediaGalleryModule:Plugin:original.html.twig" with {'settings': settings, 'original':original}  %}  
+		<div class="row item">
+			{% include "KaikmediaGalleryModule:Plugin:item.original.html.twig" with {'settings': settings, 'original':original}  %}  
 		</div>
 		<div class="col-md-12 details">
-					
+			{# original file details #}		
 		</div>
 		{% if relation is defined and relation == false %}
-			{% include "KaikmediaGalleryModule:Plugin:modify.media.html.twig" with {'settings': settings, 'original':original}  %}  		
-			
+			{% include "KaikmediaGalleryModule:Plugin:item.modify.html.twig" with {'settings': settings, 'original':original}  %}  					
 		{% endif %}	
 	{% endif %}
 		{% if relation is defined and relation != false %}
-			{% include "KaikmediaGalleryModule:Plugin:modify.relation.html.twig" with {'settings': settings, 'original':original}  %}  		
+				{# this is configurable using templates #}
+				{% if relation.type == 'icon' %}
+					{% include "KaikmediaGalleryModule:Plugin:feature.icon.modify.html.twig" with {'settings': settings, 'original':original}  %}  						
+				{% elseif relation.type == 'featured' %}
+					{% include "KaikmediaGalleryModule:Plugin:feature.featured.modify.html.twig" with {'settings': settings, 'original':original}  %}  										
+				{% elseif relation.type == 'additional' %}				
+					{% include "KaikmediaGalleryModule:Plugin:feature.additional.modify.html.twig" with {'settings': settings, 'original':original}  %}  						
+				{% endif %}
 		{% endif %}
 
 		<div class="col-md-12 relation hide">

@@ -329,21 +329,12 @@ class AdminController extends AbstractController
         }
         
         $settings = new Settings();
-        //$settings = ModUtil::getVar($this->name);
-                 
-        $hookSubscribers = HookUtil::getHookSubscribers();
-        $modulelist = array();
-        foreach ($hookSubscribers as $module) {
-            $modulelist[$module['name']] = $module['displayname'];
-        }
-        
-        $settingslist = array('KaikmediaGalleryModule' => $modulelist['KaikmediaGalleryModule']) + $modulelist;
         
         
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:preferences.html.twig', array(
            // 'form' => $form->createView()
-            'moduleList' => $settingslist,
+        	'features' => $settings->getFeatures(),
             'settings' => $settings->getSettings()
         ));
     }

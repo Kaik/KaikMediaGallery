@@ -54,9 +54,12 @@ class PluginajaxController extends AbstractController
         if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-    
+        
         $original_id = $request->query->get('original', false);
         $relation_id = $request->query->get('relation', false);
+        
+        $settings = new Settings();
+        
         if($relation_id == '0'){
         	$relation_id = false;
         }
@@ -77,6 +80,7 @@ class PluginajaxController extends AbstractController
         			'form' => $relation_form->createView(),
         			'relation' => $relation,
         			'original' => $relation->getOriginal(),
+        			'previews' => $settings->getPreviewsSelect(),
         			'settings' => ModUtil::getVar($this->name)
         	));
         

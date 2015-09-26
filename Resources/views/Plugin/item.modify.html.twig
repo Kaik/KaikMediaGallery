@@ -9,15 +9,20 @@
     {{ form_label(form.file) }} 
     {{ form_widget(form.file) }}    
 	</div>
-	<div>
-		<p><small><strong>{{ form_label(form.name) }}</strong> {{ form_widget(form.name, {'attr': {'class': 'not-input' }}) }}</small></p>		
-		<p><small><strong>{{ __('Size') }}:</strong> {{ original.size }} </small></p>
-		<p><small><strong>    {{ form_label(form.path) }} </strong>  {{ form_widget(form.path, {'attr': {'class': 'not-input' }}) }} </small></p>
+	<div>	
+		<p><small><strong>{{ __('Size') }}:</strong> {{ original.size }} </small></p>	
+		<p><small><strong>    {{ form_label(form.path) }} </strong>  {{ form_widget(form.path, {'attr': {'class': 'not-input' }}) }} </small></p>	
 		<p><small><strong>{{ __('Mime Type') }}:</strong> {{ original.mimeType }} </small></p>
 		<p><small><strong>{{ __('Extension') }}:</strong> {{ original.ext }} </small></p>
+		<p><small><strong>{{ __('Author') }}:</strong> {{ original.author.uname }} </small></p>	
+		
+				
+		<p><small><strong>{{ form_label(form.name) }}</strong> {{ form_widget(form.name, {'attr': {'class': 'not-input' }}) }}</small></p>		
 		<p><small><strong>    {{ form_label(form.publicdomain) }} </strong> {{ form_widget(form.publicdomain) }}</small></p>
 		<p><small><strong>    {{ form_label(form.legal) }} </strong> {{ form_widget(form.legal) }}</small></p>	
-		<p><small><strong>{{ __('Author') }}:</strong> {{ original.author.uname }} </small></p>	
+		
+
+		
 		<p><small><strong>{{ form_label(form.description) }}</strong>{{ form_widget(form.description) }}</small></p>	 		
 	</div>
 	</div>

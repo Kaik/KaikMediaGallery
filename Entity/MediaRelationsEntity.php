@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity as MediaRelationData;
+use Kaikmedia\GalleryModule\Util\Settings as Settings;
 /**
  * Media
  * @ORM\Table(name="kmgallery_mediarelations")
@@ -19,7 +20,6 @@ use Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity as MediaRelationData;
  */
 class MediaRelationsEntity
 {
-
     /**
      * @var integer 
      * 
@@ -101,12 +101,20 @@ class MediaRelationsEntity
     private $deletedBy;
     
     /**
-     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity", mappedBy="relation")
-     */
+     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity", mappedBy="relation", cascade={"ALL"}, indexBy="name")
+     * 
+    */     
     protected $details;    
+
+    
+    public function addDetail($name, $value, $display)
+    {
+    	$this->details[$name] = new MediaRelationData($name, $value, $display, $this);
+    }    
     
     /**
      * constructor
+     * 
      */
     public function __construct()
     {
@@ -391,25 +399,35 @@ class MediaRelationsEntity
      */
     public function getDetails()
     {
-    	if (count($this->details) > 0){		
-    		return $this->details;    		
+    	
+    	$settings = new Settings();
+    	
+    	$relation_settings = $settings->getFeatureSettings($this->type, $this->obj_name);
+    	if (isset($relation_settings['fields']) && $relation_settings['fields'] != ''){
+    		$fields = explode(',', $relation_settings['fields']);
+			  		
+    		foreach($this->details as $detail){
+	    		if(in_array($detail->getName(), $fields)){
+	    				$fields = array_flip($fields);
+	    				unset($fields[$detail->getName()]);
+	    				$fields = array_flip($fields);	    				
+	    		}
+		    	//Default name
+		    	if($detail->getName() == 'name' && $detail->getValue() == ''){
+		    		$detail->setValue($this->original->getName());	
+		    	}  		
+	    	}    		
+   		
+    		foreach($fields as $field_name){
+    			if($field_name == 'name'){
+	    			$this->addDetail($field_name, $this->original->getName(),1);
+    			}else{    				
+    				$this->addDetail($field_name, '',1);
+    			}
+    		}  		
     	}
-    	
-    	$details = new ArrayCollection();
-    	
-    	$name = new MediaRelationData();
-    	$name->setName('name');
-    	$name->setValue($this->original->getName());
-    	$name->setDisplay(1);
-    	$details->add($name);
-    	
-    	$description = new MediaRelationData();
-    	$name->setName('description');
-    	$name->setValue($this->original->getDescription());    	  	
-    	$name->setDisplay(1);
-    	$details->add($name);
-		
-    	return $details;
+    	  			
+    	return $this->details;
     }
     
     /**
