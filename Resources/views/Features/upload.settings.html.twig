@@ -55,7 +55,11 @@
 				                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_maxitems" value="{% if modulesettings.upload.maxitems is defined %}{{ modulesettings.upload.maxitems }}{% endif %}">
 				                </label>			                
 				            </div>					            				
-								            
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Feature type') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_upload_type" value="{% if modulesettings.upload.type is defined %}{{ modulesettings.upload.type }}{% endif %}">
+				                </label>					                
+				            </div>									            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		

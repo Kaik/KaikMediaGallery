@@ -1,0 +1,17 @@
+{#
+{% if insert is defined %}    
+	 {% for insertItem in insert %}
+		 {% if insertItem.original is defined %}
+		 	{% include "KaikmediaGalleryModule:Plugin:item.html.twig" with {'settings': settings, 'relation':insertItem, 'original': insertItem.original, 'css': 'col-md-12'}  %}                  			
+		 {% endif %}
+	 {% else %}
+		 <p class="alert alert-info text-center"> {{ __('No media selected to insert. You can select one media or ') }} </p> 
+	 {% endfor %}
+{% else %}
+     <p class="alert alert-warning text-center"> {{ __('Insert list is not defined. Please check your settings') }} </p>
+{% endif %}
+#}
+
+<p class="alert alert-info text-center">
+	{{ __('No media selected to insert. You can select one or more media to insert in text editor') }}
+</p> 

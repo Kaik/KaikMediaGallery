@@ -61,7 +61,11 @@
 				                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_fields" value="{% if modulesettings.featured.fields is defined %}{{ modulesettings.featured.fields }}{% endif %}">
 				                </label>					                
 				            </div>					            				
-								            
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Feature type') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_featured_type" value="{% if modulesettings.featured.type is defined %}{{ modulesettings.featured.type }}{% endif %}">
+				                </label>					                
+				            </div>									            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		

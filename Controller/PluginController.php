@@ -42,11 +42,22 @@ class PluginController extends AbstractController
         
         $settings = new Settings();
 
+        
+        $newRelationForm = false;
+        
+        
+        
+        
+		//get mediarelations assigned to calling object or create new object form
+        
+        
+        
         if ($obj_reference == null){   
         	
         	$icon = false;
         	$featured = false;
-        	$additional = false;        
+        	$additional = false;   
+        	$insert = false;
         	
         }else{
 
@@ -69,29 +80,34 @@ class PluginController extends AbstractController
         	->getAll(array('obj_name'=> $obj_name,
         			'type' => 'additional',
         			'obj_reference' => $obj_reference ));
+        	
+        	$insert = $this->get('doctrine.entitymanager')
+        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+        	->getAll(array('obj_name'=> $obj_name,
+        			'type' => 'insert',
+        			'obj_reference' => $obj_reference ));        	
         }
         
         
-        $public = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('publicdomain'=> true));
-        
-        
-        $user = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll(array('author'=> UserUtil::getVar('uid')));             
-               
-        
-        PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
+        $media = $this->get('doctrine.entitymanager')
+        				->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
+        				->getAll(array('publicdomain'=> 'include','author'=> UserUtil::getVar('uid')));
+                        
+        PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
         PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
-      
+        PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");      
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
-        return $this->render('KaikmediaGalleryModule:Plugin:gallery.html.twig', array(
+        return $this->render('KaikmediaGalleryModule:Plugin:plugin.html.twig', array(
         	'mode'     => $mode,
+        	'newRelationForm' => $newRelationForm,
             'settings' => $settings->getSettings(),
             'obj_name' => $obj_name,
             'obj_reference'   => $obj_reference,
             'icon'     		=> $icon,
             'featured'    	=> $featured,
             'additional'    => $additional,
-            'public'   		=> $public,
-            'user'     		=> $user
+        	'insert'    	=> $insert,    
+            'media'     		=> $media
         ));
     }
 }

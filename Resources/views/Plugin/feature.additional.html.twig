@@ -1,9 +1,0 @@
-{% if additional is defined %}    
-	 {% for additionalItem in additional %}
-	 {% if additionalItem.original is defined %}
-	 	{% include "KaikmediaGalleryModule:Plugin:item.html.twig" with {'settings': settings, 'relation':additionalItem, 'original': additionalItem.original, 'css': 'col-md-12'}  %}                  			
-	 {% endif %}
-	 {% endfor %}
-{% else %}
-     <p class="alert alert-info text-center"> {{ __('No media selected') }} </p>
-{% endif %}

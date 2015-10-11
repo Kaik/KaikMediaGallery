@@ -12,8 +12,8 @@ class MediaRelationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('type', 'text', array(
-            'required' => false
+        $builder->add('type', 'text', array('disabled' => true,
+            								'required' => false
         ));
            
         $builder->add('details','collection', array(

@@ -1,15 +1,16 @@
 {%- block _media_relation_details_entry_widget -%}
     {% for child in form %} 
-    {%- set vars = { 'display': value.display, 'field': value.name, 'previews': previews} -%}
-    <strong>{{form_widget(form.name,vars)}}</strong>
-	<p><small>{{form_widget(form.value,vars)}}</small></p>			
+    {%- set vars = { 'display': value.display, 'field': value.name, 'previews': previews, 'attr':attr} -%}
+    <div class="col-md-12">{{form_widget(form.name,vars)}}</div>    
+	<div class="col-md-12">{{form_widget(form.value,vars)}}</div>			
     {% endfor %}
+    {#{ dump() }#}
 {%- endblock _media_relation_details_entry_widget -%}
 
 {%- block _media_relation_details_entry_name_widget -%}
-   {% set type = 'hidden' %}
+   	{% set type = 'hidden' %}
+  	<label class="form-label text-capitalize">{{ value }}</label>
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-	{{ value }} 
 {%- endblock _media_relation_details_entry_name_widget -%}
 
 {%- block _media_relation_details_entry_value_widget -%}
@@ -17,17 +18,21 @@
 		   {% set type = type|default('text') %}
 		   <input type="{{ type }}"  {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 	{% elseif field == 'description' %}
-		   {% set type = type|default('text') %}
+		   {% set type = type|default('textarea') %}
 		   <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+	{% elseif field == 'legal' %}
+		   {% set type = type|default('textarea') %}
+		   <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>		   
 	{% elseif field == 'alt' %}
-		   {% set type = type|default('text') %}
-		   <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>	
+		   {% set type = type|default('textarea') %}
+		   <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 	{% elseif field == 'preview' %}	
-	<select {{ block('widget_attributes') }}>
-		    {% for name, label in previews %}
-		    <option value="{{ name }}" {{ block('attributes') }}{% if name == value %} selected="selected"{% endif %}>{{ label }}</option>
-			{% endfor %}
-	</select>		   	
+		   {#% set type = type|default('text') %#}	
+			<select {{ block('widget_attributes') }}>
+				    {% for name, label in previews %}
+				    <option value="{{ name }}" {{ block('attributes') }}{% if name == value %} selected="selected"{% endif %}>{{ label }}</option>
+					{% endfor %}
+			</select>		   	
 	{% else %}
 		   {% set type = type|default('text') %}
 		   <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>

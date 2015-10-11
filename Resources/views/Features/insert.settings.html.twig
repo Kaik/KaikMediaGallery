@@ -27,7 +27,12 @@
 					            <label > {{ __('Insert additional fields') }} 	
 				                <input type="text" class="form-control input-sm" name="{{ modulename }}_insert_fields" value="{% if modulesettings.insert.fields is defined %}{{ modulesettings.insert.fields }}{% endif %}">
 				                </label>					                
-				            </div>									            
+				            </div>
+				     		<div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Feature type') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_insert_type" value="{% if modulesettings.insert.type is defined %}{{ modulesettings.insert.type }}{% endif %}">
+				                </label>					                
+				            </div>										            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		

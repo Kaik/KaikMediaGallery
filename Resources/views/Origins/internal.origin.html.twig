@@ -1,0 +1,30 @@
+<ul class="row list-unstyled">
+	{%for mediaItem in media %}
+	<li class="media-item {% if mediaItem.publicdomain == '1' %}origin-public {% endif %} origin-user col-md-2 item-{{ mediaItem.id }}"
+		 role="checkbox"
+		 aria-checked="false"
+		 aria-label="{{ mediaItem.name }}"		 		 		 
+		 data-id="{{ mediaItem.id }}" 
+		 data-description="{{ mediaItem.description }}" 
+		 data-public="{{ mediaItem.publicdomain }}" 
+		 data-author="{{ mediaItem.author.uname }}"
+		 data-ext="{{ mediaItem.ext }}" 
+		 data-mimetype="{{ mediaItem.mimeType }}" 
+		 data-size="{{ mediaItem.size }}"		 
+		 data-legal="{{ mediaItem.legal }}"		 
+		 data-relation="new" >
+		 {% include "KaikmediaGalleryModule:Media:item.html.twig" with {'settings': settings, 'relation':false, 'original':mediaItem, 'css': ''}  %}
+	</li>
+	{% else %}
+		<li><p class="alert alert-warning text-center"> {{ __('No files found') }} </p></li>
+	{% endfor %}           
+</ul>
+		{#
+		<a href="#" class="media-toggle btn hide item-toggle-{{ mediaItem.original.id }}" data-relation="{{ relation.id }}" data-original="{{ original.id }}" data-type="{{ relation.type }}">
+					<i class="media-icon fa fa-check-circle fa-2x"></i>
+		</a>	
+		
+		<a href="#" class="media-add btn hide item-add-{{ original.id }}" data-relation="{{ relation.id }}" data-original="{{ original.id }}" data-type="{{ relation.type }}">
+					<i class="media-icon fa fa-plus fa-2x"></i>
+		</a>
+		#}	

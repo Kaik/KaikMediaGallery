@@ -1,0 +1,23 @@
+<ul class="row list-unstyled">
+{% if featured is not empty and featured.original is defined %}
+   <li class="media-item feature-{{ featured.type }} col-md-12"
+    	 role="checkbox"
+		 aria-checked="true"
+		 aria-label="{{ featured.original.name }}"		 		 		 
+		 data-id="{{ featured.original.id }}" 
+		 data-description="{{ featured.original.description }}" 
+		 data-public="{{ featured.original.publicdomain }}" 
+		 data-author="{{ featured.original.author.uname }}"
+		 data-ext="{{ featured.original.ext }}" 
+		 data-mimetype="{{ featured.original.mimeType }}" 
+		 data-size="{{ featured.original.size }}"		 
+		 data-legal="{{ featured.original.legal }}"		 
+		 data-relation="{{ featured.id }}"
+		 data-type="{{ featured.type }}" >    
+   
+    {% include "KaikmediaGalleryModule:Media:item.html.twig" with {'settings': settings, 'original':featured.original, 'relation': featured, 'css': '' }  %}         
+   </li>
+    {% else %}
+     <li><p class="alert alert-warning text-center"> {{ __('No featured media selected') }}</p></li>
+{% endif %}
+</ul>

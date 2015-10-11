@@ -1,0 +1,24 @@
+<ul class="row list-unstyled">
+{% if icon is not empty and icon.original is defined %}
+<li class="media-item feature-{{ icon.type }} col-md-12"
+		 role="checkbox"
+		 aria-checked="true"
+		 aria-label="{{ icon.original.name }}"		 		 		 
+		 data-id="{{ icon.original.id }}" 
+		 data-description="{{ icon.original.description }}" 
+		 data-public="{{ icon.original.publicdomain }}" 
+		 data-author="{{ icon.original.author.uname }}"
+		 data-ext="{{ icon.original.ext }}" 
+		 data-mimetype="{{ icon.original.mimeType }}" 
+		 data-size="{{ icon.original.size }}"		 
+		 data-legal="{{ icon.original.legal }}"		 
+		 data-relation="{{ icon.id }}"
+		 data-type="{{ icon.type }}" > 
+    {% include "KaikmediaGalleryModule:Media:item.html.twig" with {'settings': settings, 'original':icon.original, 'relation': icon, 'css': '' }  %}         
+</li>
+{% else %}
+     <li><p class="alert alert-warning text-center"> {{ __('No icon selected') }} </p></li>
+{% endif %}
+</ul>
+
+

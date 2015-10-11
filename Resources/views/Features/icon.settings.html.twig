@@ -54,7 +54,17 @@
 					            <label > {{ __('Media additional fields') }} 	
 				                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_fields" value="{% if modulesettings.icon.fields is defined %}{{ modulesettings.icon.fields }}{% endif %}">
 				                </label>					                
-				            </div>								            
+				            </div>	
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Max select items per object') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_maxitems" value="{% if modulesettings.icon.maxitems is defined %}{{ modulesettings.icon.maxitems }}{% endif %}">
+				                </label>					                
+				            </div>	
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Feature type') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_icon_type" value="{% if modulesettings.icon.type is defined %}{{ modulesettings.icon.type }}{% endif %}">
+				                </label>					                
+				            </div>				            				            							            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		

@@ -1,8 +1,0 @@
-{% if icon is not empty and icon.original is defined %}
-    {% include "KaikmediaGalleryModule:Plugin:item.html.twig" with {'settings': settings, 'original':icon.original, 'relation': icon, 'css': 'col-md-12' }  %}         
-{% else %}
-        <p class="alert alert-warning text-center"> {{ __('No icon selected') }} </p>
-{% endif %}
-
-
-

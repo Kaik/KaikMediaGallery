@@ -1,9 +1,0 @@
-<div class="original original-{{ original.id }}" >
-        {% if original.path  %}        
-            <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.KaikmediaGalleryModule.upload.dir ~ '/' ~ original.path }}" />
-       
-        {% else %}
-            <span class="fa fa-exclamation-triangle fa-2x"> <span/>
-                       {{ __('File path is empty!') }}           
-        {% endif %}
-</div>         		

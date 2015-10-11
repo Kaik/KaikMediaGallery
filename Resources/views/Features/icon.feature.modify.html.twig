@@ -1,0 +1,19 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% form_theme form.details 'KaikmediaGalleryModule:Form:relation.additional.fields.html.twig' %}
+
+    {{ getstatusmsg() }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+	
+	<div class="change_type">
+		<div class="col-md-4">{{ form_label(form.type) }}</div><div class="col-md-8">{{ form_widget(form.type, {'attr': {'class': 'not-input text-capitalize' }}) }}</div>	
+	</div>    
+    
+    <div class="relation-details row">
+    	{% set vars = {'previews':previews,'attr': {'class': 'input-sm form-control' }} %}
+    	{% for detail in form.details %}        
+    		<div class="col-md-12">{{ form_widget(detail,vars)}}</div>
+    	{% endfor %}
+    </div>				
+	
+	{{ form_end(form) }} 

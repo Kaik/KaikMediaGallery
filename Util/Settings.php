@@ -224,6 +224,7 @@ class Settings
 					'mimetypes' => 'image',  //
 					//select
 					'maxitems' => '', //
+					'type' => 'feature',
 					'fields' => 'name,description,alt', //
 			),
 			/* feature featured defaults */
@@ -239,6 +240,7 @@ class Settings
 					'mimetypes' => 'image',
 					//select
 					'maxitems' => '',
+					'type' => 'feature',
 					'fields' => 'name,description,alt,preview', //
 			),
 			/* feature additional defaults */
@@ -254,6 +256,7 @@ class Settings
 					'mimetypes' => 'image',
 					//select
 					'maxitems' => '10',
+					'type' => 'feature',
 					'fields' => 'name,description,alt,preview', //
 			),
 			/* feature upload this settings are threded as defaults for whole gallery module */
@@ -269,6 +272,7 @@ class Settings
 					'mimetypes' => 'image',
 					//do we need this? hmm
 					'perpage' => '',
+					'type' => 'origin',
 					//max allowed items if its set for galler
 					'maxitems' => '10',
 			),
@@ -276,23 +280,27 @@ class Settings
 			'user' =>
 			array (
 					'enabled' => '1',
+					'type' => 'origin',
 					'perpage' => '40',
 			),
 			/* feature public gallery defaults */
 			'public' =>
 			array (
 					'enabled' => '1',
+					'type' => 'origin',
 					'perpage' => '40',
 			),
 			'insert' =>
 			array (
 					'enabled' => '1',
+					'type' => 'feature',
 					'fields'  => 'name,alt'
 			),
 			/* feature albums defaults */
 			'album' =>
 			array (
 					'enabled' => '1',
+					'type' => 'feature',
 			),
 		);
 									// false/null

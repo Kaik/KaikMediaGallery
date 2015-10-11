@@ -33,10 +33,20 @@ class MediaQueryBuilder extends QueryBuilder
     
     public function filterPublicdomain($publicdomain)
     {
-        if ($publicdomain !== false) {
-            return $this->andWhere('m.publicdomain = :publicdomain')->setParameter('publicdomain', true);
+        if ($publicdomain === false) {
+
         }
-    }    
+
+        if ($publicdomain === true) {
+        	return $this->andWhere('m.publicdomain = :publicdomain')->setParameter('publicdomain', true);        
+        }
+        
+        if ($publicdomain == 'include') {
+        	return $this->orWhere('m.publicdomain = :publicdomain')->setParameter('publicdomain', true);
+        }       
+
+    } 
+        
     
     public function filterAuthor($author)
     {

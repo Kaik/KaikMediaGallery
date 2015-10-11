@@ -25,7 +25,11 @@
 				                <input type="text" class="form-control input-sm" name="{{ modulename }}_public_perpage" value="{% if modulesettings.public.perpage is defined %}{{ modulesettings.public.perpage }}{% endif %}">
 				                </label>			                
 				            </div>					            				
-								            
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Feature type') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_public_type" value="{% if modulesettings.public.type is defined %}{{ modulesettings.public.type }}{% endif %}">
+				                </label>					                
+				            </div>									            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		

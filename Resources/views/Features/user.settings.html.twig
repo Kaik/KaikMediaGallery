@@ -25,7 +25,11 @@
 				                <input type="text" class="form-control input-sm" name="{{ modulename }}_user_perpage" value="{% if modulesettings.user.perpage is defined %}{{ modulesettings.user.perpage }}{% endif %}">
 				                </label>			                
 				            </div>					            				
-								            
+				            <div class="btn-xs form-group col-md-2 pull-right">	
+					            <label > {{ __('Feature type') }} 	
+				                <input type="text" class="form-control input-sm" name="{{ modulename }}_user_type" value="{% if modulesettings.user.type is defined %}{{ modulesettings.user.type }}{% endif %}">
+				                </label>					                
+				            </div>									            
 	            		</div> 				
 					  </div>	                  		                  		
             		</div> 		
