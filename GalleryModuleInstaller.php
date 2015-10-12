@@ -12,8 +12,10 @@ class GalleryModuleInstaller extends \Zikula_AbstractInstaller
 {
 
     private $_entities = array(
-        'Kaikmedia\GalleryModule\Entity\MediaObjMapEntity',
-        'Kaikmedia\GalleryModule\Entity\MediaEntity'
+    		'Kaikmedia\GalleryModule\Entity\MediaEntity',
+    		'Kaikmedia\GalleryModule\Entity\MediaRelationsEntity',    		
+        	'Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity',
+        	'Kaikmedia\GalleryModule\Entity\AlbumEntity'
     );
 
     public function install()
@@ -27,11 +29,15 @@ class GalleryModuleInstaller extends \Zikula_AbstractInstaller
             return false;
         }
         
+        /*
+         * 
         $this->setVar('itemsperpage', 10);
         $this->setVar('upload_dir', 'kmgallery');
         $this->setVar('upload_max_media_size', 0);
         $this->setVar('upload_max_total_size', 0);
         $this->setVar('upload_allowed_ext', '');
+        */
+        
         
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
         
