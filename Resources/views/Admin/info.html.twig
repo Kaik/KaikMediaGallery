@@ -1,41 +1,59 @@
-{% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
-<h3>
-	<span class="fa fa-info"></span> {{ __('Informations and statistics')}}
-</h3>
-<div class="container-fluid">
-<div class="row">
- <div class="col-md-6">
-    <h4>{{ __('Informations') }}</h4>
-    <p class="alert alert-info"> {{ __('This gallery module main feature is to provide gallery functionality for different modules. There are few ways how to implement gallery functions depend to which module and the way it should work.') }} </p>
- </div>
- <div class="col-md-6">
-    <h4>{{ __('Statistics') }}</h4>
-    <ul class="list-group">
-      <li class="list-group-item list-group-item-info">
-        {{ __('Media') }}
-      </li>
-      <li class="list-group-item">
-        <span class="badge">14</span>
-        {{ __('All') }}
-      </li>
-      <li class="list-group-item">
-        <span class="badge">1</span>
-        {{ __('Used') }}
-      </li>
-      <li class="list-group-item">
-        <span class="badge">1</span>
-        {{ __('Unused') }}
-      </li>
-      <li class="list-group-item list-group-item-info">
-        {{ __('Objects') }}
-      </li>
-      <li class="list-group-item">
-        <span class="badge">1</span>
-        {{ __('Pages') }}
-      </li>
-    </ul>    
- </div>
-</div> 
- 
-</div>
-{% include "KaikmediaGalleryModule:Admin:footer.html.twig" %} 
+{% extends 'KaikmediaGalleryModule:Base:admin.html.twig' %}
+{% block header %}
+    {% set settings='settings' %}
+    {{ parent() }}
+    {#{ pageAddAsset('stylesheet', zasset('@ZikulaIntercomModule:css/inbox.css')) }#}
+{% endblock %} 
+{% block title %}
+    {% set title_icon="<i class='fa fa-info'></i>" %}
+    {% set title=__('Gallery informations') %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div id="km_gallery_user_index" class="col-md-12 clearfix">    
+        <div class="col-md-6">
+            <h4>{{ __('Statistics') }}</h4>
+            <p class="alert alert-info">
+            {{ __('This gallery module main feature is to provide gallery functionality for different modules. There are few ways how to implement gallery functions depend to which module and the way it should work.') }}
+            </p>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-info">
+                    {{ __('Media') }}
+                </li>
+                <li class="list-group-item">
+                    <span class="badge">14</span>
+                    {{ __('All') }}
+                </li>
+                <li class="list-group-item">
+                    <span class="badge">1</span>
+                    {{ __('Used') }}
+                </li>
+                <li class="list-group-item">
+                    <span class="badge">1</span>
+                    {{ __('Unused') }}
+                </li>
+                <li class="list-group-item list-group-item-info">
+                    {{ __('Objects') }}
+                </li>
+                <li class="list-group-item">
+                    <span class="badge">1</span>
+                    {{ __('Pages') }}
+                </li>
+            </ul>    
+        </div>
+
+    </div>
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+    {#{ include('ZikulaIntercomModule:Base:modal.html.twig') }#}
+    {#{ pageAddAsset('javascript', zasset('@ZikulaIntercomModule:js/Zikula.Intercom.inbox.manager.js')) }}
+    <script>
+    (function($) {
+            $(function(){
+                Zikula.Intercom.InboxManager.init();  
+            });
+    })(jQuery);
+    </script>
+    {#{ dump() }#}
+{% endblock %}

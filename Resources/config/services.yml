@@ -1,17 +1,25 @@
 services:
-    gallery.form.type.media:
+    kaikmedia_gallery_module.link_container:
+        class: Kaikmedia\GalleryModule\Container\LinkContainer
+        lazy: true
+        tags:
+            - { name: zikula.link_container }
+        arguments: [@translator, @router]
+    kaikmedia_gallery_module.access_manager:
+        class: Kaikmedia\GalleryModule\Security\AccessManager      
+    kaikmedia_gallery_module.form.type.media:
         class: Kaikmedia\GalleryModule\Form\Type\MediaType
         tags:
             - { name: form.type, alias: media }
-    gallery.form.type.media_relation:
+    kaikmedia_gallery_module.form.type.media_relation:
         class: Kaikmedia\GalleryModule\Form\Type\MediaRelationType
         tags:
             - { name: form.type, alias: media_relation }
-    gallery.form.type.media_relation_data:
+    kaikmedia_gallery_module.form.type.media_relation_data:
         class: Kaikmedia\GalleryModule\Form\Type\MediaRelationDataType
         tags:
             - { name: form.type, alias: media_relation_data }
-    gallery.form.type.album:
+    kaikmedia_gallery_module.form.type.album:
         class: Kaikmedia\GalleryModule\Form\Type\AlbumType
         tags:
             - { name: form.type, alias: album }

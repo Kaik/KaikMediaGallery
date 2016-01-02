@@ -4,13 +4,6 @@
  */
 namespace Kaikmedia\GalleryModule\Hook;
 
-use ServiceUtil;
-use SecurityUtil;
-use ModUtil;
-use PageUtil;
-use System;
-use ZLanguage;
-use Zikula_View;
 use Zikula\Core\Hook\AbstractHookListener;
 use Zikula\Core\Hook\DisplayHook;
 use Zikula\Core\Hook\ProcessHook;
@@ -45,10 +38,10 @@ class MediaHandlers extends AbstractHookListener
      */
     public function setup()
     {
-        $this->view = Zikula_View::getInstance(self::MODULENAME, false);
+        $this->view = \Zikula_View::getInstance(self::MODULENAME, false);
         // set caching off
-        $this->_em = ServiceUtil::get('doctrine.entitymanager');
-        $this->domain = ZLanguage::getModuleDomain(self::MODULENAME);
+        $this->_em = \ServiceUtil::get('doctrine.entitymanager');
+        $this->domain = \ZLanguage::getModuleDomain(self::MODULENAME);
     }
 
     /**
@@ -62,7 +55,7 @@ class MediaHandlers extends AbstractHookListener
     {
         
         // first check if the user is allowed to do any comments for this module/objectid
-        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
+        if (!\SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
             return;
         }
 
@@ -111,7 +104,7 @@ class MediaHandlers extends AbstractHookListener
         */ 
              
         $this->view->assign('media', $media->toArray());
-        $this->view->assign('settings', ModUtil::getVar(self::MODULENAME));
+        $this->view->assign('settings', \ModUtil::getVar(self::MODULENAME));
         $hook->setResponse(new DisplayHookResponse('provider.kaikmediagallery.ui_hooks.media', $this->view, 'Hook/display_media.tpl'));
     }  
 }

@@ -1,5 +1,6 @@
 {
 	"name" : "kaikmedia/gallery-module",
+	"version" : "1.5.0",          
 	"description" : "Gallery module for Zikula",
 	"type" : "zikula-module",
 	"license" : "LGPL-3.0+",
@@ -19,7 +20,21 @@
 	},
 	"extra" : {
 		"zikula" : {
-			"class" : "Kaikmedia\\GalleryModule\\KaikmediaGalleryModule"
+			"core-compatibility" : ">=1.4.1",                       
+			"class" : "Kaikmedia\\GalleryModule\\KaikmediaGalleryModule",
+			"displayname" : "KMGallery",
+			"url" : "kmgallery",
+			"capabilities" : {
+                                "hook_subscriber": {"class": "Kaikmedia\\GalleryModule\\Container\\HookContainer"},
+                                "hook_provider": {"class": "Kaikmedia\\GalleryModule\\Container\\HookContainer"},                                
+                                "searchable": {"class": "Kaikmedia\\GalleryModule\\Helper\\SearchHelper"},
+                                "categorizable": ["Kaikmedia\\GalleryModule\\Entity\\AlbumEntity"],                            
+				"user" : { "route" : "kaikmediagallerymodule_user_index"},
+				"admin" : {"route" : "kaikmediagallerymodule_admin_info"}
+			},
+			"securityschema" : {
+				"KaikmediaGalleryModule::" : "::"
+			}                         
 		}
 	}
 }

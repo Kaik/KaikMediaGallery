@@ -1,0 +1,13 @@
+{% block header %}
+{{ adminHeader() }}
+{% endblock %}
+{% block title %}
+      <h1>
+       {{ title_icon|raw }} {{ title }}
+        {{ pageSetVar('title', title) }}
+      </h1>
+{% endblock %} 
+{% block content %}{% endblock %}
+{% block footer %}
+{{ adminFooter() }}
+{% endblock %}{# empty Twig template #}

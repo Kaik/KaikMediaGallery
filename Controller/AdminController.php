@@ -4,13 +4,6 @@
  */
 namespace Kaikmedia\GalleryModule\Controller;
 
-use ModUtil;
-use System;
-use SecurityUtil;
-use ServiceUtil;
-use UserUtil;
-use PageUtil;
-use HookUtil;
 use Zikula\Core\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -23,39 +16,23 @@ use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
 use Kaikmedia\GalleryModule\Util\Settings as Settings;
+use Zikula\Core\Theme\Annotation\Theme;
 
 /**
  * @Route("/admin")
  */
 class AdminController extends AbstractController
 {
-
-    public function postInitialize()
-    {
-        $this->view->setCaching(false);
-    }
-
     /**
-     * Route not needed here because this is a legacy-only method
-     * The default entrypoint.
-     * 
-     * @return RedirectResponse
-     */
-    public function mainAction()
-    {
-        return new RedirectResponse($this->get('router')->generate('kaikmediagallerymodule_admin_info', array(), RouterInterface::ABSOLUTE_URL));
-    }
-
-    /**
-     * @Route("")
-     * the main administration function
+     * @Route("/index")
+     * @Theme("admin")
      * 
      * @return RedirectResponse
      */
     public function indexAction(Request $request)
     {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
         
@@ -64,18 +41,18 @@ class AdminController extends AbstractController
     
     /**
      * @Route("/info")
+     * @Theme("admin")
      * the main administration function
      *
      * @return RedirectResponse
      */
     public function infoAction(Request $request)
     {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
     
-
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:info.html.twig', array(
             //    'ZUserLoggedIn' => \UserUtil::isLoggedIn(),
@@ -95,8 +72,8 @@ class AdminController extends AbstractController
      */
     public function addnewAction(Request $request)
     {
-        // Security check
-        if (! UserUtil::isLoggedIn() || ! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
 
@@ -120,7 +97,7 @@ class AdminController extends AbstractController
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', array(
             'form' => $form->createView(),
-            'settings' => ModUtil::getVar($this->name)
+            'settings' => $this->getVars()
         ));
     }   
      
@@ -139,8 +116,8 @@ class AdminController extends AbstractController
      */
     public function modifyAction(Request $request, $id = null)
     {
-        // Security check
-        if (! UserUtil::isLoggedIn() || ! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
     
@@ -148,7 +125,7 @@ class AdminController extends AbstractController
             // create a new customer
             $media = new Media();
         } else {
-            $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
+            $this->entityManager = \ServiceUtil::getService('doctrine.entitymanager');
             $media = $this->entityManager->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getOneBy(array(
                 'id' => $id
             ));
@@ -177,7 +154,7 @@ class AdminController extends AbstractController
         return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', array(
             'form' => $form->createView(),
             'media' => $media,
-            'settings' => ModUtil::getVar($this->name)
+            'settings' => $this->getVars()
         ));
     }
     
@@ -190,8 +167,8 @@ class AdminController extends AbstractController
      */
     public function albumsAction(Request $request)
     {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
       
@@ -199,14 +176,14 @@ class AdminController extends AbstractController
         $albumTree = $repo->getAlbumJsTree();
         $album = $repo->find(1);        
         
-        PageUtil::addVar('javascript', "/web/jstree/dist/jstree.min.js");
-        PageUtil::addVar('stylesheet', "/web/jstree/dist/themes/default/style.min.css");
+        \PageUtil::addVar('javascript', "/web/jstree/dist/jstree.min.js");
+        \PageUtil::addVar('stylesheet', "/web/jstree/dist/themes/default/style.min.css");
     
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:albums.html.twig', array(
             'album' => $album,
             'albumTree' => $albumTree,
-            'settings' => ModUtil::getVar($this->name)
+            'settings' => $this->getVars()
         ));
     }    
 
@@ -232,12 +209,12 @@ class AdminController extends AbstractController
      */
     public function mediarelationsAction(Request $request, $page)
     {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
     
-        $a = array();
+        $a = [];
         // Get startnum and perpage parameter for pager
         $a['page'] = $page;
         $a['limit'] = $request->query->get('limit', 15);
@@ -262,7 +239,7 @@ class AdminController extends AbstractController
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:mediarelations.html.twig', array(
             'mediarelations' => $mediarelations,
-            'settings' => ModUtil::getVar($this->name),
+            'settings' => $this->getVars(),
             'form' => $form->createView(),
             'thisPage' => $a['page'],
             'maxPages' => ceil($mediarelations->count() / $a['limit'])
@@ -277,8 +254,8 @@ class AdminController extends AbstractController
      */
     public function mediastoreAction(Request $request, $page)
     {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
         
@@ -307,7 +284,7 @@ class AdminController extends AbstractController
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:mediastore.html.twig', array(
             'media' => $media,
-            'settings' => ModUtil::getVar($this->name),
+            'settings' => $this->getVars(),
             'form' => $form->createView(),
             'thisPage' => $a['page'],
             'maxPages' => ceil($media->count() / $a['limit'])
@@ -323,8 +300,8 @@ class AdminController extends AbstractController
      */
     public function preferencesAction(Request $request)
     {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
         
