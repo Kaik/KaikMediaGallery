@@ -4,7 +4,6 @@
  */
 namespace Kaikmedia\GalleryModule\Entity\Repository;
 
-use ServiceUtil;
 use Doctrine\ORM\EntityRepository;
 use Kaikmedia\GalleryModule\Entity\MediaRelationsQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -18,7 +17,7 @@ class MediaRelationsRepository extends EntityRepository
      */
     public function build()
     {
-        $em = ServiceUtil::getService('doctrine.entitymanager');
+        $em = \ServiceUtil::getService('doctrine.entitymanager');
         $qb = new MediaRelationsQueryBuilder($em);
         return $qb;
     }

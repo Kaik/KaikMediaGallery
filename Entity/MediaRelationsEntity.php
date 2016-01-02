@@ -30,7 +30,7 @@ class MediaRelationsEntity extends Base\AbstractBaseEntity {
     private $obj_reference;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\MediaEntity", inversedBy="relations")
+     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\Media\AbstarctMediaEntity", inversedBy="relations")
      * @ORM\JoinColumn(name="original", referencedColumnName="id")
      */
     protected $original;

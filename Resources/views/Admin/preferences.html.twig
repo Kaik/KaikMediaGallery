@@ -1,63 +1,80 @@
-{% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
+{% extends 'KaikmediaGalleryModule:Base:admin.html.twig' %}
+{% block header %}
+    {% set settings='settings' %}
+    {{ parent() }}
+    {#{ pageAddAsset('stylesheet', zasset('@ZikulaIntercomModule:css/inbox.css')) }#}
+{% endblock %} 
+{% block title %}
+    {% set title_icon="<i class='fa fa-wrench'></i>" %}
+    {% set title=__('Gallery settings and features') %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div id="km_gallery_user_index" class="col-md-12 clearfix">    
+        <form id="objpreferences">
+            <div class="row">
+                <div class="list-group col-md-12">
+                    <div class="list-group-item col-md-12 clearfix hidden-xs hidden-sm" style="background: #eee;">
+                        <div class="col-md-3">{{ __('Name')}}</div>
+                        <div class="col-md-1 pull-right text-right"><a class="btn" id="save_button" href="#" role="button"><i class="fa fa-floppy-o"></i> {{ __('Save')}}</a></div>
+                    </div>
+                    {%for modulename, modulesettings in settings %}
+                        {#% set modulesettings = attribute(settings, modulename) %#}
+                        {# Modules list#}
+                        <div class="list-group-item col-md-12 clearfix {% if settings.KaikmediaGalleryModule.gallery.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" {% if modulename == 'KaikmediaGalleryModule' %}style="background: #FFFAD5;"{% endif %}>
 
- <h3><span class="fa fa-wrench"></span> {{ __('Gallery settings and features')}}</h3>   
- {{ getstatusmsg() }}       
+                            {# Module list row gallery option is different #}
+                            {% include "KaikmediaGalleryModule:Features:gallery.settings.html.twig" %} 
+                            {# features list row#}
+                            <div id="{{ modulename }}_features" class="col-md-12 collapse">
 
-<div class="container-fluid">
-<form id="objpreferences">
-    <div class="row">
-	<div class="list-group col-md-12">
-		<div class="list-group-item col-md-12 clearfix hidden-xs hidden-sm" style="background: #eee;">
-			<div class="col-md-3">{{ __('Name')}}</div>
-			<div class="col-md-1 pull-right text-right"><a class="btn" id="save_button" href="#" role="button"><i class="fa fa-floppy-o"></i> {{ __('Save')}}</a></div>
-		</div>
-		{%for modulename, modulesettings in settings %}
-		{#% set modulesettings = attribute(settings, modulename) %#}
-		{# Modules list#}
-		<div class="list-group-item col-md-12 clearfix {% if settings.KaikmediaGalleryModule.gallery.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" {% if modulename == 'KaikmediaGalleryModule' %}style="background: #FFFAD5;"{% endif %}>
-			
-		{# Module list row gallery option is different #}
-		{% include "KaikmediaGalleryModule:Features:gallery.settings.html.twig" %} 
-		{# features list row#}
-		<div id="{{ modulename }}_features" class="col-md-12 collapse">
-			
-		{% include "KaikmediaGalleryModule:Features:icon.settings.html.twig" %} 
-											
-		{% include "KaikmediaGalleryModule:Features:featured.settings.html.twig" %} 				
+                                {% include "KaikmediaGalleryModule:Features:icon.settings.html.twig" %} 
 
-		{% include "KaikmediaGalleryModule:Features:additional.settings.html.twig" %} 
-		
-		{% include "KaikmediaGalleryModule:Features:upload.settings.html.twig" %} 
-		
-		{% include "KaikmediaGalleryModule:Features:user.settings.html.twig" %} 
-		
-		{% include "KaikmediaGalleryModule:Features:public.settings.html.twig" %} 	
-		
-		{% include "KaikmediaGalleryModule:Features:albums.settings.html.twig" %} 							
+                                {% include "KaikmediaGalleryModule:Features:featured.settings.html.twig" %} 				
 
-		{% include "KaikmediaGalleryModule:Features:insert.settings.html.twig" %} 	
-						
-		{# functions list row end#}				
-        </div>            
-            
- 		{# module list rowend#}           
-		</div>
-        {% else %}
-        <div class="list-group-item col-md-12 clearfix">
-        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-        </div>
-        {% endfor %}
-	</div>
-	</div>	
-</form>	
-</div>
-{% javascripts '@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Admin.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
-{% stylesheets '@KaikmediaGalleryModule/Resources/public/css/admin.css' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-{% endstylesheets %}
+                                {% include "KaikmediaGalleryModule:Features:additional.settings.html.twig" %} 
 
-</div>      
-{{ dump() }}
-{% include "KaikmediaGalleryModule:Admin:footer.html.twig" %} 
+                                {% include "KaikmediaGalleryModule:Features:upload.settings.html.twig" %} 
+
+                                {% include "KaikmediaGalleryModule:Features:user.settings.html.twig" %} 
+
+                                {% include "KaikmediaGalleryModule:Features:public.settings.html.twig" %} 	
+
+                                {% include "KaikmediaGalleryModule:Features:albums.settings.html.twig" %} 							
+
+                                {% include "KaikmediaGalleryModule:Features:insert.settings.html.twig" %} 	
+
+                                {# functions list row end#}				
+                            </div>            
+
+                            {# module list rowend#}           
+                        </div>
+                    {% else %}
+                        <div class="list-group-item col-md-12 clearfix">
+                            <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>	
+        </form>	
+    </div>
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+    {#{ include('ZikulaIntercomModule:Base:modal.html.twig') }}
+    {% javascripts '@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Admin.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% stylesheets '@KaikmediaGalleryModule/Resources/public/css/admin.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}    
+    {{ pageAddAsset('javascript', zasset('@ZikulaIntercomModule:js/Zikula.Intercom.inbox.manager.js')) }}
+    <script>
+    (function($) {
+            $(function(){
+                Zikula.Intercom.InboxManager.init();  
+            });
+    })(jQuery);
+    </script>
+    {#{ dump() }#}
+{% endblock %}

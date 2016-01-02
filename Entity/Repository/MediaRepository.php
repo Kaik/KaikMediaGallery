@@ -36,7 +36,7 @@ class MediaRepository extends EntityRepository
     {
         $qb = $this->build();
         $qb->select('m');
-        $qb->from('Kaikmedia\GalleryModule\Entity\MediaEntity', 'm');
+        $qb->from('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity', 'm');
         // filters
         $qb->addFilters($f);
         // search

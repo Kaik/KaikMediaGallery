@@ -50,7 +50,9 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
      */
     protected $hookApi;
     private $entities = array(
-        'Kaikmedia\GalleryModule\Entity\MediaEntity',
+        'Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity',
+        'Kaikmedia\GalleryModule\Entity\Media\AbstractUploadableEntity',
+        'Kaikmedia\GalleryModule\Entity\Media\ImageEntity',       
         'Kaikmedia\GalleryModule\Entity\MediaRelationsEntity',
         'Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity',
         'Kaikmedia\GalleryModule\Entity\AlbumEntity',

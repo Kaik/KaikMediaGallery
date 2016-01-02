@@ -101,7 +101,7 @@ class AlbumEntity extends AbstractBaseEntity {
     public function getAsJsTreeArray() {
         $parent = $this->parent == null ? '#' : $this->parent->getId();
         $arrayTree = array('id' => $this->id,
-            'text' => $this->title,
+            'text' => $this->getTitle(),
             'parent' => $parent
         );
 
@@ -110,7 +110,7 @@ class AlbumEntity extends AbstractBaseEntity {
 
     public function getMedia() {
         $em = \ServiceUtil::getService('doctrine.entitymanager');
-        $thisMedia = $em->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')
+        $thisMedia = $em->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
                 ->getAll(array('obj_name' => 'KaikmediaGalleryModule',
             'obj_id' => $this->id
         ));

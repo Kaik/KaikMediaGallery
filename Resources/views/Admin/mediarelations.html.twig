@@ -1,79 +1,113 @@
-{% include "KaikmediaGalleryModule:Admin:header.html.twig" %}  
- {% form_theme form 'bootstrap_3_layout.html.twig' %}
-    <h3><span class="fa fa-share-alt"></span>
-        {{ __('Media relations')}}
-    </h3>
-<div class="container-fluid">
-    <div class="row">
-	<div class="list-group col-md-12">
-		<div class="list-group-item col-md-12" style="background: #d9edf7;">
-                {{ getstatusmsg() }}
-                {{ form_start(form) }}
-                {{ form_errors(form) }}                    
-                <div class="col-md-2">
-                {{ form_widget(form.name) }}                    
+{% extends 'KaikmediaGalleryModule:Base:admin.html.twig' %}
+{% block header %}
+    {% set settings='settings' %}
+    {{ parent() }}
+    {#{ pageAddAsset('stylesheet', zasset('@ZikulaIntercomModule:css/inbox.css')) }#}
+{% endblock %} 
+{% block title %}
+    {% set title_icon="<i class='fa fa-share-alt'></i>" %}
+    {% set title=__('Media relations') %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div id="km_gallery_user_index" class="col-md-12 clearfix">    
+        {% form_theme form 'bootstrap_3_layout.html.twig' %}
+        <div class="row">
+            <div class="list-group col-md-12">
+                <div class="list-group-item col-md-12" style="background: #d9edf7;">
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}                    
+                    <div class="col-md-2">
+                        {{ form_widget(form.name) }}                    
+                    </div>
+                    <div class="col-md-1 pull-right text-right">                
+                        {{ form_widget(form.filter, {'attr': {'class': 'btn btn-sm btn-info'}}) }}
+                    </div>
+                    {{ form_end(form) }} 
                 </div>
-                <div class="col-md-1 pull-right text-right">                
-                {{ form_widget(form.filter, {'attr': {'class': 'btn btn-sm btn-info'}}) }}
+                <div class="list-group-item col-md-12" style="background: #eee;">
+                    <div class="col-md-3">{{ __('Obj name')}}</div>
+                    <div class="col-md-1">{{ __('Obj id')}}</div>
+                    <div class="col-md-2">{{ __('Media')}}</div>
+                    <div class="col-md-2">{{ __('Created')}}</div>
+                    <div class="col-md-2">{{ __('Author')}}</div>
+                    <div class="col-md-1 pull-right text-right">{{ __('Options')}}</div>
                 </div>
-                {{ form_end(form) }} 
-		</div>
-		<div class="list-group-item col-md-12" style="background: #eee;">
-    			<div class="col-md-3">{{ __('Obj name')}}</div>
-    		    <div class="col-md-1">{{ __('Obj id')}}</div>
-    		    <div class="col-md-2">{{ __('Media')}}</div>
-    			<div class="col-md-2">{{ __('Created')}}</div>
-    		    <div class="col-md-2">{{ __('Author')}}</div>
-    			<div class="col-md-1 pull-right text-right">{{ __('Options')}}</div>
-		</div>
-		{%for relation in mediarelations %}
-		<div class="list-group-item col-md-12">
-    			<div class="col-md-3">
-    				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': relation.id}) }}">{{ relation.obj_name }}</a>
-    			</div>
-    			<div class="col-md-1">
-    				{{ relation.obj_reference }}
-    			</div>			
-    			<div class="col-md-2">
-    			    {{ relation.original.id }}	
-    			</div>
-    			<div class="col-md-2">
-    				<p class="list-group-item-text">{{ relation.createdAt|date('d/m/Y') }}</p>
-    			</div>			
-    			<div class="col-md-2">
-    				<p class="list-group-item-text">{{ relation.author.uname }}</p>
-    			</div>			
-    			<div class="col-md-2 text-right">
-    				<a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': relation.id}) }}"><i
-    					class="fa fa-pencil"></i></a>
-    				<a data-toggle="collapse" data-target="#mediaobject-details-{{ relation.id }}"  href="#" > <i class="fa fa-angle-down fa-1x" title="{{  __('Read') }}"> </i></a> 			
-    			</div>   			
-    			<div id="mediaobject-details-{{ relation.id }}" class="row collapse">
-                {% include "KaikmediaGalleryModule:Admin:file.details.html.twig" with {'file': relation.original, 'settings': settings} %}  
-                </div>   			
-		</div>
-        {% else %}
-        <div class="list-group-item col-md-12">
-        <p class="alert alert-warning text-center"> {{ __('No mappings found') }} </p>
-        </div>
-        {% endfor %}
-		<div class="list-group-item col-md-12" style="background: #eee;">
-			{% if maxPages > 1 %}
-			<ul class="pagination pagination-sm">
-				{# `«` arrow #}
-				<li  {{ thisPage == 1 ? 'class="disabled"' }}><a
-					href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">«</a>
-				</li> {# Render each page number #} {% for i in 1..maxPages %}
-				<li  {{ thisPage == i ? 'class="active"' }}><a
-					href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: i}) }}">{{
+                {%for relation in mediarelations %}
+                    <div class="list-group-item col-md-12">
+                        <div class="col-md-3">
+                            <a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': relation.id}) }}">{{ relation.obj_name }}</a>
+                        </div>
+                        <div class="col-md-1">
+                            {{ relation.obj_reference }}
+                        </div>			
+                        <div class="col-md-2">
+                            {{ relation.original.id }}	
+                        </div>
+                        <div class="col-md-2">
+                            <p class="list-group-item-text">{{ relation.createdAt|date('d/m/Y') }}</p>
+                        </div>			
+                        <div class="col-md-2">
+                            <p class="list-group-item-text">{{ relation.author.uname }}</p>
+                        </div>			
+                        <div class="col-md-2 text-right">
+                            <a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': relation.id}) }}"><i
+                                    class="fa fa-pencil"></i></a>
+                            <a data-toggle="collapse" data-target="#mediaobject-details-{{ relation.id }}"  href="#" > <i class="fa fa-angle-down fa-1x" title="{{  __('Read') }}"> </i></a> 			
+                        </div>   			
+                        <div id="mediaobject-details-{{ relation.id }}" class="row collapse">
+                            {% include "KaikmediaGalleryModule:Admin:file.details.html.twig" with {'file': relation.original, 'settings': settings} %}  
+                        </div>   			
+                    </div>
+                {% else %}
+                    <div class="list-group-item col-md-12">
+                        <p class="alert alert-warning text-center"> {{ __('No mappings found') }} </p>
+                    </div>
+                {% endfor %}
+                <div class="list-group-item col-md-12" style="background: #eee;">
+                    {% if maxPages > 1 %}
+                        <ul class="pagination pagination-sm">
+                            {# `«` arrow #}
+                            <li  {{ thisPage == 1 ? 'class="disabled"' }}><a
+                                    href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">«</a>
+                            </li> {# Render each page number #} {% for i in 1..maxPages %}
+                            <li  {{ thisPage == i ? 'class="active"' }}><a
+                                    href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: i}) }}">{{
 						i }}</a></li> {% endfor %} {# `»` arrow #}
-				<li  {{ thisPage == maxPages ? 'class="disabled"' }}><a
-					href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">»</a>
-				</li>
-			</ul>
-			{% endif %}
-		</div>
-	</div>
-	</div>
-</div>
-{% include "KaikmediaGalleryModule:Admin:footer.html.twig" %} 
+                            <li  {{ thisPage == maxPages ? 'class="disabled"' }}><a
+                                    href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">»</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+    {#{ include('ZikulaIntercomModule:Base:modal.html.twig') }#}
+    {#{ pageAddAsset('javascript', zasset('@ZikulaIntercomModule:js/Zikula.Intercom.inbox.manager.js')) }}
+{% javascripts '@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.AlbumTree.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% stylesheets '@KaikmediaGalleryModule/Resources/public/css/albums.css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}    
+    <script>
+    (function($) {
+            $(function(){
+                Zikula.Intercom.InboxManager.init();  
+            });
+    })(jQuery);
+    </script>
+<script>
+( function($) {
+    $(document).ready(function(){
+            KaikMedia.Gallery.AlbumTree.TreeData = {{ albumTree|json_encode|raw }};
+    });
+})(jQuery);
+</script>    
+    
+    {#{ dump() }#}
+{% endblock %}
