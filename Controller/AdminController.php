@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\Media\ImageEntity as Media;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
-use Kaikmedia\GalleryModule\Util\Settings as Settings;
 use Zikula\Core\Theme\Annotation\Theme;
+use Kaikmedia\GalleryModule\Form\Type\SettingsType;
 
 /**
  * @Route("/admin")
@@ -297,14 +297,39 @@ class AdminController extends AbstractController {
             throw new AccessDeniedException();
         }
 
-        $settings = new Settings();
+        $settings = [
+            ['name' => 'KaikmediaGalleryModule', 'enabled' => 1, 'features' => [['name' => 'icon', 'enabled' => true]]]          
+            ];
+        
+        $form = $this->createForm(
+                new SettingsType(
+                $settings));
 
+        $form->handleRequest($request);
+
+        /**
+         *
+         * @var \Doctrine\ORM\EntityManager $em
+        
+        $em = $this->getDoctrine()->getManager();
+        if ($form->isValid()) {
+            $em->persist($media);
+            $em->flush();
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('status', "Media saved!");
+
+            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
+        }       
+         */
+        //$settings = $this->get('kaikmedia_gallery_module.settings_manager');
+        //$features = $this->get('kaikmedia_gallery_module.features_manager');
         $request->attributes->set('_legacy', true); // forces template to render inside old them
-        return $this->render('KaikmediaGalleryModule:Admin:preferences.html.twig', array(
-                    // 'form' => $form->createView()
-                    'features' => $settings->getFeatures(),
-                    'settings' => $settings->getSettings()
-        ));
+        return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
+                    'form' => $form->createView(),
+                    //'settings' => $settings,
+                    //'features' => $features
+        ]);
     }
 
     /**

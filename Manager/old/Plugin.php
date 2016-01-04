@@ -4,9 +4,6 @@
  */
 namespace Kaikmedia\GalleryModule\Manager;
 
-use ServiceUtil;
-use SecurityUtil;
-use UserUtil;
 use Kaikmedia\GalleryModule\Manager\Relations;
 use Doctrine\ORM\EntityManager;
 
@@ -40,7 +37,7 @@ class Plugin
     public function assignMedia($obj_name = null, $obj_id = null, $media_str = null)
     {
         // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!\SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         

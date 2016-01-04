@@ -4,10 +4,6 @@
  */
 namespace Kaikmedia\GalleryModule\Manager;
 
-use ModUtil;
-use ServiceUtil;
-use System;
-use UserUtil;
 use Doctrine\ORM\EntityManager;
 
 class Relations

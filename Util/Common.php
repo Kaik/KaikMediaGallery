@@ -4,9 +4,6 @@
  */
 namespace Kaikmedia\GalleryModule\Util;
 
-use ServiceUtil;
-use UserUtil;
-
 class Common
 {
     /**
@@ -39,13 +36,13 @@ class Common
     public function getUserTotalUpload()
     {
 
-        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $this->entityManager = \ServiceUtil::getService('doctrine.entitymanager');
         // Do a new query in order to limit maxresults, firstresult, order, etc.
         $query = $this->entityManager->createQueryBuilder()
         ->select('SUM(p.size)')
         ->from('Kaikmedia\GalleryModule\Entity\MediaEntity', 'p')
         ->where('p.author = :author')
-        ->setParameter('author', UserUtil::getVar('uid'))
+        ->setParameter('author', \UserUtil::getVar('uid'))
         ->getQuery();          
 
         return $query->getSingleScalarResult();
