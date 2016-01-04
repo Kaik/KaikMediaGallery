@@ -13,10 +13,12 @@ class MediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array(
-            'required' => false
+            'required' => false,
+            'mapped'   => false
         ))
             ->add('path', 'text', array(
-            'required' => false
+            'required' => false,
+            'mapped'   => false
         ))
             ->add('description', 'textarea', array(
             'required' => false

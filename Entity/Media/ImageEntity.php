@@ -21,7 +21,7 @@ class ImageEntity extends AbstractUploadableEntity {
 
     public function newUpload(array $info)
     {
-        parent::newUpload($info);
+        //parent::newUpload($info);
 
     }
 }

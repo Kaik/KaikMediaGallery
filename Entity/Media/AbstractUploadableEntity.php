@@ -22,13 +22,13 @@ use Gedmo\Uploadable\Uploadable;
 abstract class AbstractUploadableEntity extends AbstractMediaEntity implements Uploadable {    
     
     /**
-     * @ORM\Column(name="path", type="string")
+     * @ORM\Column(type="string")
      * @Gedmo\UploadableFilePath
      */
     protected $path;    
     
     /**
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(type="string")
      * @Gedmo\UploadableFileName
      * @var string 
      */
@@ -58,7 +58,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity implements U
     public function __construct()
     {
         parent::__construct();
-
+        
+        $this->setTitle('Title');
     }
 
     public function getPath()
@@ -85,7 +86,7 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity implements U
     public function newUpload(array $info)
     {
         // Do nothing for now.
-        $this->ext = $info['fileExtension'];
+       // $this->ext = $info['fileExtension'];
         // fileName: The filename.
         // fileExtension: The extension of the file (including the dot). Example: .jpg
         // fileWithoutExt: The filename without the extension.
