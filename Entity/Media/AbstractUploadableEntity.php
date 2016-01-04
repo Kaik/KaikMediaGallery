@@ -61,10 +61,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity implements U
 
     }
 
-    public function getPath($defaultPath)
+    public function getPath()
     {
-        unset($defaultPath);
-
         return \FileUtil::getDataDirectory() . '/kmgallery/media';
     }
     
@@ -152,5 +150,25 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity implements U
     public function getMimeType() {
         return $this->mimeType;
     }
+    
+    /**
+     * Set mimeType
+     *
+     * @param string $mimeType
+     * @return Image
+     */
+    public function setName($name) {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Get mimeType
+     *
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }    
 
 }

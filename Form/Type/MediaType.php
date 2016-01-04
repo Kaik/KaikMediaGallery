@@ -29,7 +29,8 @@ class MediaType extends AbstractType
             'required' => false
         ))
             ->add('file', 'file', array(
-            'required' => false
+            'required' => false,
+            'mapped'   => false
         ));
             
         if ($options['isXmlHttpRequest'] == false) {
@@ -41,7 +42,7 @@ class MediaType extends AbstractType
     {
         $resolver->setDefaults(array(
             'isXmlHttpRequest' => false,
-            'data_class' => 'Kaikmedia\GalleryModule\Entity\MediaEntity'
+            'data_class' => 'Kaikmedia\GalleryModule\Entity\Media\ImageEntity'
         ));
     }
 

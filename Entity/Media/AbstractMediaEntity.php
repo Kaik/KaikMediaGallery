@@ -12,7 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Zikula\Core\Doctrine\EntityAccess;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
-use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Kaikmedia\GalleryModule\Entity\Base\AbstractDocumentEntity;
 
 /**
  * Media
@@ -22,14 +23,9 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
  * 
  * @ORM\InheritanceType(value="SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr") 
+ * @ORM\DiscriminatorMap({"image" = "ImageEntity"})
  */
-abstract class AbstractMediaEntity extends AbstractBaseEntity {
-
-    /**
-     * @ORM\Column(name="name", type="string", length=255)
-     * @var string 
-     */
-    private $name;
+abstract class AbstractMediaEntity extends AbstractDocumentEntity {
 
     /**
      * @ORM\Column(type="text", length=255)
@@ -39,10 +35,15 @@ abstract class AbstractMediaEntity extends AbstractBaseEntity {
     /**
      * @ORM\Column(type="boolean")
      */
-    private $publicdomain;
-
+    private $publicdomain;   
+    
     /**
-     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\MediaRelationsEntity", mappedBy="original")
+     * @ORM\Column(type="array")
+     */
+    private $mediaExtra;      
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationEntity", mappedBy="media")
      */
     protected $relations;
 
@@ -52,27 +53,8 @@ abstract class AbstractMediaEntity extends AbstractBaseEntity {
     public function __construct() {
         parent::__construct();
         $this->publicdomian = 0;
+        $this->legal = '';
         $this->relations = new ArrayCollection();
-    }
-
-    /**
-     * Set name
-     * 
-     * @param string $name            
-     * @return Image
-     */
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * Get name
-     * 
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
     }
 
     public function getLegal() {
@@ -92,17 +74,14 @@ abstract class AbstractMediaEntity extends AbstractBaseEntity {
         $this->publicdomain = $publicdomain;
         return $this;
     }
-
-    /**
-     */
-    public function isEmpty() {
-        if (null === $this->file) {
-            return true;
-        }
-
-        return false;
+    public function getMediaExtra() {
+        return $this->mediaExtra;
     }
-    
+
+    public function setMediaExtra($mediaExtra) {
+        $this->mediaExtra = $mediaExtra;
+        return $this;
+    }
     /**
      *
      * @return object array

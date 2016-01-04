@@ -3,7 +3,7 @@
  * 
  */
 
-namespace Kaikmedia\GalleryModule\Entity;
+namespace Kaikmedia\GalleryModule\Entity\Album;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zikula\Core\Doctrine\Entity\AbstractEntityCategory;
@@ -20,7 +20,7 @@ use Zikula\Core\Doctrine\Entity\AbstractEntityCategory;
 class AlbumCategoryEntity extends AbstractEntityCategory
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\AlbumEntity", inversedBy="categoryAssignments")
+     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\Album\AlbumEntity", inversedBy="categoryAssignments")
      * @ORM\JoinColumn(name="entityId", referencedColumnName="id")
      * @var \Kaikmedia\PagesModule\Entity\PageEntity
      */

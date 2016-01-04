@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
+use Kaikmedia\GalleryModule\Entity\Media\ImageEntity as Image;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
 use Kaikmedia\GalleryModule\Util\Settings as Settings;
 use Zikula\Core\Theme\Annotation\Theme;
@@ -54,8 +54,8 @@ class AdminController extends AbstractController {
         }
 
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
-        return $this->render('KaikmediaGalleryModule:Admin:info.html.twig',[
-                        'ZUserLoggedIn' => \UserUtil::isLoggedIn(),
+        return $this->render('KaikmediaGalleryModule:Admin:info.html.twig', [
+                    'ZUserLoggedIn' => \UserUtil::isLoggedIn(),
         ]);
     }
 
@@ -71,12 +71,21 @@ class AdminController extends AbstractController {
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
-        $media = new Media();
+       
+        $media = new Image();
+        
         $form = $this->createForm('media', $media);
+        
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isValid()) {
             $em->persist($media);
+
+            $uploadableManager = $this->get('stof_doctrine_extensions.uploadable.manager');
+
+            $file = $form->has('file') ? $form->get('file')->getData() : null;
+            $uploadableManager->markEntityToUpload($media, $file);
+
             $em->flush();
             $request->getSession()
                     ->getFlashBag()
@@ -322,4 +331,5 @@ class AdminController extends AbstractController {
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
 }

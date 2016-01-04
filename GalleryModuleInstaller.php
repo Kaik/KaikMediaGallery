@@ -52,11 +52,9 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
     private $entities = array(
         'Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity',
         'Kaikmedia\GalleryModule\Entity\Media\AbstractUploadableEntity',
-        'Kaikmedia\GalleryModule\Entity\Media\ImageEntity',       
-        'Kaikmedia\GalleryModule\Entity\MediaRelationsEntity',
-        'Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity',
-        'Kaikmedia\GalleryModule\Entity\AlbumEntity',
-        'Kaikmedia\GalleryModule\Entity\AlbumCategoryEntity'
+        'Kaikmedia\GalleryModule\Entity\Media\ImageEntity',
+        'Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationsEntity',      
+        'Kaikmedia\GalleryModule\Entity\Relations\PagesRelationsEntity'
     );
 
     public function setBundle(AbstractBundle $bundle) {
@@ -104,12 +102,16 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
     public function install() {
 
         // create table
+        
+        \DoctrineHelper::createSchema($this->entityManager, $this->entities);
+        /*
         try {
             $this->schemaTool->create($this->entities);
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
             return false;
         }
+        
         // insert default category
         try {
             $this->createCategoryTree();
@@ -125,7 +127,7 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
         $hookContainer = $this->hookApi->getHookContainerInstance($this->bundle->getMetaData());
         \HookUtil::registerSubscriberBundles($hookContainer->getHookSubscriberBundles());
         \HookUtil::registerProviderBundles($hookContainer->getHookProviderBundles());
-
+        */
         // initialisation successful
         return true;
     }
@@ -137,14 +139,14 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
 
     public function uninstall() {
         // drop table
-        $this->schemaTool->drop($this->entities);
+        //$this->schemaTool->drop($this->entities);
         // Delete any module variables
-        $this->variableApi->delAll($this->name);
+        //$this->variableApi->delAll($this->name);
         // Delete entries from category registry
-        \CategoryRegistryUtil::deleteEntry($this->bundle->getName());
-        $hookContainer = $this->hookApi->getHookContainerInstance($this->bundle->getMetaData());
-        \HookUtil::unregisterSubscriberBundles($hookContainer->getHookSubscriberBundles());
-        \HookUtil::unregisterProviderBundles($hookContainer->getHookProviderBundles());
+        //\CategoryRegistryUtil::deleteEntry($this->bundle->getName());
+        //$hookContainer = $this->hookApi->getHookContainerInstance($this->bundle->getMetaData());
+        //\HookUtil::unregisterSubscriberBundles($hookContainer->getHookSubscriberBundles());
+        //\HookUtil::unregisterProviderBundles($hookContainer->getHookProviderBundles());
         // Deletion successful
         return true;
     }

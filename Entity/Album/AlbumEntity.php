@@ -4,13 +4,13 @@
  * Copyright (c) KaikMedia.com 2015
  */
 
-namespace Kaikmedia\GalleryModule\Entity;
+namespace Kaikmedia\GalleryModule\Entity\Album;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
+use Kaikmedia\GalleryModule\Entity\Base\AbstractDocumentEntity;
 
 /**
  * Media
@@ -18,7 +18,7 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
  * @ORM\Table(name="kmgallery_albums")
  * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\AlbumsRepository")
  */
-class AlbumEntity extends AbstractBaseEntity {
+class AlbumEntity extends AbstractDocumentEntity {
 
     /**
      * @Gedmo\TreeLeft
@@ -60,7 +60,7 @@ class AlbumEntity extends AbstractBaseEntity {
     /**
      * categories
      *
-     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\AlbumCategoryEntity",
+     * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\Album\AlbumCategoryEntity",
      *                mappedBy="entity", cascade={"remove", "persist"},
      *                orphanRemoval=true, fetch="EAGER")
      */
@@ -109,12 +109,12 @@ class AlbumEntity extends AbstractBaseEntity {
     }
 
     public function getMedia() {
-        $em = \ServiceUtil::getService('doctrine.entitymanager');
-        $thisMedia = $em->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
-                ->getAll(array('obj_name' => 'KaikmediaGalleryModule',
-            'obj_id' => $this->id
-        ));
-
+        //$em = \ServiceUtil::getService('doctrine.entitymanager');
+       // $thisMedia = $em->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+       //         ->getAll(array('obj_name' => 'KaikmediaGalleryModule',
+       //     'obj_id' => $this->id
+       // ));
+         $thisMedia = false;
         return $thisMedia;
     }
 
