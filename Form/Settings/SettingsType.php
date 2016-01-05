@@ -2,12 +2,12 @@
 /**
  * Copyright (c) KaikMedia.com 2015
  */
-namespace Kaikmedia\GalleryModule\Form\Type;
+namespace Kaikmedia\GalleryModule\Form\Settings;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Kaikmedia\GalleryModule\Form\Type\ModuleSettingsType;
+use Kaikmedia\GalleryModule\Form\Settings\ModuleSettingsType;
 
 class SettingsType extends AbstractType
 {
@@ -35,6 +35,7 @@ class SettingsType extends AbstractType
             'isXmlHttpRequest' => false
         ));
     }
+    
 
     public function getName()
     {

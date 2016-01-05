@@ -18,7 +18,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\Media\ImageEntity as Media;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
 use Zikula\Core\Theme\Annotation\Theme;
-use Kaikmedia\GalleryModule\Form\Type\SettingsType;
+use Kaikmedia\GalleryModule\Form\Settings\SettingsType;
 
 /**
  * @Route("/admin")
@@ -71,11 +71,11 @@ class AdminController extends AbstractController {
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
-       
+
         $media = new Media();
-        
+
         $form = $this->createForm('media', $media);
-        
+
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isValid()) {
@@ -92,7 +92,7 @@ class AdminController extends AbstractController {
                     ->add('status', "Media added!");
             return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
         }
-        
+
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', array(
                     'form' => $form->createView(),
@@ -297,38 +297,41 @@ class AdminController extends AbstractController {
             throw new AccessDeniedException();
         }
 
-        $settings = [
-            ['name' => 'KaikmediaGalleryModule', 'enabled' => 1, 'features' => [['name' => 'icon', 'enabled' => true]]]          
-            ];
-        
         $form = $this->createForm(
-                new SettingsType(
-                $settings));
+                new SettingsType($this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm()));
 
         $form->handleRequest($request);
 
         /**
          *
          * @var \Doctrine\ORM\EntityManager $em
-        
-        $em = $this->getDoctrine()->getManager();
+         */
+        //$em = $this->getDoctrine()->getManager();
         if ($form->isValid()) {
-            $em->persist($media);
-            $em->flush();
+            //$em->persist($media);
+            //$em->flush();
             $request->getSession()
                     ->getFlashBag()
-                    ->add('status', "Media saved!");
+                    ->add('status', "Settings saved!");
 
-            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
-        }       
-         */
+            $data = $form->get('modules')->getData();
+
+            $request->getSession()
+                    ->getFlashBag()
+                    ->add('status', var_dump($data));
+
+
+
+            //return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
+        }
+
         //$settings = $this->get('kaikmedia_gallery_module.settings_manager');
         //$features = $this->get('kaikmedia_gallery_module.features_manager');
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
                     'form' => $form->createView(),
-                    //'settings' => $settings,
-                    //'features' => $features
+                        //'settings' => $settings,
+                        //'features' => $features
         ]);
     }
 

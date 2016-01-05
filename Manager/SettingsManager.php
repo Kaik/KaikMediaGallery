@@ -7,11 +7,14 @@
 namespace Kaikmedia\GalleryModule\Manager;
 
 use Zikula\ExtensionsModule\Api\VariableApi;
+use Doctrine\Common\Collections\ArrayCollection;
+use Kaikmedia\GalleryModule\Features\FeaturesManager;
 
 class SettingsManager {
 
     private $name;
     protected $variablesManager;
+    protected $featuresManager;    
     private $settings;
     private $modules;
 
@@ -22,7 +25,8 @@ class SettingsManager {
         $this->name = 'KaikmediaGalleryModule';
         $this->variablesManager = $variablesManager;
         $this->settings = $this->variablesManager->getAll($this->name);
-        $this->modules = $this->getHookableModules();
+        $this->setHookableModules();
+        $this->featuresManager = new FeaturesManager($this);
     }
 
     public function setHookableModules() {
@@ -47,6 +51,27 @@ class SettingsManager {
     
     public function getModuleSettings($module) {
         
+    }
+    
+    public function getSettingsForForm() {
+        
+        $modules = $this->modules;
+        $settings = [];
+        foreach($modules as $moduleFullName => $moduleDisplayName){
+            $settings[] = ['name' => $moduleFullName, 'enabled' => 1, 'features' => $this->addFeatures()];
+        }
+        
+        return $settings;
+    } 
+    
+    public function addFeatures() {  
+        $installedFeatures = $this->featuresManager->getFeatures();
+
+        $features = new ArrayCollection();        
+        foreach($installedFeatures as $featureAlias){        
+        $features->add( $this->featuresManager->getFeature($featureAlias));        
+        }
+        return $features;
     }    
 
     public function getGallerySettings() {  

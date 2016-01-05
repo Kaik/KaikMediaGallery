@@ -1,10 +1,14 @@
 services:
+    
+  # Link container
     kaikmedia_gallery_module.link_container:
         class: Kaikmedia\GalleryModule\Container\LinkContainer
         lazy: true
         tags:
             - { name: zikula.link_container }
         arguments: [@translator, @router]
+   
+  # management
     kaikmedia_gallery_module.settings_manager:
         class: Kaikmedia\GalleryModule\Manager\SettingsManager
         arguments: [@zikula_extensions_module.api.variable]        
@@ -12,21 +16,41 @@ services:
         class: Kaikmedia\GalleryModule\Security\AccessManager
     kaikmedia_gallery_module.features_manager:
         class: Kaikmedia\GalleryModule\Features\FeaturesManager
-        arguments: [@kaikmedia_gallery_module.settings_manager]      
+        arguments: [@kaikmedia_gallery_module.settings_manager] 
+        
+        
+   
+  # form fields management     
+    kaikmedia_gallery_module.form.type.features:
+        class: Kaikmedia\GalleryModule\Form\Type\FeaturesType
+        tags:
+            - { name: form.type, alias: features }            
+  
+  # forms   
+    kaikmedia_gallery_module.form.type.feature_icon:
+        class: Kaikmedia\GalleryModule\Form\Features\IconFeatureType
+        tags:
+            - { name: form.type, alias: kaikmedia_gallery_feature_icon_type }  
+  
+  
+  
     kaikmedia_gallery_module.form.type.media:
-        class: Kaikmedia\GalleryModule\Form\Type\MediaType
+        class: Kaikmedia\GalleryModule\Form\Media\MediaType
         tags:
             - { name: form.type, alias: media }
+            
     kaikmedia_gallery_module.form.type.media_relation:
-        class: Kaikmedia\GalleryModule\Form\Type\MediaRelationType
+        class: Kaikmedia\GalleryModule\Form\MediaRelationType
         tags:
             - { name: form.type, alias: media_relation }
+            
     kaikmedia_gallery_module.form.type.media_relation_data:
-        class: Kaikmedia\GalleryModule\Form\Type\MediaRelationDataType
+        class: Kaikmedia\GalleryModule\Form\MediaRelationDataType
         tags:
             - { name: form.type, alias: media_relation_data }
+            
     kaikmedia_gallery_module.form.type.album:
-        class: Kaikmedia\GalleryModule\Form\Type\AlbumType
+        class: Kaikmedia\GalleryModule\Form\Album\AlbumType
         tags:
             - { name: form.type, alias: album }
                        

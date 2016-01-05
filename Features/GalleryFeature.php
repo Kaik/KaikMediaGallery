@@ -15,22 +15,31 @@ use Kaikmedia\GalleryModule\Features\AbstractFeature;
  *
  * @author Kaik
  */
-class IconFeature extends AbstractFeature {
+class GalleryFeature extends AbstractFeature {
+    
+    public $perpage;
     
     public function __construct() {
         parent::__construct();    
-        $this->name = 'icon';
+        $this->name = 'gallery';
         $this->type = 'feature';
         $this->enabled = true;
-        
+        $this->perpage = 25;
     }
+    
+    public function getPerpage() {
+        return $this->perpage;
+    }
+
+    public function setPerpage($perpage) {
+        $this->perpage = $perpage;
+        return $this;
+    }   
+    
     
     public function getDefaultSettings() {
         
         return [//display
-                'width' => '100', // icon width
-                'height' => '100', // icon height single preview
-                'perpage' => '', //
                 //upload
                 'extensions' => 'png,jpg', //
                 'mimetypes' => 'image', //

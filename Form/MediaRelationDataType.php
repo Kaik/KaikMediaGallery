@@ -2,7 +2,7 @@
 /**
  * Copyright (c) KaikMedia.com 2015
  */
-namespace Kaikmedia\GalleryModule\Form\Type;
+namespace Kaikmedia\GalleryModule\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

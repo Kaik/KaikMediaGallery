@@ -20,7 +20,7 @@ class FeaturesManager {
     public function __construct(SettingsManager $settingsManager) {
         $this->name = 'KaikmediaGalleryModule';
         $this->settingsManager = $settingsManager;
-        $this->features = ['gallery', 'icon', 'featured', 'additional', 'upload', 'user', 'public', 'album', 'insert'];
+        $this->features = ['gallery', 'icon'];//, 'featured', 'additional', 'upload', 'user', 'public', 'album', 'insert'];
     }    
     
     public function getFeatures() {
@@ -29,7 +29,7 @@ class FeaturesManager {
     
     public function getFeature($featureAlias) {
         $class = 'Kaikmedia\\GalleryModule\\Features\\' . ucfirst($featureAlias) . 'Feature';
-        $feature = new $class;
+        $feature = new $class();
         return $feature;
     }     
     
