@@ -34,6 +34,8 @@ class SettingsManager {
         $modules = [];
         foreach ($hookSubscribers as $module) {
             $modules[$module['name']] = $module['displayname'];
+            
+            
         }
         //this one always on top
         $modules = ['KaikmediaGalleryModule' => $modules['KaikmediaGalleryModule']] + $modules;
@@ -58,7 +60,11 @@ class SettingsManager {
         $modules = $this->modules;
         $settings = [];
         foreach($modules as $moduleFullName => $moduleDisplayName){
-            $settings[] = ['name' => $moduleFullName, 'enabled' => 1, 'features' => $this->addFeatures()];
+            $settings[] = ['name' => $moduleFullName,
+                           'display_name' => $moduleDisplayName,
+                           'enabled' => 1, 
+                           'features' => $this->addFeatures(),
+                ];
         }
         
         return $settings;

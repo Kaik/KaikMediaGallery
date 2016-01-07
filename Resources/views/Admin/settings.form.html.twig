@@ -14,7 +14,7 @@
                         <div class="col-md-12">
                             <div class="row">		
                                 <div class="col-md-2">
-                                    <h4>  {{ module.vars.value.name }} {% if module.vars.value.name == 'KaikmediaGalleryModule' %} <small>{{ __('Default settings') }}</small> {% endif %}</h4>
+                                    <h4>  {{ module.vars.value.display_name }} {% if module.vars.value.name == 'KaikmediaGalleryModule' %} <small>{{ __('Default gallery settings') }}</small> {% endif %}</h4>
                                 </div>
                                 <div class="col-md-10 text-right">
                                     {% if module.vars.value.name == 'KaikmediaGalleryModule' %} {{ __('Gallery enabled')}} {% else %}<small>{{ __('Gallery features enabled')}}</small>{% endif %}                                   
