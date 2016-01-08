@@ -21,9 +21,9 @@ class IconFeature extends AbstractFeature {
         parent::__construct();    
         $this->name = 'icon';
         $this->type = 'feature';
-        $this->enabled = true;
+        $this->enabled = 0;
         
-    }
+    }  
     
     public function getDefaultSettings() {
         

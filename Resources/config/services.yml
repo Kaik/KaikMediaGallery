@@ -16,8 +16,6 @@ services:
         class: Kaikmedia\GalleryModule\Security\AccessManager
     kaikmedia_gallery_module.features_manager:
         class: Kaikmedia\GalleryModule\Features\FeaturesManager
-        arguments: [@kaikmedia_gallery_module.settings_manager] 
-        
         
    
   # form fields management     

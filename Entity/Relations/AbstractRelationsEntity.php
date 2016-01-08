@@ -20,7 +20,8 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
  * @ORM\Table(name="kmgallery_relations")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"pages" = "PagesRelationsEntity"})
+ * @ORM\DiscriminatorMap({"pages" = "KaikmediaPagesModuleRelationsEntity",
+ *                        "users" = "ZikulaUsersModuleRelationsEntity"})
  * 
  * @author Kaik
  */

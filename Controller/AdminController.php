@@ -308,30 +308,38 @@ class AdminController extends AbstractController {
          */
         //$em = $this->getDoctrine()->getManager();
         if ($form->isValid()) {
-            //$em->persist($media);
-            //$em->flush();
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('status', "Settings saved!");
 
-            $data = $form->get('modules')->getData();
-
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('status', var_dump($data));
-
-
-
-            //return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
+            if (!$this->get('kaikmedia_gallery_module.settings_manager')->setSettingsFromForm($form->get('modules')->getData())) {
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('status', 'Error! Settings not set! Please try again');
+            } else {
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('status', 'Settings set.');
+            }
+            
+            if (!$this->get('kaikmedia_gallery_module.settings_manager')->saveSettings()) {
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('status', 'Error! Settings not saved! Please try again');
+            } else {
+                $request->getSession()
+                        ->getFlashBag()
+                        ->add('status', 'Settings saved.');
+            }           
+      
+            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_preferences'));
         }
 
-        //$settings = $this->get('kaikmedia_gallery_module.settings_manager');
-        //$features = $this->get('kaikmedia_gallery_module.features_manager');
+
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
                     'form' => $form->createView(),
-                        //'settings' => $settings,
-                        //'features' => $features
+                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm(),
+                    'settingsdb' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings(),
+                   // 'default_settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getDefaultKMGallerySettings(),                 
+                    'modules' => $this->get('kaikmedia_gallery_module.settings_manager')->getModules()
         ]);
     }
 

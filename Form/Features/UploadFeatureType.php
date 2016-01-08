@@ -7,10 +7,15 @@ namespace Kaikmedia\GalleryModule\Form\Features;
 use Kaikmedia\GalleryModule\Form\Features\AbstractFeatureType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class IconFeatureType extends AbstractFeatureType
+class UploadFeatureType extends AbstractFeatureType
 {      
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
-        parent::buildForm($builder, $options);    
+        parent::buildForm($builder, $options);
+
+        $builder->add('uploadDir','text');
+        $builder->add('uploadMaxFiles','text');
+        $builder->add('uploadMaxSingleSize','text');
+        $builder->add('allowedMedia','text');
     }    
 }

@@ -1,0 +1,21 @@
+<div class="col-md-12">
+    <h6>{{ __('Feature settings') }}</h6>
+</div>
+<div class="col-md-2">
+    {{ form_label(feature.name) }}
+    {{ form_widget(feature.name) }}
+    {{ form_label(feature.type) }}
+    {{ form_widget(feature.type) }}    
+</div>
+<div class="col-md-3">
+    {{ form_label(feature.uploadDir) }}
+    {{ form_widget(feature.uploadDir) }}
+    {{ form_label(feature.uploadMaxFiles) }}
+    {{ form_widget(feature.uploadMaxFiles) }}
+    {{ form_label(feature.uploadMaxSingleSize) }}
+    {{ form_widget(feature.uploadMaxSingleSize) }}   
+</div>
+<div class="col-md-3">
+    {{ form_label(feature.allowedMedia) }}
+    {{ form_widget(feature.allowedMedia) }}    
+</div>

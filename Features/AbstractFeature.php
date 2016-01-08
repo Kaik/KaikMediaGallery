@@ -23,8 +23,6 @@ class AbstractFeature {
     public $enabled;
     
     public function __construct() {
-
-
     }   
     
     public function getName(){

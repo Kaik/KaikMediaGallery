@@ -12,7 +12,6 @@ class GalleryFeatureType extends AbstractFeatureType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
         parent::buildForm($builder, $options);    
-        $builder->add('name','text');
         $builder->add('perpage','text'); 
     }    
 }

@@ -54,7 +54,8 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
         'Kaikmedia\GalleryModule\Entity\Media\AbstractUploadableEntity',
         'Kaikmedia\GalleryModule\Entity\Media\ImageEntity',
         'Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationsEntity',      
-        'Kaikmedia\GalleryModule\Entity\Relations\PagesRelationsEntity'
+        'Kaikmedia\GalleryModule\Entity\Relations\KaikmediaPagesModuleRelationsEntity',
+        'Kaikmedia\GalleryModule\Entity\Relations\ZikulaUsersModuleRelationsEntity'
     );
 
     public function setBundle(AbstractBundle $bundle) {
@@ -104,6 +105,8 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
         // create table
         
         \DoctrineHelper::createSchema($this->entityManager, $this->entities);
+        
+        //$this->variableApi->setAll($this->name, $modvars);
         /*
         try {
             $this->schemaTool->create($this->entities);

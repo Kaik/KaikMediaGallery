@@ -12,15 +12,17 @@ abstract class AbstractFeatureType extends AbstractType
 {  
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
-        $builder->add('enabled','choice', array(
-            'choices' => array(
+        $builder->add('enabled','choice',[
+            'choices' => [
                 '0' => 'Off',
                 '1' => 'On'
-            ),
+            ],
             'multiple' => false,
             'expanded' => true,
             'required' => true
-        )); 
+        ]);
+        $builder->add('name','text',['disabled' => true]);
+        $builder->add('type','text',['disabled' => true]);
     }  
     
     /**

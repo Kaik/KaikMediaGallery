@@ -6,29 +6,31 @@
 
 namespace Kaikmedia\GalleryModule\Features;
 
-use Kaikmedia\GalleryModule\Manager\SettingsManager;
-
 class FeaturesManager {
 
     private $name;
-    protected $settingsManager;
     private $features;
 
     /**
      * construct
      */
-    public function __construct(SettingsManager $settingsManager) {
+    public function __construct() {
         $this->name = 'KaikmediaGalleryModule';
-        $this->settingsManager = $settingsManager;
-        $this->features = ['gallery', 'icon'];//, 'featured', 'additional', 'upload', 'user', 'public', 'album', 'insert'];
+        $this->features = ['upload', 'icon', 'featured', 'additional', 'user', 'public', 'album', 'gallery', 'insert', 'avatar'];
     }    
     
     public function getFeatures() {
         return $this->features;
-    }    
+    }  
+
+    public function getFeatureClass($featureAlias) {
+        $class = 'Kaikmedia\\GalleryModule\\Features\\' . ucfirst($featureAlias) . 'Feature';
+        return $class;
+    }     
+    
     
     public function getFeature($featureAlias) {
-        $class = 'Kaikmedia\\GalleryModule\\Features\\' . ucfirst($featureAlias) . 'Feature';
+        $class = $this->getFeatureClass($featureAlias);
         $feature = new $class();
         return $feature;
     }     

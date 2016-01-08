@@ -7,7 +7,7 @@ namespace Kaikmedia\GalleryModule\Form\Features;
 use Kaikmedia\GalleryModule\Form\Features\AbstractFeatureType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class IconFeatureType extends AbstractFeatureType
+class PublicFeatureType extends AbstractFeatureType
 {      
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    

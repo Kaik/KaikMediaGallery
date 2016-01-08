@@ -8,40 +8,71 @@
             <div class="col-md-1 pull-right text-right"> {{ form_widget(form.save, {'attr': {'class': 'btn '}}) }}</div>
         </div>       
         {% for module in form.modules %}
-            <div class="list-group-item col-md-12 clearfix "{#% if module.vars.value.enabled == '0' and modulename != 'KaikmediaGalleryModule' %}hide {% endif %}" {% if modulename == 'KaikmediaGalleryModule' %}style="background: #FFFAD5;"{% endif %#}>
+            {% set default_module = (module.vars.value.name == 'KaikmediaGalleryModule') ? 1 : 0 %}
+            {% set module_supported = module.vars.value.is_supported %}
+            {% set module_enabled = module.vars.value.enabled %}
+            {% if default_module %} 
+                {% set bg_style = "style=background:#FFFAD5;" %}    
+            {% elseif not module_enabled %}      
+                {% set bg_style = "style=background:#eee;" %}      
+            {% else %}
+                {% set bg_style = '' %}   
+            {% endif %}
+            <div class="list-group-item col-md-12 clearfix {% if not module_enabled and not default_module %} text-muted {% endif %}" {{ bg_style }}>
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">		
-                                <div class="col-md-2">
-                                    <h4>  {{ module.vars.value.display_name }} {% if module.vars.value.name == 'KaikmediaGalleryModule' %} <small>{{ __('Default gallery settings') }}</small> {% endif %}</h4>
+                                <div class="col-md-6">
+                                    <h4>  {{ module.vars.value.display_name }} 
+                                        {% if module.vars.value.name == 'KaikmediaGalleryModule' %} 
+                                            <small>{{ __('Default gallery settings') }}</small> 
+                                        {% endif %}  
+                                    </h4>
                                 </div>
-                                <div class="col-md-10 text-right">
-                                    {% if module.vars.value.name == 'KaikmediaGalleryModule' %} {{ __('Gallery enabled')}} {% else %}<small>{{ __('Gallery features enabled')}}</small>{% endif %}                                   
+                                <div class="col-md-4 pull-right text-right {{ module_supported == '0' ? '' : 'hide' }}">     
+                                <p>{{ __('Module is not supported.') }}</p> 
+                                </div>    
+                                <div class="col-md-4 pull-right text-right {{ module_supported == '0' ? 'hide' : '' }} ">                                                                           
+                                    {{ module.vars.value.enabled == '0' ? __('Gallery is disabled.') : __('Gallery is enabled.') }}   
                                     {{ form_widget(module.enabled, {'mode': 'module-switch','module': module.vars.value.name,'label_attr': {'class': 'btn btn-xs btn-success radio-inline' }}) }}
                                 </div>
+                                <div class="col-md-12 text-muted {{ module_enabled == '0' ? 'hide' : '' }} " >
+                                    {% if module.vars.value.name == 'KaikmediaGalleryModule' %}
+                                        <p>{{ __('All settings under this module are global and are used as defaults if specyfic module setting is not preset.') }}
+                                            {{ __('Disabling feature here will disable it globally.') }}</p>                      
+                                        {% else %}                         
+                                        <p>{{ __('All settings here are module specyfic.') }}
+                                            {{ __('Disabling feature here will disable it only for this module.') }} </p>                                                                           
+                                        {% endif %} 
+                                </div> 
                             </div>
                         </div>     
                         <div id="{{ module.vars.value.name }}_features" class="col-md-12 collapse">
                             {% for feature in module.features %}  
-                                <div class="col-md-12 {% if feature.vars.value.enabled == '0' and module.vars.value.name != 'KaikmediaGalleryModule' %}hide {% endif %}" style="margin-bottom:20px;">					
+                                <div class="col-md-12">	
                                     <div class="row">
-                                        <div class="col-md-12 text-right">				
-                                            <span class="text-capitalize">{{ feature.vars.value.name }}</span> <span>  {{ __('feature')}}</span>
-                                            {# Feature x on/off#}	
-                                            {{ form_widget(feature.enabled, {'mode': 'feature-switch','module': module.vars.value.name,'feature': feature.vars.value.name ,'label_attr': {'class': 'btn btn-xs btn-primary radio-inline' }}) }}
-                                        </div>	
-                                        {# Feature x settings#}	
-                                        <div id="{{ module.vars.value.name }}_feature_{{ feature.vars.value.name }}" class="col-md-12 collapse">					
-                                            <div class="row bg-info">
+                                        <div class="panel panel-default clearfix">
+                                            <div class="panel-heading clearfix">
+                                                <div class="col-md-4">
+                                                    <h4 class="panel-title text-capitalize">{{ feature.vars.value.name }}</h4>
+                                                </div>    
+                                                <div class="col-md-4">
+                                                    <p class="text-capitalize">{{ feature.vars.value.type }}</p>
+                                                </div>                                                 
+                                                <div class="col-md-4 text-right pull-right">				
+                                                    {# Feature x on/off#}
+                                                    {{ __('Feature')}} {{ module.vars.value.enabled == '0' ? __(' is disabled.') : __(' is enabled.') }}  
+                                                    {{ form_widget(feature.enabled, {'mode': 'feature-switch','module': module.vars.value.name,'feature': feature.vars.value.name ,'label_attr': {'class': 'btn btn-xs btn-primary radio-inline' }}) }}
+                                                </div>	                                                
+                                            </div>
+                                            <div id="{{ module.vars.value.name }}_feature_{{ feature.vars.value.name }}" class="panel-body collapse">
                                                 {{ include('@KaikmediaGalleryModule/Form/feature.'~ feature.vars.value.name ~'.form.html.twig') }}
-                                            </div>	                  		                  		
-                                        </div> 		
-                                        {# Feature x settings end #}	            		           				
+                                            </div>
+                                        </div>                                                 		           				
                                     </div>			  
                                 </div>
                                 {# Feature x end #}	                               
-
                             {% endfor %}  
                         </div> 
                     </div>    

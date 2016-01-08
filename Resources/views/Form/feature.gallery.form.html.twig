@@ -1,9 +1,11 @@
 <div class="col-md-12">
-    <h4>{{ __('Feature gallery settings') }}</h4>
+    <h6>{{ __('Feature settings') }}</h6>
 </div>
 <div class="col-md-2">
     {{ form_label(feature.name) }}
     {{ form_widget(feature.name) }}
+    {{ form_label(feature.type) }}
+    {{ form_widget(feature.type) }}    
 </div>
 <div class="col-md-2">  
     {{ form_label(feature.perpage) }}

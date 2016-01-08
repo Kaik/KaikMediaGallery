@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\RelationsRepository")
  * @author Kaik
  */
-class PagesRelationsEntity extends AbstractRelationEntity {
+class KaikmediaPagesModuleRelationsEntity extends AbstractRelationEntity {
        
     /**
      * @ORM\ManyToOne(targetEntity="Kaikmedia\PagesModule\Entity\PageEntity")
