@@ -26,8 +26,8 @@ class UserController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        // Security check
-        if (!\SecurityUtil::checkPermission($this->name . '::view', '::', ACCESS_READ)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
     

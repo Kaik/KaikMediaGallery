@@ -22,7 +22,7 @@ class AlbumFeature extends AbstractFeature {
         $this->name = 'album';
         $this->type = 'insert';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-folder';
     }  
     
     public function getDefaultSettings() {

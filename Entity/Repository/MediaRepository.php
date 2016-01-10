@@ -4,9 +4,8 @@
  */
 namespace Kaikmedia\GalleryModule\Entity\Repository;
 
-use ServiceUtil;
 use Doctrine\ORM\EntityRepository;
-use Kaikmedia\GalleryModule\Entity\MediaQueryBuilder;
+use Kaikmedia\GalleryModule\Entity\QueryBuilder\MediaQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class MediaRepository extends EntityRepository
@@ -18,7 +17,7 @@ class MediaRepository extends EntityRepository
      */
     public function build()
     {
-        $em = ServiceUtil::getService('doctrine.entitymanager');
+        $em = \ServiceUtil::getService('doctrine.entitymanager');
         $qb = new MediaQueryBuilder($em);
         return $qb;
     }

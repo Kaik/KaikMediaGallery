@@ -50,8 +50,8 @@ class ManagerController extends AbstractController
      */
     public function editAction(Request $request)
     {
-        // Security check
-        if (!UserUtil::isLoggedIn() || !SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
         

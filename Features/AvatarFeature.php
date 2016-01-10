@@ -22,7 +22,7 @@ class AvatarFeature extends AbstractFeature {
         $this->name = 'avatar';
         $this->type = 'internal';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-smile-o';
     }  
     
     public function getDefaultSettings() {

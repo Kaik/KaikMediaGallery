@@ -6,23 +6,21 @@
  * and open the template in the editor.
  */
 
-namespace Kaikmedia\GalleryModule\Features;
+namespace Kaikmedia\GalleryModule\Media;
 
 /**
- * Description of AbstractFeature
+ * Description of AbstractMediaType
  *
  * @author Kaik
  */
-class AbstractFeature {
-    //put your code here
+class AbstractMedia {
+//put your code here
     
     public $name;
     
     public $type;
     
     public $enabled;
-    
-    public $icon;
     
     public function __construct() {
     }   
@@ -54,17 +52,8 @@ class AbstractFeature {
         return $this;
     }
     
-    public function getIcon(){
-        return $this->icon;
-    }
-    
-    public function setIcon($icon) {
-        $this->icon = $icon;
-        return $this;
-    }   
-    
     public function getFormClass() {
-      return '\Kaikmedia\\GalleryModule\\Form\\Features\\' . ucfirst($this->getAlias()) . 'Type';  
+      return '\Kaikmedia\\GalleryModule\\Form\\Media\\' . ucfirst($this->getAlias()) . 'Type';  
     }  
     
     public function getClass() {
@@ -77,5 +66,5 @@ class AbstractFeature {
         $class = explode('\\', $class);
         $class = $class[count($class) - 1];
         return lcfirst($class);
-    }    
+    }      
 }

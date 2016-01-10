@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotati
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\Media\ImageEntity as Media;
 use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
@@ -298,15 +299,12 @@ class AdminController extends AbstractController {
         }
 
         $form = $this->createForm(
-                new SettingsType($this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm()));
+                new SettingsType($this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm(), ['isXmlHttpRequest' => $request->isXmlHttpRequest()]
+                )
+        );
 
         $form->handleRequest($request);
 
-        /**
-         *
-         * @var \Doctrine\ORM\EntityManager $em
-         */
-        //$em = $this->getDoctrine()->getManager();
         if ($form->isValid()) {
 
             if (!$this->get('kaikmedia_gallery_module.settings_manager')->setSettingsFromForm($form->get('modules')->getData())) {
@@ -318,7 +316,7 @@ class AdminController extends AbstractController {
                         ->getFlashBag()
                         ->add('status', 'Settings set.');
             }
-            
+
             if (!$this->get('kaikmedia_gallery_module.settings_manager')->saveSettings()) {
                 $request->getSession()
                         ->getFlashBag()
@@ -327,45 +325,26 @@ class AdminController extends AbstractController {
                 $request->getSession()
                         ->getFlashBag()
                         ->add('status', 'Settings saved.');
-            }           
-      
-            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_preferences'));
+            }
         }
 
+        if ($request->isXmlHttpRequest()) {
+            $response = new JsonResponse();
+            $response->setData([
+                'html' => $this->renderView('KaikmediaGalleryModule:Admin:settings.form.html.twig', [
+                    'form' => $form->createView(),
+                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings()
+                ])
+            ]);
+
+            return $response;
+        }
 
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
                     'form' => $form->createView(),
-                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm(),
-                    'settingsdb' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings(),
-                   // 'default_settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getDefaultKMGallerySettings(),                 
-                    'modules' => $this->get('kaikmedia_gallery_module.settings_manager')->getModules()
+                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings()
         ]);
-    }
-
-    /**
-     * @Route("/saveobjpreferences", options={"expose"=true})
-     * @Method("POST")
-     *
-     * @return Response symfony response object
-     * @throws AccessDeniedException Thrown if the user doesn't have admin access to the module
-     */
-    public function objpreferencesAction(Request $request) {
-        // Permission check
-        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
-            throw new AccessDeniedException();
-        }
-
-        $obj_json = $request->request->get('settings', false);
-
-        $settings_arr = json_decode($obj_json, true);
-        \ModUtil::setVars($this->name, $settings_arr);
-
-        $response = new Response(json_encode($result = array(
-                    'response' => $settings_arr
-        )));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
     }
 
 }

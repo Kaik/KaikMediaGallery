@@ -23,6 +23,7 @@ abstract class AbstractFeatureType extends AbstractType
         ]);
         $builder->add('name','text',['disabled' => true]);
         $builder->add('type','text',['disabled' => true]);
+        $builder->add('icon','text',['required' => true]);
     }  
     
     /**

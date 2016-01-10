@@ -10,7 +10,7 @@ services:
    
   # management
     kaikmedia_gallery_module.settings_manager:
-        class: Kaikmedia\GalleryModule\Manager\SettingsManager
+        class: Kaikmedia\GalleryModule\Settings\SettingsManager
         arguments: [@zikula_extensions_module.api.variable]        
     kaikmedia_gallery_module.access_manager:
         class: Kaikmedia\GalleryModule\Security\AccessManager
@@ -29,23 +29,23 @@ services:
         class: Kaikmedia\GalleryModule\Form\Features\IconFeatureType
         tags:
             - { name: form.type, alias: kaikmedia_gallery_feature_icon_type }  
-  
-  
+ 
+ # twig
+    kaikmedia_gallery_module.twig.kmgallery_extension:
+        class: Kaikmedia\GalleryModule\Twig\Extension\KMGalleryExtension
+        arguments: ["@fragment.handler"]
+        tags:
+            - { name: twig.extension }
   
     kaikmedia_gallery_module.form.type.media:
         class: Kaikmedia\GalleryModule\Form\Media\MediaType
         tags:
             - { name: form.type, alias: media }
             
-    kaikmedia_gallery_module.form.type.media_relation:
+    kaikmedia_gallery_module..type.media_relation:
         class: Kaikmedia\GalleryModule\Form\MediaRelationType
         tags:
             - { name: form.type, alias: media_relation }
-            
-    kaikmedia_gallery_module.form.type.media_relation_data:
-        class: Kaikmedia\GalleryModule\Form\MediaRelationDataType
-        tags:
-            - { name: form.type, alias: media_relation_data }
             
     kaikmedia_gallery_module.form.type.album:
         class: Kaikmedia\GalleryModule\Form\Album\AlbumType

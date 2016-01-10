@@ -27,6 +27,7 @@ class UploadFeature extends AbstractFeature {
         $this->name = 'upload';
         $this->type = 'origin';
         $this->enabled = 0;
+        $this->icon = 'fa fa-upload';
         $this->uploadDir = 'userdata';
         $this->uploadMaxFiles = 0;
         $this->uploadMaxSingleSize = 0;

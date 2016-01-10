@@ -1,6 +1,6 @@
 <div class="item-image" >
 	{% if original.path  %}        
-	            <img class="img-responsive" src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ settings.KaikmediaGalleryModule.upload.dir ~ '/' ~ original.path }}" />
+	            <img class="img-responsive" src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/web/uploads/' ~ original.path }}" />
 	        {% else %}
 	            <span class="fa fa-exclamation-triangle fa-2x"> </span>
 	            {{ __('File path is empty!') }}           

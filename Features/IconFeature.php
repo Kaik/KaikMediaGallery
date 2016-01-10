@@ -22,7 +22,7 @@ class IconFeature extends AbstractFeature {
         $this->name = 'icon';
         $this->type = 'feature';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-file-image-o';       
     }  
     
     public function getDefaultSettings() {

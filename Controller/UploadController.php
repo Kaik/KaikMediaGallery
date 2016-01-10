@@ -48,8 +48,8 @@ class UploadController extends AbstractController
      */
     public function newmediaAction(Request $request)
     {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::view', '::', ACCESS_READ)) {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
         
@@ -84,17 +84,5 @@ class UploadController extends AbstractController
         )));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-    }
-    
-    /**
-     * Create and configure the view for the controller.
-     *
-     * NOTE: This is necessary because the Zikula_Controller_AbstractAjax overrides this method located in Zikula_AbstractController.
-     */
-    protected function configureView()
-    {
-        $this->setView();
-        $this->view->setController($this);
-        $this->view->assign('controller', $this);
-    }    
+    }  
 }

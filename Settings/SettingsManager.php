@@ -4,7 +4,7 @@
  *
  */
 
-namespace Kaikmedia\GalleryModule\Manager;
+namespace Kaikmedia\GalleryModule\Settings;
 
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -149,6 +149,8 @@ class SettingsManager {
             $mixedSettings[$moduleFullName] = $this->setModuleSettings($moduleFullName, $moduleDisplayName, $moduleSettings);
         }
         $this->settings = $mixedSettings;
+        
+        return true;
     }
 
     public function saveSettings() {

@@ -24,6 +24,7 @@ class GalleryFeature extends AbstractFeature {
         $this->name = 'gallery';
         $this->type = 'insert';
         $this->enabled = 0;
+        $this->icon = 'fa fa-th-large';    
         $this->perpage = 25;
     }
     

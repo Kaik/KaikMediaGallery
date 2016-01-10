@@ -22,7 +22,7 @@ class AdditionalFeature extends AbstractFeature {
         $this->name = 'additional';
         $this->type = 'feature';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-paperclip';
     }  
     
     public function getDefaultSettings() {

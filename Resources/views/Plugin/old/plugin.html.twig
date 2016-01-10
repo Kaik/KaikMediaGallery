@@ -1,0 +1,59 @@
+{% set obj_settings = attribute(settings, obj_name) %}
+<script>
+(function($) {
+	$(function(){
+            KaikMedia.Gallery.Settings = {{ settings|json_encode|raw }};
+            //KaikMedia.Gallery.Settings.mode = '{{ mode|raw }}';
+            KaikMedia.Gallery.Plugin.init($('#kmgallery_plugin_container'), '{{ obj_name }}', '{{ obj_reference }}');
+	});
+})(jQuery);
+</script>
+{#
+<input type="hidden" name="__upload_token" value="{{ csrf_token('media') }}">
+#}
+
+<div id="kmgallery_plugin_container">
+<div id="kmgallery_plugin_selected_previews">
+	  {% if obj_settings.icon.enabled %} 	 
+	  <div id="kmgallery_plugin_selected_icon_preview" class="col-md-2 ">
+		<h5><strong>{{ __('Icon') }}</strong></h5>		  
+	  	<div class="row">				
+		{% if icon is not empty %}
+		        {% include "KaikmediaGalleryModule:Plugin:preview.html.twig" with {'settings': settings, 'original':icon.original, 'relation': icon, 'css': 'col-md-12' } %}              
+		{% else %}
+		        {{ __('No icon selected') }} 
+		{% endif %}		
+		</div>		
+      </div>             
+	  {% endif %} 
+	  {% if obj_settings.featured.enabled %} 	 
+	  <div id="kmgallery_plugin_selected_featured_preview" class="col-md-4">
+		<h5><strong>{{ __('Featured') }}</strong></h5>		  
+	  	<div class="row">
+		{% if featured is not empty %}
+		        {% include "KaikmediaGalleryModule:Plugin:preview.html.twig" with {'settings': settings, 'original':featured.original, 'relation': featured, 'css': 'col-md-12' } %}              
+		{% else %}
+		        {{ __('No featured media selected') }}
+		{% endif %}	
+		</div>							
+      </div>             
+	  {% endif %} 
+	  {% if obj_settings.additional.enabled %} 	 
+	  <div id="kmgallery_plugin_selected_additional_preview" class="col-md-6">
+		<h5><strong>{{ __('Additional') }}</strong></h5>		  
+	  	<div class="row">
+		{% if additional is not empty %}    
+		{%for additionalItem in additional %}
+		{% if additionalItem is defined %} 			 
+			 {% include "KaikmediaGalleryModule:Plugin:preview.html.twig" with {'settings': settings, 'relation':additionalItem, 'original': additionalItem.original, 'css': 'col-md-6'} %}                  		
+		{% endif %}	 
+		{% endfor %}
+		{% else %}
+		        {{ __('No additional media selected') }}		     
+		{% endif %}	
+		</div>
+      </div>             
+	  {% endif %}  
+</div>
+	{% include "KaikmediaGalleryModule:Manager:manager.html.twig" %}  
+</div><!-- /#kmgallery_plugin_container -->

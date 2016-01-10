@@ -1,103 +1,77 @@
 <div id="kmgallery_manager_launcher" class="col-md-12 text-center">  
-	<a href="#" data-toggle="modal" data-target="#kmgallery_manager"> <i class="fa fa-picture-o"></i> {{ __('Manage media') }}</a>	
+    <a href="#" data-toggle="modal" data-target="#kmgallery_manager"> <i class="fa fa-picture-o"></i> {{ __('Manage media') }}</a>	
 </div> 
 <div id="kmgallery_manager" class="modal fade">
-      <div class="modal-dialog modal-lg" style="width: 90%;">
+    <div class="modal-dialog modal-lg" style="width: 90%;">
         <div class="modal-content">
-          <div class="modal-header" style="background:#E4F2FF;">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>              			
-			<div id="kmgallery_manager_msg_box" class="col-md-3 pull-right">		
-			</div>                         
-	          <ul id="kmgallery_manager_features" class="nav nav-pills">
-	                <li role="presentation"  class="mode mode-info active">           
-	                    <a data-feature="info"  href="#kmgallery_manager_info_box" aria-controls="kmgallery_manager_info_box" role="tab" data-toggle="pill"><i class="fa fa-info-circle"></i> {{  __('Info') }} </a>
-	                </li>                         	          
-	            {% if obj_settings.icon.enabled %} 
-	                <li role="presentation" class="mode mode-icon">           
-	                    <a data-feature="icon"  href="#kmgallery_manager_icon_box" aria-controls="kmgallery_manager_icon_box" role="tab" data-toggle="pill"><i class="fa fa-file-image-o"> </i> {{  __('Icon') }}</a>
-	                </li>                         
-	            {% endif %}          
-	            {% if obj_settings.featured.enabled %} 
-	                <li role="presentation" class="mode mode-featured">           
-	                    <a data-feature="featured"  href="#kmgallery_manager_featured_box" aria-controls="kmgallery_manager_featured_box" role="tab" data-toggle="pill"><i class="fa fa-image"> </i> {{  __('Featured media') }}</a>
-	                </li>                         
-	            {% endif %}  
-	            {% if obj_settings.additional.enabled %} 
-	                <li role="presentation" class="mode mode-additional">           
-	                    <a data-feature="additional"  href="#kmgallery_manager_additional_box" aria-controls="kmgallery_manager_additional_box" role="tab" data-toggle="pill"><i class="fa fa-paperclip"> </i> {{  __('Additional media') }}</a>
-	                </li>                         
-	            {% endif %} 
-	            {% if obj_settings.insert.enabled %} 
-	                <li role="presentation" class="mode mode-insert">           
-	                    <a data-feature="insert"  href="#kmgallery_manager_insert_box" aria-controls="kmgallery_manager_insert_box" role="tab" data-toggle="pill"><i class="fa fa-align-justify"> </i> {{  __('Insert media') }} </a>
-	                </li>                         
-	            {% endif %}  	                                      
-	          </ul> 
-                    
-		</div>
-		<div class="modal-body">                  
-        <div class="row"> 
-          	<div id="kmgallery_manager_selected" class="col-xs-12 col-md-2">  
-          	<div class="tab-content">
-	            <div role="tabpanel" class="tab-pane active" id="kmgallery_manager_info_box">     
-	                {% include "KaikmediaGalleryModule:Features:info.feature.html.twig" %}                           
-	            </div>          	
-	            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_icon_box">     
-	                {% include "KaikmediaGalleryModule:Features:icon.feature.html.twig" %}                           
-	            </div>
-	            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_featured_box">     
-	                {% include "KaikmediaGalleryModule:Features:featured.feature.html.twig" %}                           
-	            </div>            
-	            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_additional_box">    
-	                {% include "KaikmediaGalleryModule:Features:additional.feature.html.twig" %}                           
-	            </div>
-	            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_insert_box">    
-	                {% include "KaikmediaGalleryModule:Features:insert.feature.html.twig" %}                           
-	            </div>	            
-          	</div>                                 
-          	</div>                              
-        	<div id="kmgallery_manager_library" class="col-xs-12 col-md-8" > 
-          		<div id="kmgallery_manager_library_info" class="col-md-12">
-          			<h4>{{ __('This is place where you can select media') }}</h4>
-          		</div>        	       	 
-				<ul id="kmgallery_manager_origins" class="nav nav-tabs">
-	            {% if obj_settings.user.enabled %} 
-	                <li role="presentation" class="origins">           
-	                    <a id="kmgallery_manager_origins_user_pill" data-origin="user" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="fa fa-user"> </i> {{  __('Your media gallery') }}</a>
-	                </li>                         
-	            {% endif %}				
-	            {% if obj_settings.public.enabled %} 
-	                <li role="presentation" class="origins">           
-	                    <a id="kmgallery_manager_origins_public_pill" data-origin="public" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="fa fa-cloud"> </i> {{  __('Public media gallery') }}</a>
-	                </li>                         
-	            {% endif %}
-	            {% if obj_settings.upload.enabled %} 
-	                <li role="presentation" class="origins">           
-	                    <a id="kmgallery_manager_origins_upload_pill" data-origin="upload" href="#kmgallery_manager_upload_box" aria-controls="kmgallery_manager_upload_box" role="tab" data-toggle="tab"><i class="fa fa-upload"> </i> {{  __('Upload media') }}</a>
-	                </li>                         
-	            {% endif %}  
-				</ul>   
-				       
-          		<div class="tab-content">        		
-		            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_media_box">
-		          		<div id="kmgallery_manager_library_search" class="col-md-12">    
-		          		<div class="col-md-3 pull-right"><input type="text" class="form-control" placeholder="{{ __('Search') }}"></div>
-	          			</div>  
-		                {% include "KaikmediaGalleryModule:Origins:internal.origin.html.twig" %}                     
-		            </div>          		
-		            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_upload_box">
-		                {% include "KaikmediaGalleryModule:Origins:upload.origin.html.twig" %}                     
-		            </div>
-          		</div>              
-          </div>          
-          <div id="kmgallery_manager_details" class="col-xs-12 col-md-2">  
-          		{% include "KaikmediaGalleryModule:Manager:details.html.twig" %}         
-          </div>                      
-          </div>         
-          </div>         
-          <div class="modal-footer" style="background:#E4F2FF;">       
-            <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>
-          </div>
+            <div class="modal-header" style="background:#E4F2FF;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>              			
+                <div id="kmgallery_manager_msg_box" class="col-md-3 pull-right">		
+                </div>                         
+                <ul id="kmgallery_manager_features" class="nav nav-pills">
+                    <li role="presentation"  class="mode mode-info active">           
+                        <a data-feature="info"  href="#kmgallery_manager_info_box" aria-controls="kmgallery_manager_info_box" role="tab" data-toggle="pill"><i class="fa fa-info-circle"></i> {{  __('Info') }} </a>
+                    </li>    
+                    {% for feature in obj_features %}
+                        {% if feature.enabled and feature.type == 'feature' %}
+                            <li role="presentation" class="mode mode-icon">           
+                                <a data-feature="icon"  href="#kmgallery_manager_{{ feature.name }}_box" aria-controls="kmgallery_manager_{{ feature.name }}_box" role="tab" data-toggle="pill"><i class="{{ feature.icon }}"> </i> {{ feature.name }}</a>
+                            </li>  
+                        {% endif %}
+                    {% endfor %}  
+                </ul> 
+
+            </div>
+            <div class="modal-body">                  
+                <div class="row"> 
+                    <div id="kmgallery_manager_selected" class="col-xs-12 col-md-2">  
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="kmgallery_manager_info_box">     
+                                {% include "KaikmediaGalleryModule:Features:info.feature.html.twig" %}                           
+                            </div>          	
+                            {% for feature in obj_features %}
+                                {% if feature.enabled and feature.type == 'feature' %}
+                                    <div role="tabpanel" class="tab-pane" id="kmgallery_manager_{{ feature.name }}_box">     
+                                        {% include "KaikmediaGalleryModule:Features:" ~ feature.name ~ ".feature.html.twig" %}                           
+                                    </div> 
+                                {% endif %}
+                            {% endfor %}  	            
+                        </div>                                 
+                    </div>                              
+                    <div id="kmgallery_manager_library" class="col-xs-12 col-md-8" > 
+                        <div id="kmgallery_manager_library_info" class="col-md-12">
+                            <h4>{{ __('This is place where you can select media') }}</h4>
+                        </div>        	       	 
+                        <ul id="kmgallery_manager_origins" class="nav nav-tabs">
+                            {% for origin in obj_features %}
+                                {% if origin.enabled and origin.type == 'origin' %}
+                                <li role="presentation" class="origins">           
+                                    <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.name }}</a>
+                                </li> 
+                                {% endif %}
+                            {% endfor %}  
+                        </ul>   
+
+                        <div class="tab-content">        		
+                            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_media_box">
+                                <div id="kmgallery_manager_library_search" class="col-md-12">    
+                                    <div class="col-md-3 pull-right"><input type="text" class="form-control" placeholder="{{ __('Search') }}"></div>
+                                </div>  
+                                {% include "KaikmediaGalleryModule:Origins:internal.origin.html.twig" %}                     
+                            </div>          		
+                            <div role="tabpanel" class="tab-pane" id="kmgallery_manager_upload_box">
+                                {% include "KaikmediaGalleryModule:Origins:upload.origin.html.twig" %}                     
+                            </div>
+                        </div>              
+                    </div>          
+                    <div id="kmgallery_manager_details" class="col-xs-12 col-md-2">  
+                        {% include "KaikmediaGalleryModule:Manager:details.html.twig" %}         
+                    </div>                      
+                </div>         
+            </div>         
+            <div class="modal-footer" style="background:#E4F2FF;">       
+                <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>
+            </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

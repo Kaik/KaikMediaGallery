@@ -22,7 +22,7 @@ class FeaturedFeature extends AbstractFeature {
         $this->name = 'featured';
         $this->type = 'feature';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-image';        
     }  
     
     public function getDefaultSettings() {

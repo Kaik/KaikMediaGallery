@@ -22,7 +22,7 @@ class InsertFeature extends AbstractFeature {
         $this->name = 'insert';
         $this->type = 'insert';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-align-justify';        
     }  
     
     public function getDefaultSettings() {

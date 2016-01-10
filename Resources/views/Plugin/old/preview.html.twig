@@ -1,0 +1,7 @@
+{# add isImage test, add handlers to handle different media types based on mime type #}
+<div class="{{ css }} item item-details item-select" data-original="{{ original.id }}">
+	{% include "KaikmediaGalleryModule:Media:item.image.html.twig" with {'settings': settings, 'original':original}  %}  
+</div>        		
+<a href="#" class="media-unselect btn hide">
+	<i class="media-icon fa fa-check-circle fa-2x"></i>
+</a>

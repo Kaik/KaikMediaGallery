@@ -1,113 +1,95 @@
 <?php
+
 /**
  * Copyright (c) KaikMedia.com 2015
  */
+
 namespace Kaikmedia\GalleryModule\Controller;
 
-use ModUtil;
-use System;
-use SecurityUtil;
-use ServiceUtil;
-use UserUtil;
-use PageUtil;
 use Zikula\Core\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
-use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
-use Kaikmedia\GalleryModule\Entity\MediaRelationsEntity as MediaRelation;
-use Kaikmedia\GalleryModule\Util\Common as Utils;
-use Kaikmedia\GalleryModule\Util\Settings as Settings;
 
 /**
  */
-class PluginController extends AbstractController
-{  
+class PluginController extends AbstractController {
+
     /**
      * This function generate 
      *
      * @return RedirectResponse
      */
-    public function galleryAction(Request $request, $obj_name = null, $obj_reference = null, $mode = 'info')
-    {
-        // Security check
-        if (! SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+    public function managerAction(Request $request, $obj_reference = null, $mode = 'info') {
+        // Permission check
+        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
         
-        $settings = new Settings();
-
         
+        $masterRequest = $this->get('request_stack')->getMasterRequest();
+        $obj_name = $masterRequest->attributes->get('_zkModule');
+        
+        
+        /*
         $newRelationForm = false;
-        
-        
-        
-        
-		//get mediarelations assigned to calling object or create new object form
-        
-        
-        
-        if ($obj_reference == null){   
-        	
-        	$icon = false;
-        	$featured = false;
-        	$additional = false;   
-        	$insert = false;
-        	
-        }else{
 
-        	$icon = $this->get('doctrine.entitymanager')
-        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
-        	->getOneBy(array('obj_name'=> $obj_name,
-        			'type' => 'icon',
-        			'obj_reference' => $obj_reference ));
-        	
-        	
-        	$featured = $this->get('doctrine.entitymanager')
-        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
-        	->getOneBy(array('obj_name'=> $obj_name,
-        			'type' => 'featured',
-        			'obj_reference' => $obj_reference ));
-        	
-        	
-        	$additional = $this->get('doctrine.entitymanager')
-        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
-        	->getAll(array('obj_name'=> $obj_name,
-        			'type' => 'additional',
-        			'obj_reference' => $obj_reference ));
-        	
-        	$insert = $this->get('doctrine.entitymanager')
-        	->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
-        	->getAll(array('obj_name'=> $obj_name,
-        			'type' => 'insert',
-        			'obj_reference' => $obj_reference ));        	
+        //get mediarelations assigned to calling object or create new object form
+
+
+        if ($obj_reference == null) {
+
+            $icon = false;
+            $featured = false;
+            $additional = false;
+            $insert = false;
+        } else {
+
+            $icon = $this->get('doctrine.entitymanager')
+                    ->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+                    ->getOneBy(array('obj_name' => $obj_name,
+                'type' => 'icon',
+                'obj_reference' => $obj_reference));
+
+
+            $featured = $this->get('doctrine.entitymanager')
+                    ->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+                    ->getOneBy(array('obj_name' => $obj_name,
+                'type' => 'featured',
+                'obj_reference' => $obj_reference));
+
+
+            $additional = $this->get('doctrine.entitymanager')
+                    ->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+                    ->getAll(array('obj_name' => $obj_name,
+                'type' => 'additional',
+                'obj_reference' => $obj_reference));
+
+            $insert = $this->get('doctrine.entitymanager')
+                    ->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+                    ->getAll(array('obj_name' => $obj_name,
+                'type' => 'insert',
+                'obj_reference' => $obj_reference));
         }
-        
-        
+
+        */
         $media = $this->get('doctrine.entitymanager')
-        				->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
-        				->getAll(array('publicdomain'=> 'include','author'=> UserUtil::getVar('uid')));
-                        
-        PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
-        PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
-        PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");      
+                ->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')
+                ->getAll(array('publicdomain' => 'include', 'author' => \UserUtil::getVar('uid')));
+        
+        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
+        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
+        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Plugin:plugin.html.twig', array(
-        	'mode'     => $mode,
-        	'newRelationForm' => $newRelationForm,
-            'settings' => $settings->getSettings(),
-            'obj_name' => $obj_name,
-            'obj_reference'   => $obj_reference,
-            'icon'     		=> $icon,
-            'featured'    	=> $featured,
-            'additional'    => $additional,
-        	'insert'    	=> $insert,    
-            'media'     		=> $media
+                    'media' => $media,
+                    'mode' => $mode,
+                    'obj_name' => $obj_name,
+                    'obj_reference' => $obj_reference,
+                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings(),
         ));
     }
+
 }

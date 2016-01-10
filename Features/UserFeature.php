@@ -22,7 +22,7 @@ class UserFeature extends AbstractFeature {
         $this->name = 'user';
         $this->type = 'origin';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-user';       
     }  
     
     public function getDefaultSettings() {

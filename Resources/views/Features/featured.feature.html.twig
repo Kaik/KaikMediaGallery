@@ -1,5 +1,5 @@
 <ul class="row list-unstyled">
-{% if featured is not empty and featured.original is defined %}
+{% if featured is defined and featured.original is defined %}
    <li class="media-item feature-{{ featured.type }} col-md-12"
     	 role="checkbox"
 		 aria-checked="true"

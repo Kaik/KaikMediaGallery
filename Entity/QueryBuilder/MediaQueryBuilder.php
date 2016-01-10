@@ -2,9 +2,8 @@
 /**
  * Copyright (c) KaikMedia.com 2015
  */
-namespace Kaikmedia\GalleryModule\Entity;
+namespace Kaikmedia\GalleryModule\Entity\QueryBuilder;
 
-use UserUtil;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -84,7 +83,7 @@ class MediaQueryBuilder extends QueryBuilder
                 if (is_numeric($search)) {
                     return $this->filterAuthor($search);
                 } elseif (is_string($search)) {
-                    $uid = UserUtil::getIdFromName($search);
+                    $uid = \UserUtil::getIdFromName($search);
                     $uid = $uid !== false ? $uid : 0;
                     return $this->filterAuthor($uid);
                 }

@@ -22,7 +22,7 @@ class PublicFeature extends AbstractFeature {
         $this->name = 'public';
         $this->type = 'origin';
         $this->enabled = 0;
-        
+        $this->icon = 'fa fa-cloud';       
     }  
     
     public function getDefaultSettings() {
