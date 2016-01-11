@@ -15,7 +15,7 @@ use Kaikmedia\GalleryModule\Features\AbstractFeature;
  *
  * @author Kaik
  */
-class UploadFeature extends AbstractFeature {
+class AddmediaFeature extends AbstractFeature {
 
     public $uploadDir;
     public $uploadMaxFiles;
@@ -24,16 +24,20 @@ class UploadFeature extends AbstractFeature {
 
     public function __construct() {
         parent::__construct();
-        $this->name = 'upload';
+        $this->name = 'addmedia';
         $this->type = 'origin';
         $this->enabled = 0;
-        $this->icon = 'fa fa-upload';
+        $this->icon = 'fa fa-plus';
         $this->uploadDir = 'userdata';
         $this->uploadMaxFiles = 0;
         $this->uploadMaxSingleSize = 0;
         $this->allowedMedia = '';
     }
 
+    public function getDisplayName() {
+        return 'Add media';
+    }   
+    
     public function getUploadDir() {
         return $this->uploadDir;
     }

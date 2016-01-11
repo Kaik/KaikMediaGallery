@@ -60,17 +60,18 @@
                                 {% include "KaikmediaGalleryModule:Origins:internal.origin.html.twig" %}                     
                             </div>          		
                             <div role="tabpanel" class="tab-pane" id="kmgallery_manager_upload_box">
-                                {% include "KaikmediaGalleryModule:Origins:upload.origin.html.twig" %}                     
+                                {% include "KaikmediaGalleryModule:Origins:addmedia.origin.html.twig" %}                     
                             </div>
                         </div>              
                     </div>          
                     <div id="kmgallery_manager_details" class="col-xs-12 col-md-2">  
                         {% include "KaikmediaGalleryModule:Manager:details.html.twig" %}         
                     </div>                      
-                </div>         
+                </div>   
             </div>         
             <div class="modal-footer" style="background:#E4F2FF;">       
                 <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>
+         
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

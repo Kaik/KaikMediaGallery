@@ -14,6 +14,8 @@
 		 data-legal="{{ mediaItem.legal }}"		 
 		 data-relation="new" >
 		 {% include "KaikmediaGalleryModule:Media:item.html.twig" with {'settings': settings, 'relation':false, 'original':mediaItem, 'css': ''}  %}
+                 
+                           {{ dump() }}
 	</li>
 	{% else %}
 		<li><p class="alert alert-warning text-center"> {{ __('No files found') }} </p></li>

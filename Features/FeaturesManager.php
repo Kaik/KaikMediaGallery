@@ -16,7 +16,7 @@ class FeaturesManager {
      */
     public function __construct() {
         $this->name = 'KaikmediaGalleryModule';
-        $this->features = ['upload', 'icon', 'featured', 'additional', 'user', 'public', 'album', 'gallery', 'insert', 'avatar'];
+        $this->features = ['addmedia', 'icon', 'featured', 'additional', 'user', 'public', 'album', 'gallery', 'insert', 'avatar'];
     }    
     
     public function getFeatures() {
