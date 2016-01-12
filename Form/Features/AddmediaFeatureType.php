@@ -14,12 +14,7 @@ class AddmediaFeatureType extends AbstractFeatureType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         parent::buildForm($builder, $options);
 
-        $builder->add('uploadDir', 'text');
-        $builder->add('uploadMaxFiles', 'text');
-        $builder->add('uploadMaxSingleSize', 'text');
-        $builder->add('allowedMedia', 'text', [
-            'required' => false
-            ]);
+        $builder->add('settings', 'addmediasettings');
     }
 
 }

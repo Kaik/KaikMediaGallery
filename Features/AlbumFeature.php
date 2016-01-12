@@ -25,6 +25,10 @@ class AlbumFeature extends AbstractFeature {
         $this->icon = 'fa fa-folder';
     }  
     
+    public function getDisplayName() {
+        return 'Insert album';
+    }    
+    
     public function getDefaultSettings() {
         
         return [//display

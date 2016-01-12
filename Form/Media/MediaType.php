@@ -12,40 +12,31 @@ class MediaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array(
-            'required' => false,
-            'mapped'   => false
-        ))
-            ->add('path', 'text', array(
-            'required' => false,
-            'mapped'   => false
-        ))
-            ->add('description', 'textarea', array(
+        $builder->add('title', 'text', [
             'required' => false
-        ))
-            ->add('legal', 'textarea', array(
+        ])
+            ->add('description', 'textarea', [
             'required' => false
-        ))
-            ->add('publicdomain', 'checkbox', array(
+        ])
+            ->add('legal', 'textarea', [
+            'required' => false
+        ])
+            ->add('publicdomain', 'checkbox', [
             'label' => 'public',
             'required' => false
-        ))
-            ->add('file', 'file', array(
-            'required' => false,
-            'mapped'   => false
-        ));
+        ]);
             
         if ($options['isXmlHttpRequest'] == false) {
-            $builder->add('save', 'submit', array('label' => 'Save'));
+            $builder->add('save', 'submit', ['label' => 'Save']);
         }                       
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'isXmlHttpRequest' => false,
             'data_class' => 'Kaikmedia\GalleryModule\Entity\Media\ImageEntity'
-        ));
+        ]);
     }
 
     public function getName()

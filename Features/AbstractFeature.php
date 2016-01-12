@@ -69,7 +69,7 @@ class AbstractFeature {
     
     public function getClass() {
         
-    } 
+    }   
 
     public function getAlias()
     {

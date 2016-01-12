@@ -16,14 +16,21 @@ services:
         class: Kaikmedia\GalleryModule\Security\AccessManager
     kaikmedia_gallery_module.features_manager:
         class: Kaikmedia\GalleryModule\Features\FeaturesManager
-        
+    kaikmedia_gallery_module.media_handlers_manager:
+        class: Kaikmedia\GalleryModule\Media\MediaHandlersManager        
+    kaikmedia_gallery_module.media_manager:
+        class: Kaikmedia\GalleryModule\Media\MediaManager    
    
   # form fields management     
     kaikmedia_gallery_module.form.type.features:
         class: Kaikmedia\GalleryModule\Form\Type\FeaturesType
         tags:
             - { name: form.type, alias: features }            
-  
+   # form fields management     
+    kaikmedia_gallery_module.form.type.addmediasettings:
+        class: Kaikmedia\GalleryModule\Form\Type\AddmediaSettingsType
+        tags:
+            - { name: form.type, alias: addmediasettings }   
   # forms   
     kaikmedia_gallery_module.form.type.feature_icon:
         class: Kaikmedia\GalleryModule\Form\Features\IconFeatureType

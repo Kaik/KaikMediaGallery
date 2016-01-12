@@ -6,18 +6,17 @@
  * and open the template in the editor.
  */
 
-namespace Kaikmedia\GalleryModule\Entity\Media;
-
-use Doctrine\ORM\Mapping as ORM;
+namespace Kaikmedia\GalleryModule\Media\Handlers;
 
 /**
- * Description of ImageEntity
- * @ORM\Entity()
- * 
+ * Description of UrlHandler
+ *
  * @author Kaik
  */
-class ImageEntity extends AbstractUploadableEntity {
+class UrlHandler extends AbstractMediaHandler {
     //put your code here
-
-
+    public function __construct() {
+        parent::__construct();
+        
+    }
 }

@@ -24,6 +24,9 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractDocumentEntity;
  * @ORM\InheritanceType(value="SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr") 
  * @ORM\DiscriminatorMap({"image" = "ImageEntity",
+ *                         "pdf" = "PdfEntity",
+ *                         "youtube" = "YoutubeEntity",
+ *                         "url" = "UrlEntity",
  *                         "file"  = "AbstractUploadableEntity"})
  */
 abstract class AbstractMediaEntity extends AbstractDocumentEntity {

@@ -25,6 +25,10 @@ class AdditionalFeature extends AbstractFeature {
         $this->icon = 'fa fa-paperclip';
     }  
     
+    public function getDisplayName() {
+        return 'Add additional media';
+    }
+    
     public function getDefaultSettings() {
         
         return [//display

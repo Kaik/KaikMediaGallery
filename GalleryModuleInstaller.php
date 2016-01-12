@@ -53,6 +53,9 @@ class GalleryModuleInstaller implements ExtensionInstallerInterface, ContainerAw
         'Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity',
         'Kaikmedia\GalleryModule\Entity\Media\AbstractUploadableEntity',
         'Kaikmedia\GalleryModule\Entity\Media\ImageEntity',
+        'Kaikmedia\GalleryModule\Entity\Media\PdfEntity',
+        'Kaikmedia\GalleryModule\Entity\Media\YoutubeEntity',
+        'Kaikmedia\GalleryModule\Entity\Media\UrlEntity',
         'Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationsEntity',      
         'Kaikmedia\GalleryModule\Entity\Relations\KaikmediaPagesModuleRelationsEntity',
         'Kaikmedia\GalleryModule\Entity\Relations\ZikulaUsersModuleRelationsEntity'

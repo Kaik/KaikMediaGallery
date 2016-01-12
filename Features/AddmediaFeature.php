@@ -9,71 +9,62 @@
 namespace Kaikmedia\GalleryModule\Features;
 
 use Kaikmedia\GalleryModule\Features\AbstractFeature;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Kaikmedia\GalleryModule\Media\MediaHandlersManager;
+use Kaikmedia\GalleryModule\Settings\UploadSettings;
+use Kaikmedia\GalleryModule\Settings\MimeTypeSettings;
 /**
  * Description of IconFeature
  *
  * @author Kaik
  */
 class AddmediaFeature extends AbstractFeature {
+   
+    /*
 
-    public $uploadDir;
-    public $uploadMaxFiles;
-    public $uploadMaxSingleSize;
-    public $allowedMedia;
+    */
+   public $settings;
 
-    public function __construct() {
+
+   public function __construct() {
         parent::__construct();
         $this->name = 'addmedia';
         $this->type = 'origin';
         $this->enabled = 0;
         $this->icon = 'fa fa-plus';
-        $this->uploadDir = 'userdata';
-        $this->uploadMaxFiles = 0;
-        $this->uploadMaxSingleSize = 0;
-        $this->allowedMedia = '';
+        $this->settings = new ArrayCollection();
+        $this->setDefaultSettings();
     }
 
     public function getDisplayName() {
         return 'Add media';
     }   
     
-    public function getUploadDir() {
-        return $this->uploadDir;
-    }
+    public function getSettings() {
+        return $this->settings;
+    } 
 
-    public function setUploadDir($uploadDir) {
-        $this->uploadDir = $uploadDir;
+    public function setSettings($settings) {
+        $this->settings = $settings;
         return $this;
-    }
+    }     
+    
+    public function setDefaultSettings() {
+        
+        $uploadSettings = new UploadSettings();
+        $this->settings->add($uploadSettings);
+        $mediaHandlersManager = new MediaHandlersManager();
+        $mimeTypes = $mediaHandlersManager->getSupportedMimeTypes();
+        foreach($mimeTypes as $mimeType => $handler){           
+            $mimeTypeSettings = new MimeTypeSettings();
+            $mimeTypeSettings->setMimeType($mimeType);
+            $mimeTypeSettings->setHandler($handler);
+            $this->settings->add($mimeTypeSettings);              
+        }
 
-    public function getUploadMaxFiles() {
-        return $this->uploadMaxFiles;
-    }
-
-    public function setUploadMaxFiles($uploadMaxFiles) {
-        $this->uploadMaxFiles = $uploadMaxFiles;
-        return $this;
-    }
-
-    public function getUploadMaxSingleFiles() {
-        return $this->uploadMaxSingleSize;
-    }
-
-    public function setUploadMaxSingleSize($uploadMaxSingleSize) {
-        $this->uploadMaxSingleSize = $uploadMaxSingleSize;
-        return $this;
-    }
-
-    public function getAllowedMedia() {
-        return $this->allowedMedia;
-    }
-
-    public function setAllowedMedia($allowedMedia) {
-        $this->allowedMedia = $allowedMedia;
-        return $this;
-    }
-
+  
+    }       
+    
     public function getDefaultSettings() {
 
         return [//display

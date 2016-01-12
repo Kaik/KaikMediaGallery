@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="panel-heading">{{ __('Mime type settings') }}</div>
+  <div class="panel-body">
+    {{ form_widget(setting.name) }}  
+    <div class="col-md-3">
+    {{ form_label(setting.mimeType) }}
+    {{ form_widget(setting.mimeType) }}       
+    </div>
+    <div class="col-md-3">
+    {{ form_label(setting.handler) }}
+    {{ form_widget(setting.handler) }}       
+    </div>   
+    <div class="col-md-3">
+    {{ form_label(setting.enabled) }}
+    {{ form_widget(setting.enabled) }}       
+    </div>
+  </div>
+</div>    
+</div>

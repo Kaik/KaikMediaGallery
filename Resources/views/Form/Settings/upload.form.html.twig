@@ -1,0 +1,22 @@
+{# empty Twig template #}
+{#{ form_widget(feature.settings) }#}
+<div class="row">
+<div class="panel panel-primary">
+  <div class="panel-heading">{{ __('Upload settings') }}</div>
+  <div class="panel-body">
+    {{ form_widget(setting.name) }}  
+    <div class="col-md-3">
+    {{ form_label(setting.uploadDir) }}
+    {{ form_widget(setting.uploadDir) }}       
+    </div>
+    <div class="col-md-3">
+    {{ form_label(setting.uploadMaxFiles) }}
+    {{ form_widget(setting.uploadMaxFiles) }}       
+    </div>
+    <div class="col-md-3">
+    {{ form_label(setting.uploadMaxSingleSize) }}
+    {{ form_widget(setting.uploadMaxSingleSize) }}       
+    </div>
+  </div>
+</div>    
+</div>

@@ -14,6 +14,15 @@ namespace Kaikmedia\GalleryModule\Media;
  * @author Kaik
  */
 class MediaManager {
-    //put your code here
     
+    private $name;
+
+    /**
+     * construct
+     */
+    public function __construct() {
+        $this->name = 'KaikmediaGalleryModule';
+
+    }    
+  
 }

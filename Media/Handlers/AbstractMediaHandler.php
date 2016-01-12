@@ -6,14 +6,13 @@
  * and open the template in the editor.
  */
 
-namespace Kaikmedia\GalleryModule\Media;
+namespace Kaikmedia\GalleryModule\Media\Handlers;
 
 /**
- * Description of AbstractMediaType
  *
  * @author Kaik
  */
-class AbstractMedia {
+class AbstractMediaHandler {
 //put your code here
     
     public $name;
@@ -52,8 +51,12 @@ class AbstractMedia {
         return $this;
     }
     
+    public function getSupportedMimeTypes() {
+        return [];
+    }    
+    
     public function getFormClass() {
-      return '\Kaikmedia\\GalleryModule\\Form\\Media\\' . ucfirst($this->getAlias()) . 'Type';  
+      return '\Kaikmedia\\GalleryModule\\Form\\Media\\Handlers' . ucfirst($this->getAlias()) . 'Handler';  //??
     }  
     
     public function getClass() {

@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * 
  * @author Kaik
  */
-class ImageEntity extends AbstractUploadableEntity {
+class UrlEntity extends AbstractMediaEntity {
     //put your code here
 
 

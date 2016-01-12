@@ -1,5 +1,5 @@
 <div class="row">
-    {% form_theme form with ['bootstrap_3_layout.html.twig', 'KaikmediaGalleryModule:Form:settings.radio.html.twig'] %}
+    {% form_theme form with ['bootstrap_3_layout.html.twig', '@KaikmediaGalleryModule/Form/Settings/settings.radio.html.twig'] %}
     {{ form_start(form) }}
     {{ form_errors(form) }}
     <div class="list-group col-md-12">
@@ -67,7 +67,7 @@
                                                 </div>	                                                
                                             </div>
                                             <div id="{{ module.vars.value.name }}_feature_{{ feature.vars.value.name }}" class="panel-body collapse">
-                                                {{ include('@KaikmediaGalleryModule/Form/feature.'~ feature.vars.value.name ~'.form.html.twig') }}
+                                                {{ include('@KaikmediaGalleryModule/Form/Features/Settings/feature.'~ feature.vars.value.name ~'.form.html.twig') }}
                                             </div>
                                         </div>                                                 		           				
                                     </div>			  

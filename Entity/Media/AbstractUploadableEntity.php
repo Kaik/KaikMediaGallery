@@ -9,64 +9,55 @@
 namespace Kaikmedia\GalleryModule\Entity\Media;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zikula\Core\Doctrine\EntityAccess;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
-use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
-use Gedmo\Uploadable\Uploadable;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\MediaRepository")
- * @Gedmo\Uploadable(pathMethod="getPath", callback="newUpload", filenameGenerator="SHA1", appendNumber=true)
+ * @ORM\Entity()
  */
-abstract class AbstractUploadableEntity extends AbstractMediaEntity implements Uploadable {    
-    
-    /**
-     * @ORM\Column(type="string")
-     * @Gedmo\UploadableFilePath
-     */
-    protected $path;    
-    
-    /**
-     * @ORM\Column(type="string")
-     * @Gedmo\UploadableFileName
-     * @var string 
-     */
-    protected $name;    
+abstract class AbstractUploadableEntity extends AbstractMediaEntity {
 
     /**
-     * @ORM\Column(type="string")
-     * @Gedmo\UploadableFileMimeType
+     */
+    protected $path;
+
+    /**
+     * @var string 
+     */
+    protected $name;
+
+    /**
      *
      * @var string
      */
     protected $mimeType;
-    
+
     /**
-     * @ORM\Column(type="decimal")
-     * @Gedmo\UploadableFileSize
      * 
      */
-    protected $size;    
+    protected $size;
 
     /**
-     * @ORM\Column(type="string", length=15)
      */
     protected $ext;
+
+    /**
+     */
+    private $file;
     
+     /**
+     */   
+    private $temp;
 
-    public function __construct()
-    {
+    
+    public function __construct() {
         parent::__construct();
-        
-        $this->setTitle('Title');
-    }
 
-    public function getPath()
-    {
+        $this->setTitle('Title');
+    }    
+    public function getPath() {
         return \FileUtil::getDataDirectory() . '/kmgallery/media';
     }
-    
+
     /**
      * Set path
      * 
@@ -76,25 +67,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity implements U
     public function setPath($path) {
         $this->path = $path;
         return $this;
-    }    
-
-    public function getUrl()
-    {
-        return \System::getBaseUri() . '/' . $this->getPath();
     }
 
-    public function newUpload(array $info)
-    {
-        // Do nothing for now.
-       // $this->ext = $info['fileExtension'];
-        // fileName: The filename.
-        // fileExtension: The extension of the file (including the dot). Example: .jpg
-        // fileWithoutExt: The filename without the extension.
-        // filePath: The file path. Example: /my/path/filename.jpg
-        // fileMimeType: The mime-type of the file. Example: text/plain.
-        // fileSize: Size of the file in bytes. Example: 140000.
-    }
-    
     /**
      *
      * @return the unknown_type
@@ -151,11 +125,11 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity implements U
     public function getMimeType() {
         return $this->mimeType;
     }
-    
+
     /**
      * Set mimeType
      *
-     * @param string $mimeType
+     * @param string $name
      * @return Image
      */
     public function setName($name) {
@@ -170,6 +144,69 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity implements U
      */
     public function getName() {
         return $this->name;
-    }    
+    }   
+    
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null) {
+        $this->file = $file;
+        // check if we have an old image path
+        if (isset($this->path)) {
+            // store the old name to delete after the update
+            $this->temp = $this->path;
+            $this->path = null;
+        } else {
+            $this->path = 'initial';
+        }
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload() {
+        if (null !== $this->getFile()) {
+            // do whatever you want to generate a unique name
+            $filename = sha1(uniqid(mt_rand(), true));
+            $this->path = $filename . '.' . $this->getFile()->guessExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload() {
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        // if there is an error when moving the file, an exception will
+        // be automatically thrown by move(). This will properly prevent
+        // the entity from being persisted to the database on error
+        $this->getFile()->move($this->getUploadRootDir(), $this->path);
+
+        // check if we have an old image
+        if (isset($this->temp)) {
+            // delete the old image
+            unlink($this->getUploadRootDir() . '/' . $this->temp);
+            // clear the temp image path
+            $this->temp = null;
+        }
+        $this->file = null;
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload() {
+        $file = $this->getAbsolutePath();
+        if ($file) {
+            unlink($file);
+        }
+    }
 
 }

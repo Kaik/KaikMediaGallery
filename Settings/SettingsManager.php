@@ -9,6 +9,7 @@ namespace Kaikmedia\GalleryModule\Settings;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kaikmedia\GalleryModule\Features\FeaturesManager;
+use Kaikmedia\GalleryModule\Media\MediaHandlersManager;
 
 class SettingsManager {
 
@@ -16,9 +17,11 @@ class SettingsManager {
     private $displayName;
     protected $variablesManager;
     protected $featuresManager;
+    protected $mediaHandlersManager;
     private $settings;
     private $modules;
     private $features;
+    private $mediaHandlers;
 
     /**
      * construct
@@ -29,8 +32,10 @@ class SettingsManager {
         $this->setModules($this->getHookableModules());
         $this->variablesManager = $variablesManager;
         $this->featuresManager = new FeaturesManager();
+        $this->mediaHandlersManager = new MediaHandlersManager();
         //now we have all features with default settings as array collection
         $this->setFeatures($this->featuresManager->getFeatures());
+        $this->mediaHandlers = $this->mediaHandlersManager->getMediaHandlers();
         $this->setSettings($this->variablesManager->getAll($this->name));
     }
 
@@ -39,9 +44,7 @@ class SettingsManager {
     }
 
     public function setModules($modules) {
-        //@todo: this one always on top
-        $modules = ['KaikmediaGalleryModule' => $modules['KaikmediaGalleryModule']] + $modules;
-        $this->modules = $modules;
+        $this->modules = ['KaikmediaGalleryModule' => $modules['KaikmediaGalleryModule']] + $modules;
     }
 
     /*
@@ -55,8 +58,8 @@ class SettingsManager {
         $moduleSettings['display_name'] = $moduleDisplayName === null ? $this->displayName : $moduleDisplayName;
         $is_this_default_module = ($this->name == $moduleSettings['name']) ? 1 : 0;
         if ($is_this_default_module == 0) {
-            $class = '\\Kaikmedia\\GalleryModule\\Entity\\Relations\\'. $moduleFullName . 'RelationsEntity';
-            $moduleSettings['is_supported'] = (class_exists($class)) ? 1 : 0 ;
+            $class = '\\Kaikmedia\\GalleryModule\\Entity\\Relations\\' . $moduleFullName . 'RelationsEntity';
+            $moduleSettings['is_supported'] = (class_exists($class)) ? 1 : 0;
         } else {
             $moduleSettings['is_supported'] = 1;
         }
@@ -75,6 +78,7 @@ class SettingsManager {
     /*
      * 
      */
+
     public function setModuleFeatures($features = null) {
 
         if ($features === null) {
@@ -149,7 +153,7 @@ class SettingsManager {
             $mixedSettings[$moduleFullName] = $this->setModuleSettings($moduleFullName, $moduleDisplayName, $moduleSettings);
         }
         $this->settings = $mixedSettings;
-        
+
         return true;
     }
 
@@ -159,7 +163,7 @@ class SettingsManager {
 
     public function setSettingsFromForm($data) {
         $settings = [];
-        foreach ($data as $key => $module) {
+        foreach ($data as $module) {
             $moduleFullName = $module['name'];
             $settings[$moduleFullName] = $module;
         }
