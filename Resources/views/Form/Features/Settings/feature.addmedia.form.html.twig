@@ -10,13 +10,21 @@
     {{ form_widget(feature.icon) }}      
 </div>
 <div class="col-md-10">
-   {% for setting in feature.settings %}    
-       {{ include('@KaikmediaGalleryModule/Form/Settings/'~ setting.vars.value.name ~'.form.html.twig')  }}
-       
-       
-       
-       
-   {% endfor %}   
-</div>
-                                
-                               
+
+    {% set upload_setting = feature.settings|first %}   
+    {{ include('@KaikmediaGalleryModule/Form/Settings/upload.form.html.twig', {'setting': upload_setting })  }}
+
+    <div class="row">
+        <div class="panel panel-warning">
+            <div class="panel-heading">{{ __('Mime type settins') }}</div>
+            <div class="panel-body">
+                {% for setting in feature.settings %}    
+                    {% if loop.first %}
+                    {% else %}    
+                        {{ include('@KaikmediaGalleryModule/Form/Settings/mimetype.form.html.twig')  }}
+                    {% endif%}
+                {% endfor %}   
+            </div>
+        </div>    
+    </div>
+</div>               

@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotatio
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Kaikmedia\GalleryModule\Form\Features\AddMediaType;
 
 /**
  */
@@ -28,10 +29,35 @@ class PluginController extends AbstractController {
             throw new AccessDeniedException();
         }
         
-        
         $masterRequest = $this->get('request_stack')->getMasterRequest();
         $obj_name = $masterRequest->attributes->get('_zkModule');
         
+        $addMediaForm = $this->createForm(
+                new AddMediaType([], ['isXmlHttpRequest' => $request->isXmlHttpRequest()]
+                )
+        );
+
+        $media = $this->get('doctrine.entitymanager')
+                ->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')
+                ->getAll(array('publicdomain' => 'include', 'author' => \UserUtil::getVar('uid')));
+        
+        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
+        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
+        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
+        $request->attributes->set('_legacy', true); // forces template to render inside old theme
+        return $this->render('KaikmediaGalleryModule:Plugin:plugin.html.twig', array(
+                    'media' => $media,
+                    'mode' => $mode,
+                    'addMediaForm' => $addMediaForm->createView(),
+                    'obj_name' => $obj_name,
+                    'obj_reference' => $obj_reference,
+                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings(),
+        ));
+    }
+
+}
+
+
         
         /*
         $newRelationForm = false;
@@ -75,21 +101,3 @@ class PluginController extends AbstractController {
         }
 
         */
-        $media = $this->get('doctrine.entitymanager')
-                ->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')
-                ->getAll(array('publicdomain' => 'include', 'author' => \UserUtil::getVar('uid')));
-        
-        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
-        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
-        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
-        $request->attributes->set('_legacy', true); // forces template to render inside old theme
-        return $this->render('KaikmediaGalleryModule:Plugin:plugin.html.twig', array(
-                    'media' => $media,
-                    'mode' => $mode,
-                    'obj_name' => $obj_name,
-                    'obj_reference' => $obj_reference,
-                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings(),
-        ));
-    }
-
-}

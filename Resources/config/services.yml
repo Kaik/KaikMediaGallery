@@ -44,15 +44,15 @@ services:
         tags:
             - { name: twig.extension }
   
+    kaikmedia_gallery_module.form.type.addmedia_form:
+        class: Kaikmedia\GalleryModule\Form\Features\AddMediaType
+        tags:
+            - { name: form.type, alias: addmedia }
+  
     kaikmedia_gallery_module.form.type.media:
         class: Kaikmedia\GalleryModule\Form\Media\MediaType
         tags:
             - { name: form.type, alias: media }
-            
-    kaikmedia_gallery_module..type.media_relation:
-        class: Kaikmedia\GalleryModule\Form\MediaRelationType
-        tags:
-            - { name: form.type, alias: media_relation }
             
     kaikmedia_gallery_module.form.type.album:
         class: Kaikmedia\GalleryModule\Form\Album\AlbumType

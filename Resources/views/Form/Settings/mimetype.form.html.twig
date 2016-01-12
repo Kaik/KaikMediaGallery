@@ -1,19 +1,14 @@
 <div class="row">
-  <div class="panel-heading">{{ __('Mime type settings') }}</div>
-  <div class="panel-body">
-    {{ form_widget(setting.name) }}  
+    {{ form_widget(setting.name) }}
+    {{ form_widget(setting.mimeType) }} 
+    {{ form_widget(setting.handler) }}   
     <div class="col-md-3">
-    {{ form_label(setting.mimeType) }}
-    {{ form_widget(setting.mimeType) }}       
+    {{ setting.vars.value.mimeType }}       
     </div>
     <div class="col-md-3">
-    {{ form_label(setting.handler) }}
-    {{ form_widget(setting.handler) }}       
+    {{ setting.vars.value.handler }}       
     </div>   
     <div class="col-md-3">
-    {{ form_label(setting.enabled) }}
-    {{ form_widget(setting.enabled) }}       
+    {{ form_widget(setting.enabled, {'label_attr': {'class': 'btn btn-xs btn-primary radio-inline' }}) }}    
     </div>
   </div>
-</div>    
-</div>

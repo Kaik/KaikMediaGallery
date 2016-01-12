@@ -1,2 +1,51 @@
-<div id="kmgallery_plugin_upload"> </div>                           
- 
+{% form_theme addMediaForm 'bootstrap_3_layout.html.twig' %}
+{% set addmedia_settings = obj_settings.features|first %}
+
+{{ form_start(addMediaForm) }}
+{{ form_errors(addMediaForm) }}
+<div class="row">
+<div class="col-md-12" style="margin-top:10px;">
+    <div class="alert" role="alert">
+    </div>
+</div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body bg-warning">
+        <div class="col-md-3">
+            {{ __('Upload files')}}    
+        </div>       
+        <div class="col-md-9">
+            {{ form_widget(addMediaForm.files, {'attr': {'class': 'file_input'}}) }}            
+        </div>         
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body bg-warning">
+        <div class="col-md-3">
+            {{ __('Add youtube url')}}     
+        </div>    
+        <div class="col-md-9">        
+            {{ form_widget(addMediaForm.youtube, {'attr': {'class': 'youtube'}}) }}
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body bg-warning">
+        <div class="col-md-3">
+            {{ __('Add url')}}     
+        </div>    
+        <div class="col-md-9">   
+            {{ form_widget(addMediaForm.url, {'attr': {'class': 'url'}}) }}
+        </div>
+    </div>
+</div>    
+
+
+
+
+<div class="col-md-12 text-right">
+    {#{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }#}
+</div>
+{{ form_end(addMediaForm) }} 
+{#{ dump() }#}

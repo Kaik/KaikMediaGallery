@@ -16,9 +16,17 @@ class MimeTypeSettingsType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
           $builder->add('name', 'hidden');
-          $builder->add('mimeType', 'text');         
-          $builder->add('handler', 'text');
-          $builder->add('enabled', 'text');
+          $builder->add('mimeType', 'hidden');         
+          $builder->add('handler', 'hidden');
+        $builder->add('enabled','choice',[
+            'choices' => [
+                '0' => 'Off',
+                '1' => 'On'
+            ],
+            'multiple' => false,
+            'expanded' => true,
+            'required' => true
+        ]);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
