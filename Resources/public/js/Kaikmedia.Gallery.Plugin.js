@@ -18,7 +18,7 @@ KaikMedia.Gallery.Plugin = {
 			    
 		init: function ($container, obj_name, obj_reference){
 			    	
-			this.config.$container = $container;
+                this.config.$container = $container;
 	    	this.config.obj.name = obj_name;
 	    	this.config.obj.reference = obj_reference;
 	    	this.config.obj.settings = KaikMedia.Gallery.Settings[obj_name];
@@ -26,6 +26,6 @@ KaikMedia.Gallery.Plugin = {
 	    	//init manager
 	    	KaikMedia.Gallery.Manager.init(this.config);
 	    	//console.log(KaikMedia)
-		},			
+		}		
 };
 })( jQuery );

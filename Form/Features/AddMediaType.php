@@ -24,7 +24,11 @@ class AddMediaType extends AbstractType
         
         //if ($options['upload'] == false) {        	
         $builder->add('files', 'file', [
-            'required' => false            
+            'required' => false,
+            'attr' => [
+                "accept" => "image/*",
+                "multiple" => "multiple",
+            ]        
         ]);
        // }
         

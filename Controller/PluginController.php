@@ -41,11 +41,14 @@ class PluginController extends AbstractController {
                 ->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')
                 ->getAll(array('publicdomain' => 'include', 'author' => \UserUtil::getVar('uid')));
         
+        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.settings.js");  
+        //\PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.SettingsManager.js");         
+       // \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");        
         \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
-        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.plugin.css");
-        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
+        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.manager.css");
+
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
-        return $this->render('KaikmediaGalleryModule:Plugin:plugin.html.twig', array(
+        return $this->render('KaikmediaGalleryModule:Plugin:manager.html.twig', array(
                     'media' => $media,
                     'mode' => $mode,
                     'addMediaForm' => $addMediaForm->createView(),

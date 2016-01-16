@@ -1,0 +1,22 @@
+{% set obj_settings = attribute(settings, obj_name) %}
+{% set obj_features = attribute(obj_settings, 'features') %}  
+<script>
+    (function ($) {
+        $(function () {
+                KaikMedia.Gallery.settings.set({{ settings|json_encode|raw }});  
+                var config = [];
+                config.$container = $('#kmgallery_plugin_container');
+                config.obj = [];
+                config.obj.name = 'KaikmediaPagesModule';
+	    	config.obj.reference = 'new';
+	    	config.obj.settings = KaikMedia.Gallery.settings.get(config.obj.name);
+	    	
+	    	//init manager
+	    	KaikMedia.Gallery.Manager.init(config);            
+        });
+    })(jQuery);
+</script>
+
+<div id="kmgallery_plugin_container">
+    {% include "KaikmediaGalleryModule:Manager:manager.html.twig" %}  
+</div><!-- /#kmgallery_plugin_container -->

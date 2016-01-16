@@ -4,21 +4,25 @@
 {{ form_start(addMediaForm) }}
 {{ form_errors(addMediaForm) }}
 <div class="row">
-<div class="col-md-12" style="margin-top:10px;">
-    <div class="alert" role="alert">
+    <div class="col-md-12" style="margin-top:10px;">
+        <div class="alert" role="alert">
+        </div>
     </div>
 </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body bg-warning">
-        <div class="col-md-3">
-            {{ __('Upload files')}}    
-        </div>       
-        <div class="col-md-9">
-            {{ form_widget(addMediaForm.files, {'attr': {'class': 'file_input'}}) }}            
-        </div>         
-    </div>
-</div>
+<div class="row">
+    <div class="col-md-12">    
+        <ul id="upload_preview" class="list-inline list-unstyled clearfix">
+
+        </ul>   
+        <div id="drop_zone">
+                {{ __('Drop files here')}}                 
+                <a id="select-files" href="#">{{ __('or select')}}</a>  
+        </div>        
+    </div>     
+    <div class="col-md-12 text-center hide">              
+        {{ form_widget(addMediaForm.files, {'attr': {'class': 'file_input'}}) }}      
+    </div>        
+</div>    
 <div class="panel panel-default">
     <div class="panel-body bg-warning">
         <div class="col-md-3">
@@ -40,7 +44,6 @@
         </div>
     </div>
 </div>    
-
 
 
 
