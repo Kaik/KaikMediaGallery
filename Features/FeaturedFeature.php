@@ -24,21 +24,8 @@ class FeaturedFeature extends AbstractFeature {
         $this->enabled = 0;
         $this->icon = 'fa fa-image';        
     }  
-    
-    public function getDefaultSettings() {
-        
-        return [//display
-                'width' => '100', // icon width
-                'height' => '100', // icon height single preview
-                'perpage' => '', //
-                //upload
-                'extensions' => 'png,jpg', //
-                'mimetypes' => 'image', //
-                //select
-                'maxitems' => '', //
-                'type' => 'feature',
-                'fields' => 'name,description,alt']; //        
-        
-    }
-    
+
+    public function getDisplayName() {
+        return 'Featured image';
+    }  
 }

@@ -27,22 +27,5 @@ class AlbumFeature extends AbstractFeature {
     
     public function getDisplayName() {
         return 'Insert album';
-    }    
-    
-    public function getDefaultSettings() {
-        
-        return [//display
-                'width' => '100', // icon width
-                'height' => '100', // icon height single preview
-                'perpage' => '', //
-                //upload
-                'extensions' => 'png,jpg', //
-                'mimetypes' => 'image', //
-                //select
-                'maxitems' => '', //
-                'type' => 'feature',
-                'fields' => 'name,description,alt']; //        
-        
-    }
-    
+    }     
 }

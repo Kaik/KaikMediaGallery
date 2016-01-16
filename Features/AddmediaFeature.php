@@ -62,20 +62,4 @@ class AddmediaFeature extends AbstractFeature {
             $this->settings->add($mimeTypeSettings);
         }
     }
-
-    public function getDefaultSettings() {
-
-        return [//display
-            'width' => '100', // icon width
-            'height' => '100', // icon height single preview
-            'perpage' => '', //
-            //upload
-            'extensions' => 'png,jpg', //
-            'mimetypes' => 'image', //
-            //select
-            'maxitems' => '', //
-            'type' => 'feature',
-            'fields' => 'name,description,alt']; //        
-    }
-
 }

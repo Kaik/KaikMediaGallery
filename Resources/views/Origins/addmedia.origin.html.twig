@@ -10,20 +10,21 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">    
-        <ul id="upload_preview" class="list-inline list-unstyled clearfix">
-
-        </ul>   
+    <div class="col-md-12"> 
+        <div class="col-md-12 text-center hide">              
+            {{ form_widget(addMediaForm.files, {'attr': {'class': 'file_input'}}) }}      
+        </div>         
         <div id="drop_zone">
-                {{ __('Drop files here')}}                 
-                <a id="select-files" href="#">{{ __('or select')}}</a>  
+            {{ __('Drop files here')}}                 
+            <a id="select-files" href="#">{{ __('or select')}}</a>  
         </div>        
-    </div>     
-    <div class="col-md-12 text-center hide">              
-        {{ form_widget(addMediaForm.files, {'attr': {'class': 'file_input'}}) }}      
-    </div>        
+    </div>    
+    <div class="col-md-12">         
+    <ul id="upload_preview" class="list-inline list-unstyled clearfix">
+    </ul>   
+    </div>    
 </div>    
-<div class="panel panel-default">
+<div class="panel panel-default hide">
     <div class="panel-body bg-warning">
         <div class="col-md-3">
             {{ __('Add youtube url')}}     
@@ -34,7 +35,7 @@
 
     </div>
 </div>
-<div class="panel panel-default">
+<div class="panel panel-default hide">
     <div class="panel-body bg-warning">
         <div class="col-md-3">
             {{ __('Add url')}}     

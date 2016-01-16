@@ -226,7 +226,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
             ext: '',
             mimeType: '',
             legal: '',
-            relation: 0,
+            relation: 0
         };
     };
 
@@ -276,23 +276,17 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                     return false;
                 });
 
-
                 $('#addmedia_form_files').on('change', function (e) {
                     handleFiles(e);
                 });
 
-
                 // Setup the dnd listeners.
-                $('#drop_zone').on('dragover', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();                    
-                    handleDragOver(e);
+                $('#drop_zone').bind({
+                    "dragover": handleDragOver,
+                    "dragleave": handleDragOver,
+                    "drop": handleFiles
                 });
-                $('#drop_zone').on('drop', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();                     
-                    handleFiles(e);
-                });
+
                 /* bind mode switch 
                  $features_menu.find('a').each(function () {
                  $(this).on('click', function (e) {
@@ -432,13 +426,22 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
 
 
             function handleDragOver(e) {
+                e.stopPropagation();
+                e.preventDefault();
                 e.target.className = (e.type === "dragover" ? "hover" : "");
             }
 
-            function handleFiles(e) {       
-                var files = e.target.files || e.dataTransfer.files;
-                for (var i = 0, f; f = files[i]; i++) {
-                    procesSelectedFile(f);
+            function handleFiles(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var dt = e.dataTransfer || (e.originalEvent && e.originalEvent.dataTransfer);
+                var files = e.target.files || (dt && dt.files);
+                if (files) {
+                    for (var i = 0, f; f = files[i]; i++) {
+                        procesSelectedFile(f);
+                    }
+                } else {
+                    // Perhaps some kind of message here
                 }
             }
 

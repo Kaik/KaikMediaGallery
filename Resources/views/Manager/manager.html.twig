@@ -15,7 +15,7 @@
                     {% for feature in obj_features %}
                         {% if feature.enabled and feature.type == 'feature' %}
                             <li role="presentation" class="mode mode-icon">           
-                                <a data-feature="icon"  href="#kmgallery_manager_{{ feature.name }}_box" aria-controls="kmgallery_manager_{{ feature.name }}_box" role="tab" data-toggle="pill"><i class="{{ feature.icon }}"> </i> {{ feature.name }}</a>
+                                <a data-feature="icon"  href="#kmgallery_manager_{{ feature.name }}_box" aria-controls="kmgallery_manager_{{ feature.name }}_box" role="tab" data-toggle="pill"><i class="{{ feature.icon }}"> </i> {{ feature.getDisplayName() }}</a>
                             </li>  
                         {% endif %}
                     {% endfor %}  
@@ -47,9 +47,9 @@
                                 {% if origin.enabled and origin.type == 'origin' %}
                                 <li role="presentation" class="origins">   
                                     {% if origin.name == 'addmedia' %}
-                                    <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.name }}</a>
+                                    <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
                                     {% else %}
-                                    <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.name }}</a>
+                                    <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
                                     {% endif %}    
                                 </li> 
                                 {% endif %}
@@ -75,7 +75,7 @@
             </div>         
             <div class="modal-footer" style="background:#E4F2FF;">       
                 <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>
-         
+                {{ dump() }}
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

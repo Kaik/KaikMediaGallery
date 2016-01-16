@@ -28,6 +28,10 @@ class GalleryFeature extends AbstractFeature {
         $this->perpage = 25;
     }
     
+    public function getDisplayName() {
+        return 'Insert gallery';
+    }    
+    
     public function getPerpage() {
         return $this->perpage;
     }
@@ -36,19 +40,4 @@ class GalleryFeature extends AbstractFeature {
         $this->perpage = $perpage;
         return $this;
     }   
-    
-    
-    public function getDefaultSettings() {
-        
-        return [//display
-                //upload
-                'extensions' => 'png,jpg', //
-                'mimetypes' => 'image', //
-                //select
-                'maxitems' => '', //
-                'type' => 'feature',
-                'fields' => 'name,description,alt']; //        
-        
-    }
-    
 }

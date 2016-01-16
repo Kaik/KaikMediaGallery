@@ -25,20 +25,8 @@ class InsertFeature extends AbstractFeature {
         $this->icon = 'fa fa-align-justify';        
     }  
     
-    public function getDefaultSettings() {
-        
-        return [//display
-                'width' => '100', // icon width
-                'height' => '100', // icon height single preview
-                'perpage' => '', //
-                //upload
-                'extensions' => 'png,jpg', //
-                'mimetypes' => 'image', //
-                //select
-                'maxitems' => '', //
-                'type' => 'feature',
-                'fields' => 'name,description,alt']; //        
-        
+    public function getDisplayName() {
+        return 'Insert media';
     }
     
 }

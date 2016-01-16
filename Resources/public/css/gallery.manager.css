@@ -134,7 +134,7 @@
 }
 
 .media-preview-details{
-    
+    font-size: smaller;
     
 }
 
@@ -149,7 +149,7 @@
     margin-bottom: 20px;
 }
 
-#drop_zone:hover {
+#drop_zone .hover {
     border: 2px dashed #ff0000;
 }
 
