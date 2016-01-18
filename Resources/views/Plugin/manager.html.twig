@@ -6,6 +6,7 @@
                 KaikMedia.Gallery.settings.set({{ settings|json_encode|raw }});  
                 var config = [];
                 config.$container = $('#kmgallery_plugin_container');
+                config.mediaTypes = {{ mediaTypes|json_encode|raw }};
                 config.obj = [];
                 config.obj.name = 'KaikmediaPagesModule';
 	    	config.obj.reference = 'new';

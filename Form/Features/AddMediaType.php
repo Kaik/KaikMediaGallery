@@ -20,17 +20,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class AddMediaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        
+    {   
         //if ($options['upload'] == false) {        	
         $builder->add('files', 'file', [
             'required' => false,
             'attr' => [
-                "accept" => "image/*",
+                "accept" => $options['allowed_mime_types'],
                 "multiple" => "multiple",
             ]        
         ]);
        // }
+        
+      // var_dump($options);
+      // exit(0);
         
         $builder->add('youtube', 'text', [
             'required' => false
@@ -49,6 +51,7 @@ class AddMediaType extends AbstractType
     {
         $resolver->setDefaults([
             'isXmlHttpRequest' => false,
+            'allowed_mime_types' => false,
             'upload' => true,
         ]);
     }

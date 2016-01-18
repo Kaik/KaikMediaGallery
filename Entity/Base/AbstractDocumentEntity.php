@@ -81,7 +81,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
     
     /**
      * The author uid
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="author", referencedColumnName="uid")
      */
     private $author;    
@@ -105,7 +105,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
         $this->inmenu = 1;
         $this->inlist = 1;
         $em = \ServiceUtil::getService('doctrine.entitymanager');
-        $this->author = $em->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy(array(
+        $this->author = $em->getRepository('Zikula\UsersModule\Entity\UserEntity')->findOneBy(array(
             'uid' => \UserUtil::getVar('uid')
         ));
         $this->language = 'all';
@@ -328,7 +328,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
      * @param integer $author            
      * @return Pages
      */
-    public function setAuthor(\Zikula\Module\UsersModule\Entity\UserEntity $author = null) {
+    public function setAuthor(\Zikula\UsersModule\Entity\UserEntity $author = null) {
         $this->author = $author;
 
         return $this;

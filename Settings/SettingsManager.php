@@ -29,7 +29,7 @@ class SettingsManager {
     public function __construct(VariableApi $variablesManager) {
         $this->name = 'KaikmediaGalleryModule';
         $this->displayName = 'KMGallery';
-        $this->setModules($this->getHookableModules());
+        $this->setModules($this->getSupportedObjects());
         $this->variablesManager = $variablesManager;
         $this->featuresManager = new FeaturesManager();
         $this->mediaHandlersManager = new MediaHandlersManager();
@@ -43,6 +43,14 @@ class SettingsManager {
         return $this->modules;
     }
 
+    public function getModulesMetaData() {
+
+        //$test = [];
+        $modules = $this->entityManager->getRepository('Zikula\Core\Doctrine\Entity\ExtensionEntity')->findBy(array('state' => 3), array('displayname' => 'ASC'));
+
+        return $modules;
+    }
+
     public function setModules($modules) {
         $this->modules = ['KaikmediaGalleryModule' => $modules['KaikmediaGalleryModule']] + $modules;
     }
@@ -51,11 +59,11 @@ class SettingsManager {
      * Returns settings for module 
      */
 
-    public function setModuleSettings($moduleFullName = null, $moduleDisplayName = null, $settings = []) {
+    public function setModuleSettings($moduleFullName = null, $module = [], $settings = []) {
 
         $moduleSettings = [];
         $moduleSettings['name'] = $moduleFullName = $moduleFullName === null ? $this->name : $moduleFullName;
-        $moduleSettings['display_name'] = $moduleDisplayName === null ? $this->displayName : $moduleDisplayName;
+        $moduleSettings['display_name'] = $module['display_name'] === null ? $this->displayName : $module['display_name'];
         $is_this_default_module = ($this->name == $moduleSettings['name']) ? 1 : 0;
         if ($is_this_default_module == 0) {
             $class = '\\Kaikmedia\\GalleryModule\\Entity\\Relations\\' . $moduleFullName . 'RelationsEntity';
@@ -69,6 +77,7 @@ class SettingsManager {
             $enabled = (isset($settings['enabled']) && $settings['enabled'] == 1 ) ? 1 : $is_this_default_module;
         }
         $moduleSettings['enabled'] = $enabled;
+        $moduleSettings['entity'] = (array_key_exists('entity', $module)) ? $module['entity'] : false;
         $features = array_key_exists('features', $settings) ? $settings['features'] : null;
         $moduleSettings['features'] = $this->setModuleFeatures($features);
 
@@ -99,20 +108,6 @@ class SettingsManager {
         }
 
         return $moduleFeatures;
-    }
-
-    /**
-     * This function get hookable modules list from system
-     * 
-     */
-    public function getHookableModules() {
-
-        //@todo: change it to Core 2.0 version
-        $hookSubscribers = \HookUtil::getHookSubscribers();
-        foreach ($hookSubscribers as $module) {
-            $modules[$module['name']] = $module['displayname'];
-        }
-        return $modules;
     }
 
     public function getFeatures() {
@@ -148,9 +143,9 @@ class SettingsManager {
     public function setSettings($settings = []) {
         $mixedSettings = [];
         $modules = $this->modules;
-        foreach ($modules as $moduleFullName => $moduleDisplayName) {
+        foreach ($modules as $moduleFullName => $module) {
             $moduleSettings = array_key_exists($moduleFullName, $settings) ? $settings[$moduleFullName] : [];
-            $mixedSettings[$moduleFullName] = $this->setModuleSettings($moduleFullName, $moduleDisplayName, $moduleSettings);
+            $mixedSettings[$moduleFullName] = $this->setModuleSettings($moduleFullName, $module, $moduleSettings);
         }
         $this->settings = $mixedSettings;
 
@@ -169,6 +164,77 @@ class SettingsManager {
         }
 
         return $this->setSettings($settings);
+    }
+
+    public function getSettingsForObject($object) {
+        return (array_key_exists($object, $this->settings)) ? $this->settings[$object] : false;
+    }
+
+    public function getFeatureForObject($object, $feature) {
+
+        $object_settings = $this->getSettingsForObject($object);
+        if ($object_settings === false) {
+            return false;
+        }
+        $object_features = (array_key_exists('features', $object_settings)) ? $object_settings['features'] : false;
+        if ($object_features === false) {
+            return false;
+        }
+
+        $feature_settings = $object_features->filter(
+                        function($entry) use ($feature) {
+                    return ($entry->getName() == $feature) ? true : false;
+                }
+                )->first();
+
+        return $feature_settings;
+    }
+
+    public function getAllowedMimeTypesForObject($object) {
+        $allowedMimeTypes = [];
+
+        $addMediaFeature = $this->getFeatureForObject($object, 'addmedia');
+        if ($addMediaFeature === false) {
+            return '';
+        }
+        $addMediaFeatureSettings = $addMediaFeature->getSettings();
+        if ($addMediaFeatureSettings === false) {
+            return '';
+        }
+        $mimeTypesCollection = $addMediaFeatureSettings->filter(
+                function($entry) {
+            return ($entry->getName() == 'mimetype' && $entry->getEnabled()) ? true : false;
+        }
+        );
+        foreach ($mimeTypesCollection as $mimeType){
+          $allowedMimeTypes[] = $mimeType->getMimeType();
+        }    
+        return implode(',', $allowedMimeTypes);
+    }
+
+    public function getSupportedObjects() {
+        $supportedObjects = [
+            'KaikmediaGalleryModule' => ['name' => 'KaikmediaGalleryModule',
+                'is_default' => true, //mark this module unused
+                'display_name' => 'Gallery',
+                'is_supported' => 1,
+                'enabled' => 1,
+            ],
+            'ZikulaUsersModule' => ['name' => 'ZikulaUsersModule',
+                'display_name' => 'Users',
+                'is_supported' => 1,
+                'enabled' => 0,
+                'entity' => 'Zikula\UsersModule\Entity\UserEntity'
+            ],
+            'KaikmediaPagesModule' => ['name' => 'KaikmediaPagesModule',
+                'display_name' => 'Pages',
+                'is_supported' => 1,
+                'enabled' => 0,
+                'entity' => 'Kaikmedia\PagesModule\Entity\PageEntity'
+            ]
+        ];
+        
+        return $supportedObjects;
     }
 
 }

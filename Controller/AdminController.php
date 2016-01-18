@@ -343,6 +343,8 @@ class AdminController extends AbstractController {
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
                     'form' => $form->createView(),
+                    //'modules' => $modules,
+                    'supported_objects' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject('KaikmediaPagesModule'),
                     'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings()
         ]);
     }

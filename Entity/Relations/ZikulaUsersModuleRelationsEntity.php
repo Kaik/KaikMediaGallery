@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ZikulaUsersModuleRelationsEntity extends AbstractRelationEntity {
        
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="objectId", referencedColumnName="uid")
      */
     private $objectId;

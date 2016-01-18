@@ -70,12 +70,13 @@
                     </div>          
                     <div id="kmgallery_manager_details" class="col-xs-12 col-md-2">  
                         {% include "KaikmediaGalleryModule:Manager:details.html.twig" %}         
-                    </div>                      
+                    </div>  
+                 {{ dump() }}                    
                 </div>   
             </div>         
             <div class="modal-footer" style="background:#E4F2FF;">       
                 <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>
-                {{ dump() }}
+           
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

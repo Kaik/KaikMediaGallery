@@ -20,9 +20,9 @@ use Zikula\Core\Doctrine\Entity\AbstractEntityCategory;
 class AlbumCategoryEntity extends AbstractEntityCategory
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\Album\AlbumEntity", inversedBy="categoryAssignments")
+     * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\Album\AlbumEntity", inversedBy="category")
      * @ORM\JoinColumn(name="entityId", referencedColumnName="id")
-     * @var \Kaikmedia\PagesModule\Entity\PageEntity
+     * @var Kaikmedia\GalleryModule\Entity\Album\AlbumEntity
      */
     private $entity;
 

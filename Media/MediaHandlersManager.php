@@ -42,8 +42,8 @@ class MediaHandlersManager {
         foreach($this->mediaHandlers as $mediaHandlerAlias){
             $handler = $this->getMediaHandler($mediaHandlerAlias);
             $mimeTypes = $handler->getSupportedMimeTypes();
-            foreach ($mimeTypes as $mimeType){
-                $supportedMimeTypes[$mimeType] = $mediaHandlerAlias;    
+            foreach ($mimeTypes as $mimeType => $data){
+                $supportedMimeTypes[$mimeType] = $data;    
             } 
         }
         return $supportedMimeTypes;

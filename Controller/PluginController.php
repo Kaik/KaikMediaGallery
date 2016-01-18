@@ -33,8 +33,9 @@ class PluginController extends AbstractController {
         $obj_name = $masterRequest->attributes->get('_zkModule');
         
         $addMediaForm = $this->createForm(
-                new AddMediaType([], ['isXmlHttpRequest' => $request->isXmlHttpRequest()]
-                )
+                new AddMediaType(), null , ['allowed_mime_types' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject($obj_name),
+                                      'isXmlHttpRequest' => $request->isXmlHttpRequest()]
+                
         );
 
         $media = $this->get('doctrine.entitymanager')
@@ -50,6 +51,7 @@ class PluginController extends AbstractController {
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Plugin:manager.html.twig', array(
                     'media' => $media,
+                    'mediaTypes' => $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes(),
                     'mode' => $mode,
                     'addMediaForm' => $addMediaForm->createView(),
                     'obj_name' => $obj_name,

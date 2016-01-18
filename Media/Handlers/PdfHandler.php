@@ -24,9 +24,8 @@ class PdfHandler extends AbstractMediaHandler {
 
     public function getSupportedMimeTypes() {
     return [
-            'application/pdf',
-            'application/x-pdf',
+            'application/pdf' => ['handler' => 'pdf', 'icon' => 'fa fa-pdf-o'],
+            'application/x-pdf' => ['handler' => 'pdf', 'icon' => 'fa fa-pdf-o'],
         ];
     }
-
 }

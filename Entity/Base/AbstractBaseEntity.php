@@ -48,7 +48,7 @@ abstract class AbstractBaseEntity extends EntityAccess {
     /**
      * The user id of the creator of the category
      * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="createdBy", referencedColumnName="uid")
      */
     private $createdBy;
@@ -62,13 +62,13 @@ abstract class AbstractBaseEntity extends EntityAccess {
     /**
      * The user id of the last updater of the category
      * @Gedmo\Blameable(on="update")
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="updatedBy", referencedColumnName="uid")
      */
     private $updatedBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="deletedBy", referencedColumnName="uid")
      */
     private $deletedBy;

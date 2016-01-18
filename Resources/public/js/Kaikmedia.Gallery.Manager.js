@@ -34,6 +34,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
     };
 
     //Public Property
+    manager.mediaTypes = [];
     manager.obj = false;
     manager.features = [];
     manager.origins = [];
@@ -49,6 +50,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         //add vars from config
         manager.obj = config.obj;
         // view as singelton
+        manager.mediaTypes = config.mediaTypes;
         manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
         //init view
         //manager.view.init(config.$container.find('#kmgallery_manager'));    	

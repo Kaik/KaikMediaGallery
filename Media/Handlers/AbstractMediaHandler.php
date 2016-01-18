@@ -53,7 +53,7 @@ class AbstractMediaHandler {
     
     public function getSupportedMimeTypes() {
         return [];
-    }    
+    }  
     
     public function getFormClass() {
       return '\Kaikmedia\\GalleryModule\\Form\\Media\\Handlers' . ucfirst($this->getAlias()) . 'Handler';  //??

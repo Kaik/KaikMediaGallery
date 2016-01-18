@@ -55,10 +55,10 @@ class AddmediaFeature extends AbstractFeature {
         $this->settings->add($uploadSettings);
         $mediaHandlersManager = new MediaHandlersManager();
         $mimeTypes = $mediaHandlersManager->getSupportedMimeTypes();
-        foreach ($mimeTypes as $mimeType => $handler) {
+        foreach ($mimeTypes as $mimeType => $data) {
             $mimeTypeSettings = new MimeTypeSettings();
             $mimeTypeSettings->setMimeType($mimeType);
-            $mimeTypeSettings->setHandler($handler);
+            $mimeTypeSettings->setHandler($data['handler']);
             $this->settings->add($mimeTypeSettings);
         }
     }
