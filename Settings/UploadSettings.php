@@ -54,7 +54,7 @@ class UploadSettings {
         return $this;
     }
 
-    public function getUploadMaxSingleFiles() {
+    public function getUploadMaxSingleSize() {
         return $this->uploadMaxSingleSize;
     }
 

@@ -60,9 +60,9 @@
                                                 <div class="col-md-4">
                                                     <p class="text-capitalize">{{ feature.vars.value.type }}</p>
                                                 </div>                                                 
-                                                <div class="col-md-4 text-right pull-right">				
+                                                <div class="col-md-4 text-right pull-right">		  
                                                     {# Feature x on/off#}
-                                                    {{ __('Feature')}} {{ module.vars.value.enabled == '0' ? __(' is disabled.') : __(' is enabled.') }}  
+                                                    {{ __('Feature')}} {{ feature.vars.value.enabled == '0' ? __(' is disabled.') : __(' is enabled.') }}  
                                                     {{ form_widget(feature.enabled, {'mode': 'feature-switch','module': module.vars.value.name,'feature': feature.vars.value.name ,'label_attr': {'class': 'btn btn-xs btn-primary radio-inline' }}) }}
                                                 </div>	                                                
                                             </div>

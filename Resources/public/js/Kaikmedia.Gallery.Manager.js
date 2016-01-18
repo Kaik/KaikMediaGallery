@@ -51,6 +51,8 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         manager.obj = config.obj;
         // view as singelton
         manager.mediaTypes = config.mediaTypes;
+        manager.features = config.features;
+        manager.addmedia = config.addmedia;
         manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
         //init view
         //manager.view.init(config.$container.find('#kmgallery_manager'));    	

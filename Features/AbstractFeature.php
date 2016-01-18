@@ -70,6 +70,13 @@ class AbstractFeature {
     public function getClass() {
         
     }   
+    
+    public function mergeSettings($settings) {
+        $enabled = ($settings->getEnabled() == 1) ? $this->getEnabled() : 0;
+        $this->setEnabled($enabled);
+        
+        return $this;
+    }
 
     public function getAlias()
     {

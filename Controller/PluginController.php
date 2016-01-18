@@ -52,6 +52,7 @@ class PluginController extends AbstractController {
         return $this->render('KaikmediaGalleryModule:Plugin:manager.html.twig', array(
                     'media' => $media,
                     'mediaTypes' => $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes(),
+                    'objects' => $this->get('kaikmedia_gallery_module.settings_manager')->getObjects(),
                     'mode' => $mode,
                     'addMediaForm' => $addMediaForm->createView(),
                     'obj_name' => $obj_name,
