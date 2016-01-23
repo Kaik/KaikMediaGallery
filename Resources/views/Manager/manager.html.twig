@@ -45,7 +45,7 @@
                         <ul id="kmgallery_manager_origins" class="nav nav-tabs">
                             {% for origin in obj_features %}
                                 {% if origin.enabled and origin.type == 'origin' %}
-                                <li role="presentation" class="origins">   
+                                <li role="presentation" class="origins {% if origin.name == 'addmedia' %} pull-right{% endif %} ">   
                                     {% if origin.name == 'addmedia' %}
                                     <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
                                     {% else %}

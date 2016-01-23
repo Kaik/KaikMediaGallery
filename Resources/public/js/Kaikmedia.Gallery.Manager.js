@@ -34,6 +34,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
     };
 
     //Public Property
+    manager.upload = [];
     manager.mediaTypes = [];
     manager.obj = false;
     manager.features = [];
@@ -53,6 +54,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         manager.mediaTypes = config.mediaTypes;
         manager.features = config.features;
         manager.addmedia = config.addmedia;
+        manager.upload = config.addmedia[0];
         manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
         //init view
         //manager.view.init(config.$container.find('#kmgallery_manager'));    	
@@ -170,6 +172,49 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
 
         manager.view.switchOrigin(manager.current.origin.name);
     };
+
+    /*
+     * manager file
+     * 
+     */
+    manager.handleFileForUpload = function (f) {
+        // Render thumbnail.
+        // Only process image files.
+        var file = {};
+        file = manager.validateFileForUpload(f);
+        file.mediaType = manager.mediaTypes[f.type];
+        //console.log(file);
+
+        if (file.type.match('image.*')) {
+            var reader = new FileReader();
+            // Closure to capture the file information.
+            reader.onload = (function (theFile) {
+                return function (e) {
+                    manager.view.displaySelectedFile(theFile, e.target.result);
+                };
+            })(f);
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(file);
+        } else {
+            manager.view.displaySelectedFile(file, false);
+        }
+
+    };
+
+    manager.validateFileForUpload = function (f) {
+        // Render thumbnail.
+        f.error = false;
+        
+        if(f.size > manager.upload.uploadMaxSingleSize){
+           f.error = 'File is too big. Maximum single file size is ' + manager.upload.uploadMaxSingleSize;
+        }
+        
+        
+        
+        return f;
+    };
+
+
 
     /*
      * manager item
@@ -428,7 +473,6 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 });
             }
 
-
             function handleDragOver(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -442,53 +486,48 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 var files = e.target.files || (dt && dt.files);
                 if (files) {
                     for (var i = 0, f; f = files[i]; i++) {
-                        procesSelectedFile(f);
+                        manager.handleFileForUpload(f);
                     }
                 } else {
                     // Perhaps some kind of message here
                 }
             }
 
-
-            function procesSelectedFile(f) {
-                // Render thumbnail.
-                // Only process image files.
-                if (!f.type.match('image.*')) {
-                    //    continue;
-                }
-
-                var reader = new FileReader();
-
-                // Closure to capture the file information.
-                reader.onload = (function (theFile) {
-                    return function (e) {
-                        displaySelectedFile(theFile, e.target.result);
-                    };
-                })(f);
-
-                // Read in the image file as a data URL.
-                reader.readAsDataURL(f);
-
-            }
-
-
             function displaySelectedFile(theFile, src) {
                 // Render thumbnail.
+                console.log(theFile);
                 var li = $('<li/>')
                         .addClass('media-preview col-md-2 ')
                         .appendTo($upload_preview);
-                $('<img/>')
-                        .addClass('media-preview-file thumbnail img-responsive')
-                        .attr('src', src)
-                        .attr('title', escape(theFile.name))
-                        .appendTo(li);
+                if (src !== false) {
+                    $('<img/>')
+                            .addClass('media-preview-file thumbnail img-responsive')
+                            .attr('src', src)
+                            .attr('title', escape(theFile.name))
+                            .appendTo(li);
+                } else {
+                    $('<i/>')
+                            .addClass(theFile.mediaType.icon + ' fa-5x')
+                            .attr('title', escape(theFile.name))
+                            .appendTo(li);
+                }
+
                 var details = $('<div/>')
                         .addClass('media-preview-details')
                         .appendTo(li);
+                
                 $('<p/>')
                         .addClass('name file-name')
                         .html(theFile.name)
+                        .appendTo(details);                
+                  
+                if (theFile.error !== false) {                
+                $('<p/>')
+                        .addClass('error text-danger')
+                        .html(theFile.error)
                         .appendTo(details);
+                }
+                /*
                 $('<p/>')
                         .addClass('size')
                         .html(theFile.size)
@@ -497,10 +536,8 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                         .addClass('type')
                         .html(theFile.type)
                         .appendTo(details);
+                */
             }
-
-
-
 
             //
             function itemDetails(item) {
@@ -586,6 +623,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 getDataFromView: getDataFromView,
                 switchOrigin: switchOrigin,
                 switchFeature: switchFeature,
+                displaySelectedFile: displaySelectedFile,
                 itemSelect: itemSelect,
                 itemUnSelect: itemUnSelect,
                 itemDetails: itemDetails,
