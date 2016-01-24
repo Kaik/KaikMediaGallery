@@ -15,23 +15,8 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
 
     /*
      * manager properties 
-     * 
+     *
      */
-    //Private Property
-    // var ... @todo move to separate gallery namespace?
-    var new_item = {id: false,
-        name: '',
-        src: '',
-        publicdomain: false,
-        file: false,
-        description: '',
-        size: 0,
-        ext: '',
-        mimeType: '',
-        legal: '',
-        author: false,
-        relation: 'new'
-    };
 
     //Public Property
     manager.upload = [];
@@ -45,7 +30,11 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
 
     /*
      * manager functions  
-     * 
+     *         //init view
+     //manager.view.init(config.$container.find('#kmgallery_manager'));    	
+     //load data true ajax false view
+     //switch origin to defautl
+     //manager.view.switchOrigin(manager.current.origin.name);     
      */
     manager.init = function (config) {
         //add vars from config
@@ -56,13 +45,8 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         manager.addmedia = config.addmedia;
         manager.upload = config.addmedia[0];
         manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
-        //init view
-        //manager.view.init(config.$container.find('#kmgallery_manager'));    	
-        //load data true ajax false view
         loadData(false);
-        //switch origin to defautl
-        //manager.view.switchOrigin(manager.current.origin.name);
-        console.log(KaikMedia);
+        console.log(KaikMedia.Gallery.mediaItem);
     };
 
     /*
@@ -173,110 +157,16 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         manager.view.switchOrigin(manager.current.origin.name);
     };
 
-    /*
-     * manager file
-     * 
-     */
-    manager.handleFileForUpload = function (f) {
-        // Render thumbnail.
-        // Only process image files.
-        var file = {};
-        file = manager.validateFileForUpload(f);
-        file.mediaType = manager.mediaTypes[f.type];
-        //console.log(file);
-
-        if (file.type.match('image.*')) {
-            var reader = new FileReader();
-            // Closure to capture the file information.
-            reader.onload = (function (theFile) {
-                return function (e) {
-                    manager.view.displaySelectedFile(theFile, e.target.result);
-                };
-            })(f);
-            // Read in the image file as a data URL.
-            reader.readAsDataURL(file);
-        } else {
-            manager.view.displaySelectedFile(file, false);
-        }
-
-    };
-
-    manager.validateFileForUpload = function (f) {
-        // Render thumbnail.
+    manager.prepareForUpload = function (f) {
+        // add media type info.
+        f.mediaType = manager.mediaTypes[f.type];
+        // add preupload validation info.        
         f.error = false;
-        
-        if(f.size > manager.upload.uploadMaxSingleSize){
-           f.error = 'File is too big. Maximum single file size is ' + manager.upload.uploadMaxSingleSize;
-        }
-        
-        
+        if (f.size > manager.upload.uploadMaxSingleSize) {
+            f.error = 'File is too big. Maximum single file size is ' + manager.upload.uploadMaxSingleSize;
+        }   
         
         return f;
-    };
-
-
-
-    /*
-     * manager item
-     * 
-     */
-    manager.itemSelect = function (item) {
-        /* add clone item and add all needed data and push to selected */
-
-        manager.view.itemSelect(item);
-    };
-
-    manager.itemUnSelect = function (item) {
-        /* add remove item from selected */
-
-        manager.view.itemUnSelect(item);
-    };
-
-    manager.itemGetDetails = function (item) {
-        /* change item data acording to view need's like size in kb */
-
-        manager.view.itemDetails(item);
-    };
-
-    manager.itemEdit = function (item) {
-        /* get ajax form */
-
-        var pars = {
-            mode: manager.current.feature.name,
-            original: item.id,
-            relation: item.relation
-        };
-
-        //manager.view.showBusy();
-        /* */
-        $.ajax({
-            type: "GET",
-            url: Routing.generate('kaikmediagallerymodule_manager_edit'),
-            data: pars
-        }).success(function (result) {
-            var template = result.template;
-            manager.view.itemEdit(template);
-        }).error(function (result) {
-            manager.view.displayError(result.status + ': ' + result.statusText);
-        }).always(function () {
-            //manager.view.hideBusy();           
-        });
-
-    };
-
-    manager.copy_item = function () {
-        return {id: false,
-            name: '',
-            src: '',
-            publicdomain: false,
-            file: false,
-            description: '',
-            size: 0,
-            ext: '',
-            mimeType: '',
-            legal: '',
-            relation: 0
-        };
     };
 
     /*
@@ -405,28 +295,6 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
 
             }
 
-            function getItemDataFromElement($el) {
-
-                var item = {};
-
-                item.id = $el.attr('data-id');
-                item.name = $el.attr('aria-label');
-                item.description = $el.attr('data-description');
-                item.publicdomain = $el.attr('data-public');
-                item.ext = $el.attr('data-ext');
-                item.mimeType = $el.attr('data-mimetype');
-                item.author = $el.attr('data-author');
-                item.size = $el.attr('data-size');
-                item.legal = $el.attr('data-legal');
-
-                item.relation = $el.attr('data-relation');
-                item.type = $el.attr('data-type');
-
-                item.src = $el.find('img').attr('src');
-                //console.log(item, $el);
-                return item;
-            }
-
             //origins and features
             function switchFeature() {
                 libraryCleanSelection();
@@ -449,29 +317,6 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 $('#kmgallery_manager_media_box').addClass('active');
                 //console.log('origin swiched');
             }
-            /*
-             //Item template
-             function itemTemplate( ) {
-             
-             var $item = $("<div>", {class: "item" });
-             
-             return $item
-             }       
-             */
-            //Item
-            function itemSelect(item) {
-                $modal.find('.item-' + item.id).each(function () {
-                    $(this).find('a.media-unselect').removeClass('hide');
-                    $(this).attr('data-relation', item.relation);
-                });
-            }
-            //
-            function itemUnSelect(item) {
-                $modal.find('.item-' + item.id).each(function () {
-                    $(this).find('a.media-unselect').addClass('hide');
-                    $(this).attr('data-relation', 'new');
-                });
-            }
 
             function handleDragOver(e) {
                 e.stopPropagation();
@@ -486,84 +331,15 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 var files = e.target.files || (dt && dt.files);
                 if (files) {
                     for (var i = 0, f; f = files[i]; i++) {
-                        manager.handleFileForUpload(f);
+                        var mediaItem = KaikMedia.Gallery.mediaItem.upload(manager.prepareForUpload(f));
+                        $upload_preview.append(mediaItem.view.getItem());
                     }
                 } else {
                     // Perhaps some kind of message here
                 }
             }
 
-            function displaySelectedFile(theFile, src) {
-                // Render thumbnail.
-                console.log(theFile);
-                var li = $('<li/>')
-                        .addClass('media-preview col-md-2 ')
-                        .appendTo($upload_preview);
-                if (src !== false) {
-                    $('<img/>')
-                            .addClass('media-preview-file thumbnail img-responsive')
-                            .attr('src', src)
-                            .attr('title', escape(theFile.name))
-                            .appendTo(li);
-                } else {
-                    $('<i/>')
-                            .addClass(theFile.mediaType.icon + ' fa-5x')
-                            .attr('title', escape(theFile.name))
-                            .appendTo(li);
-                }
 
-                var details = $('<div/>')
-                        .addClass('media-preview-details')
-                        .appendTo(li);
-                
-                $('<p/>')
-                        .addClass('name file-name')
-                        .html(theFile.name)
-                        .appendTo(details);                
-                  
-                if (theFile.error !== false) {                
-                $('<p/>')
-                        .addClass('error text-danger')
-                        .html(theFile.error)
-                        .appendTo(details);
-                }
-                /*
-                $('<p/>')
-                        .addClass('size')
-                        .html(theFile.size)
-                        .appendTo(details);
-                $('<p/>')
-                        .addClass('type')
-                        .html(theFile.type)
-                        .appendTo(details);
-                */
-            }
-
-            //
-            function itemDetails(item) {
-                var $item = $("<div>", {class: "item-details"});
-                $item.html('<img class="img-responsive" src="' + item.src + '">');
-                $details_box.find('.item-details-title-box').removeClass('hide');
-                $details_box.find('.item-details-preview-box').html($item).removeClass('hide');
-
-                $details = $details_box.find('.item-details-box');
-                $details.find('.name').html(item.name);
-                $details.find('.size').html(item.size);
-                $details.find('.mimetype').html(item.mimeType);
-                $details.find('.ext').html(item.ext);
-                $details.find('.author').html(item.author);
-                $details.removeClass('hide');
-                //console.log($item);
-
-                $details_box.find('.item-details-info-box').addClass('hide');
-            }
-
-            //
-            function itemEdit(form) {
-                $details_box.find('.item-details-edit-box').html(form).removeClass('hide');
-                removeOverlay();
-                //bind saveItem form action       	
-            }
 
             //Item
             function libraryCleanSelection() {
@@ -623,13 +399,8 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 getDataFromView: getDataFromView,
                 switchOrigin: switchOrigin,
                 switchFeature: switchFeature,
-                displaySelectedFile: displaySelectedFile,
-                itemSelect: itemSelect,
-                itemUnSelect: itemUnSelect,
-                itemDetails: itemDetails,
                 showBusy: showBusy,
                 hideBusy: hideBusy,
-                itemEdit: itemEdit,
                 displayError: displayError
             };
         }
