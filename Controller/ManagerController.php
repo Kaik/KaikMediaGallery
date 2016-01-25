@@ -4,11 +4,6 @@
  */
 namespace Kaikmedia\GalleryModule\Controller;
 
-use ModUtil;
-use System;
-use SecurityUtil;
-use ServiceUtil;
-use UserUtil;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Response\Ajax\NotFoundResponse;
 use Zikula\Core\Response\Ajax\ForbiddenResponse;
@@ -21,18 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
-use Kaikmedia\GalleryModule\Entity\MediaRelationsEntity as MediaRelation;
-use Kaikmedia\GalleryModule\Util\Settings as Settings;
 
 /**
- * @Route("/ajax/manager")
+ * @Route("/manager")
  */
 class ManagerController extends AbstractController
 {
    
     /**
-     * @Route("/edit/", options={"expose"=true})
+     * @Route("/edit", options={"expose"=true})
      * @Method("GET")
      * Modify aplicant information.
      *

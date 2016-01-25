@@ -330,7 +330,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 var files = e.target.files || (dt && dt.files);
                 if (files) {
                     for (var i = 0, f; f = files[i]; i++) {
-                        var mediaItem = new KaikMedia.Gallery.model.mediaItem(); //.upload);
+                        var mediaItem = new KaikMedia.Gallery.model.mediaItem(); 
                         mediaItem.setDatafromUpload(manager.prepareForUpload(f));
                         $upload_preview.append(mediaItem.view.render());
                         //mediaItem.upload();

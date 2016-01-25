@@ -51,11 +51,11 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
         var mediaView = function () {
 
             //this is item as jquery dom element..
-            var $item = $('<div/>').addClass('media-item col-md-2 ');
-            var $progress = $('<div/>').addClass('media-progress progress');
-            var $preview = $('<div/>').addClass('media-preview');
-            var $details = $('<div/>').addClass('media-details');
-            var $error = $('<div/>').addClass('media-error');
+            var $item = $('<div/>').addClass('mdtm');
+            var $progress = $('<div/>').addClass('progress');
+            var $preview = $('<div/>').addClass('preview');
+            var $details = $('<div/>').addClass('details');
+            var $error = $('<div/>').addClass('error');
 
             $item.append($progress);
             $item.append($preview);
@@ -81,7 +81,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 
             function imagePreview() {
                 return $('<img/>')
-                        .addClass('media-preview-file thumbnail img-responsive')
+                        .addClass('image img-responsive')
                         .attr('src', item.mediaExtra.file)
                         .attr('title', escape(item.title));
             }
@@ -97,10 +97,9 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             ;
 
             function iconPreview() {
-                console.log(item);
                 var icon = typeof (item.mediaExtra.mediaType) !== 'undefined' ? item.mediaExtra.mediaType.icon : 'fa fa-file';
                 return $('<i/>')
-                        .addClass('media-preview-icon ' + icon + ' fa-5x')
+                        .addClass('icon ' + icon + ' fa-5x')
                         .attr('title', escape(item.title));
 
             }
@@ -108,10 +107,6 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 
             function addDetails() {
 
-                $('<p/>')
-                        .addClass('name file-name')
-                        .html(item.title)
-                        .appendTo($details);
                 $('<p/>')
                         .addClass('size')
                         .html(item.mediaExtra.size)
@@ -124,13 +119,22 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             }
             ;
 
+            function displayTitle() {
+                $('<p/>')
+                        .addClass('title')
+                        .html(item.title)
+                        .appendTo($details);
+            }
+            ;
+
             function addError() {
                 if (item.mediaExtra.error !== false) {
                     $('<p/>')
-                            .addClass('error text-danger')
+                            .addClass('text text-danger')
                             .html(item.mediaExtra.error)
                             .appendTo($error);
                 }
+                setProgressType('progress-bar-danger');
             }
             ;
 
@@ -145,16 +149,29 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             }
             ;
 
+            function setProgressType(type) {
+                var type = typeof (type) !== 'undefined' && type !== null ? type : '';
+                var $progres_bar = $progress.find('.progress-bar');
+                $progres_bar.removeClass().addClass('hide').addClass('progress-bar').addClass(type).removeClass('hide');
+            }
+            ;
+
+
             function updateProgress(x) {
                 var width = typeof (x) !== 'undefined' && x !== null ? x : 0;
-                var $progres_bar = $progress.find('div.progress-bar');
+                
+                if(width === 100){
+                  // setProgressType('progress-bar-success'); 
+                }
+                
+                var $progres_bar = $progress.find('.progress-bar');
                 $progres_bar.css('width', width + '%')
                         .attr('aria-valuenow', width);
             }
             ;
 
             function removeProgress() {
-                $progress.remove();
+                $progress.fadeOut(300, function() { $(this).remove(); });
 
             }
             ;
@@ -168,12 +185,13 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                 render: render,
                 setView: setView,
                 addProgress: addProgress,
+                setProgressType: setProgressType,
                 updateProgress: updateProgress,
                 removeProgress: removeProgress,
                 addPreview: addPreview,
                 updatePreview: updatePreview,
                 addError: addError,
-                addDetails: addDetails
+                displayTitle: displayTitle
             };
 
         };
@@ -209,7 +227,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                     item.mediaExtra.file = e.target.result;
                     view.updateProgress(100);
                     view.updatePreview();
-
+                    create();
                 };
             })(f);
 
@@ -220,15 +238,15 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
         function errorHandler(evt) {
             switch (evt.target.error.code) {
                 case evt.target.error.NOT_FOUND_ERR:
-                    alert('File Not Found!');
+                    item.mediaExtra.error = 'File Not Found!';
                     break;
                 case evt.target.error.NOT_READABLE_ERR:
-                    alert('File is not readable');
+                    item.mediaExtra.error = 'File is not readable';
                     break;
                 case evt.target.error.ABORT_ERR:
                     break; // noop
                 default:
-                    alert('An error occurred reading this file.');
+                    item.mediaExtra.error = 'An error occurred reading this file.';
             }
             ;
         }
@@ -248,6 +266,8 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
         this.setDatafromUpload = function (f) {
 
             item.title = f.name;
+            view.displayTitle();
+            item.mediaExtra.fileData = f;
             item.mediaExtra.name = f.name;
             item.mediaExtra.size = f.size;
             item.mediaExtra.mimeType = f.type;
@@ -259,6 +279,73 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             //console.log(item);
 
         };
+
+        function create() {
+            
+            if(item.mediaExtra.error){
+              view.setProgressType('progress-bar-danger');
+              return false;  
+            }
+            
+            updateProgress(0);
+            view.setProgressType('progress-bar-warning');
+
+            var data = new FormData();
+            //var token = $newLi.find('input[name="upload_token"]').val();
+            //console.log(token);
+            data.append('media[name]', item.title);
+            data.append('media[description]', item.description);           
+            data.append('media[file]', item.mediaExtra.fileData);
+            //data.append('images[_token]',token);  
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('kaikmediagallerymodule_media_create'),
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,                
+                xhr: function () {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = (evt.loaded / evt.total) * 100;   
+                            updateProgress(percentComplete);
+                            if (percentComplete === 100) {
+                                view.setProgressType('progress-bar-success');
+                            }             
+                        }
+                    }, false);
+                    
+                    xhr.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = (evt.loaded / evt.total) * 100;
+                            updateProgress(percentComplete);
+                        }
+                    }, false);
+                    return xhr;
+                }
+            }).success(function (result) {
+                console.log(result);
+                //var template = result.template;
+                //manager.view.itemEdit(template);
+                view.setProgressType('progress-bar-success');
+                view.removeProgress();
+            }).error(function (result) {
+                console.log(result);
+                view.setProgressType('progress-bar-danger');
+                //manager.view.displayError(result.status + ': ' + result.statusText);
+            }).always(function () {
+                console.log('always');
+                //manager.view.hideBusy();           
+            });
+
+
+
+
+        };
+
+
 
     };
 
