@@ -46,7 +46,6 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         manager.upload = config.addmedia[0];
         manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
         loadData(false);
-        console.log(KaikMedia.Gallery.mediaItem);
     };
 
     /*
@@ -331,8 +330,10 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 var files = e.target.files || (dt && dt.files);
                 if (files) {
                     for (var i = 0, f; f = files[i]; i++) {
-                        var mediaItem = KaikMedia.Gallery.mediaItem.upload(manager.prepareForUpload(f));
-                        $upload_preview.append(mediaItem.view.getItem());
+                        var mediaItem = new KaikMedia.Gallery.model.mediaItem(); //.upload);
+                        mediaItem.setDatafromUpload(manager.prepareForUpload(f));
+                        $upload_preview.append(mediaItem.view.render());
+                        //mediaItem.upload();
                     }
                 } else {
                     // Perhaps some kind of message here
