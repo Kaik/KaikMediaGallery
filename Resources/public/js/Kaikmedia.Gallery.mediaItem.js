@@ -159,11 +159,11 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 
             function updateProgress(x) {
                 var width = typeof (x) !== 'undefined' && x !== null ? x : 0;
-                
-                if(width === 100){
-                  // setProgressType('progress-bar-success'); 
+
+                if (width === 100) {
+                    // setProgressType('progress-bar-success'); 
                 }
-                
+
                 var $progres_bar = $progress.find('.progress-bar');
                 $progres_bar.css('width', width + '%')
                         .attr('aria-valuenow', width);
@@ -171,7 +171,9 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             ;
 
             function removeProgress() {
-                $progress.fadeOut(300, function() { $(this).remove(); });
+                $progress.fadeOut(300, function () {
+                    $(this).remove();
+                });
 
             }
             ;
@@ -273,6 +275,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             item.mediaExtra.mimeType = f.type;
             item.mediaExtra.error = f.error;
             item.mediaExtra.mediaType = f.mediaType;
+            item.mediaExtra.isUpload = true;
             item.mediaExtra.isImage = this.isImage();
             this.readFile(f);
             view.addError();
@@ -281,42 +284,40 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
         };
 
         function create() {
-            
-            if(item.mediaExtra.error){
-              view.setProgressType('progress-bar-danger');
-              return false;  
+
+            if (item.mediaExtra.error) {
+                view.setProgressType('progress-bar-danger');
+                return false;
             }
-            
+
             updateProgress(0);
             view.setProgressType('progress-bar-warning');
-
-            var data = new FormData();
+            console.log(item);
+            var type = typeof (item.mediaExtra.mediaType) !== 'undefined' ? item.mediaExtra.mediaType.handler : 'unknown';
+            var data = getMediaItemDataForm();
             //var token = $newLi.find('input[name="upload_token"]').val();
             //console.log(token);
-            data.append('media[name]', item.title);
-            data.append('media[description]', item.description);           
-            data.append('media[file]', item.mediaExtra.fileData);
             //data.append('images[_token]',token);  
 
             $.ajax({
                 type: "POST",
-                url: Routing.generate('kaikmediagallerymodule_media_create'),
+                url: Routing.generate('kaikmediagallerymodule_media_create', { "type": type, "_format": 'json'}),
                 data: data,
                 cache: false,
                 contentType: false,
-                processData: false,                
+                processData: false,
                 xhr: function () {
                     var xhr = new window.XMLHttpRequest();
                     xhr.upload.addEventListener("progress", function (evt) {
                         if (evt.lengthComputable) {
-                            var percentComplete = (evt.loaded / evt.total) * 100;   
+                            var percentComplete = (evt.loaded / evt.total) * 100;
                             updateProgress(percentComplete);
                             if (percentComplete === 100) {
                                 view.setProgressType('progress-bar-success');
-                            }             
+                            }
                         }
                     }, false);
-                    
+
                     xhr.addEventListener("progress", function (evt) {
                         if (evt.lengthComputable) {
                             var percentComplete = (evt.loaded / evt.total) * 100;
@@ -336,16 +337,45 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                 view.setProgressType('progress-bar-danger');
                 //manager.view.displayError(result.status + ': ' + result.statusText);
             }).always(function () {
-                console.log('always');
+                //console.log('always');
                 //manager.view.hideBusy();           
             });
 
 
 
 
-        };
+        }
+        ;
+        
+        function getMediaItemDataForm() {
 
+            var data = new FormData();
+            data.append('media[name]', item.title);
+            data.append('media[description]', item.description);
+            if(item.mediaExtra.isUpload){
+            data.append('media[file]', dataURItoBlob());
+            }
+            return data;
+        }
+        
+        function dataURItoBlob() {
+            // convert base64 to raw binary data held in a string
+            // doesn't handle URLEncoded DataURIs
 
+            var byteString = window.atob(item.mediaExtra.file.split(',')[1]);
+            // separate out the mime component
+
+            //var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(byteString.length);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            // write the ArrayBuffer to a blob, and you're done
+            var blob = new Blob([ia], {type: item.mediaExtra.mimeType});
+
+            return blob;
+        }
 
     };
 

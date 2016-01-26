@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RouterInterface;
+use Kaikmedia\GalleryModule\Media\MediaHandlersManager;
+
 
 /**
  * @Route("/media")
@@ -79,8 +81,8 @@ class MediaController extends AbstractController {
 
     /**
      * @Route(
-     *     "/create.{_format}",
-     *     defaults={"_format": "json"},
+     *     "/create/{type}/{_format}",
+     *     defaults={"_format": "json", "type": "unknow"},
      *     requirements={
      *         "_format": "json"
      *     },
@@ -100,20 +102,20 @@ class MediaController extends AbstractController {
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function createAction(Request $request, $_format) {
+    public function createAction(Request $request, $type, $_format) {
         // Permission check
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
 
-
-        
-        
-        
+        $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
+        $formClass = $mediaManager->getForm();
+      
+                
         //json
         if ($_format == 'json') {
             $data = array(
-                'media' => $request->request->get('media'),
+                'media' => $formClass,
                 '_format' => $_format
             );
 

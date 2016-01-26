@@ -56,11 +56,11 @@ class AbstractMediaHandler {
     }  
     
     public function getFormClass() {
-      return '\Kaikmedia\\GalleryModule\\Form\\Media\\Handlers' . ucfirst($this->getAlias()) . 'Handler';  //??
+      return '\Kaikmedia\\GalleryModule\\Form\\Media\\MediaType';  //default
     }  
     
     public function getClass() {
-        
+      return '\Kaikmedia\\GalleryModule\\Entity\\Media\\' . ucfirst($this->getAlias()) . 'Entity';  //mediaitem class
     } 
 
     public function getAlias()
