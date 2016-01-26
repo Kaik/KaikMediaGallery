@@ -57,7 +57,7 @@ abstract class AbstractMediaEntity extends AbstractDocumentEntity {
     public function __construct() {
         parent::__construct();
         $this->publicdomian = 0;
-        $this->legal = '';
+        $this->legal = 'unknow';
         $this->relations = new ArrayCollection();
     }
 
@@ -102,5 +102,8 @@ abstract class AbstractMediaEntity extends AbstractDocumentEntity {
         $this->relations = $relations;
         return $this;
     }
-
+    
+    public function isUploadable() {
+        return false;
+    }
 }

@@ -19,7 +19,6 @@ class ImageHandler extends AbstractMediaHandler {
 
     public function __construct() {
         parent::__construct();
-        
     }
 
     public function getSupportedMimeTypes() {

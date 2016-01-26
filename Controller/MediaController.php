@@ -109,15 +109,32 @@ class MediaController extends AbstractController {
         }
 
         $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
+        $mediaItem = $mediaManager->getMediaItem();
         $formClass = $mediaManager->getForm();
-      
-                
+        
+        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);        
+        
+        $errors = false;
+        if ($request->getMethod() == "POST"){
+            $form->handleRequest($request);
+          //  if ($form->isValid())
+          //  {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($mediaItem);
+                $em->flush();        
+          //  } else {
+           //     $errors = (string) $form->getErrors(true, false);
+          //  }
+        }
+            
+            
         //json
         if ($_format == 'json') {
-            $data = array(
-                'media' => $formClass,
+            $data = [
+                'media' => $mediaItem,
+                'errors' => $errors,               
                 '_format' => $_format
-            );
+            ];
 
             $response = new JsonResponse($data);
 

@@ -33,11 +33,27 @@ class MediaManager {
     
     public function create($type) {
         $this->handler = $this->mediaHandlersManager->getMediaHandler($type);
-        $this->mediaItem = $this->handler->getClass();
+        $mediaClass = $this->handler->getEntityClass();
+        $this->mediaItem = new $mediaClass();
         return $this;  
     }
     
+    public function getMediaItem() {
+        return $this->mediaItem;  
+    }   
+    
+    public function getName() {
+        return $this->handler->getFormClass(); 
+    }     
+    
+    public function getClass() { 
+        return $this->handler->getEntityClass();
+    }     
+    
     public function getForm() { 
-        return $this->handler->getFormClass();    
+        $type = $this->handler->getType();
+        $formClass = $this->handler->getFormClass();
+        $form = new $formClass($type);
+        return $form;    
     }     
 }

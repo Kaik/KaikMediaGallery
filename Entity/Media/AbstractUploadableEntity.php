@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity()
+ * @ORM\HasLifecycleCallbacks()
  */
 abstract class AbstractUploadableEntity extends AbstractMediaEntity {
 
@@ -43,17 +44,17 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
     /**
      */
     private $file;
-    
-     /**
-     */   
+
+    /**
+     */
     private $temp;
 
-    
     public function __construct() {
         parent::__construct();
 
         $this->setTitle('Title');
-    }    
+    }
+
     public function getPath() {
         return \FileUtil::getDataDirectory() . '/kmgallery/media';
     }
@@ -144,8 +145,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      */
     public function getName() {
         return $this->name;
-    }   
-    
+    }
+
     /**
      * Sets file.
      *
@@ -164,14 +165,25 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
     }
 
     /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile() {
+        return $this->file;
+    }
+
+    /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
     public function preUpload() {
+        $this->setDescription('lala2');
         if (null !== $this->getFile()) {
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
             $this->path = $filename . '.' . $this->getFile()->guessExtension();
+            $this->addMediaExtra();             
         }
     }
 
@@ -179,11 +191,10 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function upload() {
+    public function upload() {      
         if (null === $this->getFile()) {
             return;
         }
-
         // if there is an error when moving the file, an exception will
         // be automatically thrown by move(). This will properly prevent
         // the entity from being persisted to the database on error
@@ -198,15 +209,35 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
         }
         $this->file = null;
     }
+    
+    public function getUploadRootDir() {
+        return \FileUtil::getDataDirectory() . '/kmgallery/media';
+    }
+
+    private function addMediaExtra() {
+        $mediaEx = [
+            'path' => $this->path,
+            'mimeType' => $this->mimeType,
+            'size' => $this->size,
+            'ext' => $this->ext,
+            'name' => $this->name
+        ];
+        $this->setMediaExtra($mediaEx);
+        return $this;
+    }
 
     /**
      * @ORM\PostRemove()
      */
     public function removeUpload() {
-        $file = $this->getAbsolutePath();
+        //$file = $this->getAbsolutePath();
         if ($file) {
             unlink($file);
         }
+    }
+
+    public function isUploadable() {
+        return true;
     }
 
 }

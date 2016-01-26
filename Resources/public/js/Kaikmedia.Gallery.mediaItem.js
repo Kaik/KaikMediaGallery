@@ -348,12 +348,16 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
         ;
         
         function getMediaItemDataForm() {
-
+            var type = typeof (item.mediaExtra.mediaType) !== 'undefined' ? item.mediaExtra.mediaType.handler : 'unknown';
             var data = new FormData();
-            data.append('media[name]', item.title);
-            data.append('media[description]', item.description);
+            data.append('media_'+type+'[title]', item.title);
+            data.append('media_'+type+'[description]', item.description !== '' ? item.description : item.title );
+            data.append('media_'+type+'[urltitle]', item.urltitle);
+            data.append('media_'+type+'[legal]', item.legal !== '' ? item.legal : 'unknow');
+            data.append('media_'+type+'[publicdomain]', item.publicdomain);
+            data.append('media_'+type+'[mediaExtra]', item.mediaExtra.type);
             if(item.mediaExtra.isUpload){
-            data.append('media[file]', dataURItoBlob());
+                data.append('media_'+type+'[file]', dataURItoBlob());
             }
             return data;
         }

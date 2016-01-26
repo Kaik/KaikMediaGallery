@@ -22,6 +22,8 @@ class AbstractMediaHandler {
     public $enabled;
     
     public function __construct() {
+        $this->setName($this->getAlias());
+        $this->setType(substr($this->name,0,-7));
     }   
     
     public function getName(){
@@ -58,9 +60,13 @@ class AbstractMediaHandler {
     public function getFormClass() {
       return '\Kaikmedia\\GalleryModule\\Form\\Media\\MediaType';  //default
     }  
-    
+ 
+    public function getEntityClass() {
+      return '\Kaikmedia\\GalleryModule\\Entity\\Media\\' . ucfirst($this->type) . 'Entity';  //mediaitem class
+    }    
+
     public function getClass() {
-      return '\Kaikmedia\\GalleryModule\\Entity\\Media\\' . ucfirst($this->getAlias()) . 'Entity';  //mediaitem class
+      return '\Kaikmedia\\GalleryModule\\Entity\\Media\\' . ucfirst($this->type) . 'Entity';  //mediaitem class
     } 
 
     public function getAlias()
