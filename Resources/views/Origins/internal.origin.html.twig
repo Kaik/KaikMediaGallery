@@ -1,6 +1,6 @@
-<ul class="row list-unstyled">
+<div class="row">
 	{%for mediaItem in media %}
-	<li class="media-item {% if mediaItem.publicdomain == '1' %}origin-public {% endif %} origin-user col-md-2 item-{{ mediaItem.id }}"
+	<div class="media-item {% if mediaItem.publicdomain == '1' %}origin-public {% endif %} origin-user col-md-2 item-{{ mediaItem.id }}"
 		 role="checkbox"
 		 aria-checked="false"
 		 aria-label="{{ mediaItem.name }}"		 		 		 
@@ -13,14 +13,16 @@
 		 data-size="{{ mediaItem.size }}"		 
 		 data-legal="{{ mediaItem.legal }}"		 
 		 data-relation="new" >
+            
+            
 		 {% include "KaikmediaGalleryModule:Media:item.html.twig" with {'settings': settings, 'relation':false, 'original':mediaItem, 'css': ''}  %}
                  
-                           {{ dump() }}
-	</li>
+                 {{ dump(mediaItem) }}
+	</div>
 	{% else %}
-		<li><p class="alert alert-warning text-center"> {{ __('No files found') }} </p></li>
+		<div><p class="alert alert-warning text-center"> {{ __('No files found') }} </p></div>
 	{% endfor %}           
-</ul>
+</div>
 		{#
 		<a href="#" class="media-toggle btn hide item-toggle-{{ mediaItem.original.id }}" data-relation="{{ relation.id }}" data-original="{{ original.id }}" data-type="{{ relation.type }}">
 					<i class="media-icon fa fa-check-circle fa-2x"></i>

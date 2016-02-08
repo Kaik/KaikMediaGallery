@@ -80,6 +80,11 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             ;
 
             function imagePreview() {
+
+                if (item.mediaExtra.file === 'undefined') {
+
+                }
+
                 return $('<img/>')
                         .addClass('image img-responsive')
                         .attr('src', item.mediaExtra.file)
@@ -207,7 +212,8 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 
         //this.view = view;
 
-        this.readFile = function (f) {
+        function readFile() {
+
 
             //based on actual media data;
             var reader = new FileReader();
@@ -229,13 +235,40 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                     item.mediaExtra.file = e.target.result;
                     view.updateProgress(100);
                     view.updatePreview();
-                    create();
+                    if (!item.id) {
+                        create();
+                    }else{
+                        view.setProgressType('progress-bar-success');
+                        view.removeProgress();                        
+                    }
+                    
                 };
-            })(f);
+            })(item.mediaExtra.fileData);
 
-            // Read in the image file as a data URL.
-            reader.readAsDataURL(f);
-        };
+            if (typeof (item.mediaExtra.fileData) !== 'undefined') {
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(item.mediaExtra.fileData);
+
+            } else {
+                var success = function (result){                
+                    item.mediaExtra.fileData = result;
+                    reader.readAsDataURL(item.mediaExtra.fileData);
+                };
+                var url = Routing.getBaseUrl().replace(/\w+\.php$/gi,'') + '/' + item.path + '/' + item.mediaExtra.path;
+                               
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = "blob";
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (success)
+                            success(xhr.response);
+                    }
+                };
+                xhr.send(null);              
+            }
+        }
+        ;
 
         function errorHandler(evt) {
             switch (evt.target.error.code) {
@@ -264,7 +297,6 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             }
         }
 
-
         this.setDatafromUpload = function (f) {
 
             item.title = f.name;
@@ -277,14 +309,22 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             item.mediaExtra.mediaType = f.mediaType;
             item.mediaExtra.isUpload = true;
             item.mediaExtra.isImage = this.isImage();
-            this.readFile(f);
+            readFile();
             view.addError();
-            //console.log(item);
+        };
 
+        this.setMediaItemData = function (itemData) {
+            $.extend(item, itemData);
+            view.displayTitle();
+            readFile();
+            view.addError();
+            //console.log(itemData);
+            //item.mediaExtra.isImage = this.isImage();
+            return item;
         };
 
         function create() {
-
+            //console.log('create');
             if (item.mediaExtra.error) {
                 view.setProgressType('progress-bar-danger');
                 return false;
@@ -292,7 +332,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 
             updateProgress(0);
             view.setProgressType('progress-bar-warning');
-            console.log(item);
+            //console.log('create');
             var type = typeof (item.mediaExtra.mediaType) !== 'undefined' ? item.mediaExtra.mediaType.handler : 'unknown';
             var data = getMediaItemDataForm();
             //var token = $newLi.find('input[name="upload_token"]').val();
@@ -301,7 +341,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 
             $.ajax({
                 type: "POST",
-                url: Routing.generate('kaikmediagallerymodule_media_create', { "type": type, "_format": 'json'}),
+                url: Routing.generate('kaikmediagallerymodule_media_create', {"type": type, "_format": 'json'}),
                 data: data,
                 cache: false,
                 contentType: false,
@@ -327,13 +367,13 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                     return xhr;
                 }
             }).success(function (result) {
-                console.log(result);
+                //console.log(result);
                 //var template = result.template;
                 //manager.view.itemEdit(template);
                 view.setProgressType('progress-bar-success');
                 view.removeProgress();
             }).error(function (result) {
-                console.log(result);
+                //console.log(result);
                 view.setProgressType('progress-bar-danger');
                 //manager.view.displayError(result.status + ': ' + result.statusText);
             }).always(function () {
@@ -346,22 +386,30 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 
         }
         ;
-        
+
         function getMediaItemDataForm() {
             var type = typeof (item.mediaExtra.mediaType) !== 'undefined' ? item.mediaExtra.mediaType.handler : 'unknown';
             var data = new FormData();
-            data.append('media_'+type+'[title]', item.title);
-            data.append('media_'+type+'[description]', item.description !== '' ? item.description : item.title );
-            data.append('media_'+type+'[urltitle]', item.urltitle);
-            data.append('media_'+type+'[legal]', item.legal !== '' ? item.legal : 'unknow');
-            data.append('media_'+type+'[publicdomain]', item.publicdomain);
-            data.append('media_'+type+'[mediaExtra]', item.mediaExtra.type);
-            if(item.mediaExtra.isUpload){
-                data.append('media_'+type+'[file]', dataURItoBlob());
+            data.append('media_' + type + '[title]', item.title);
+            data.append('media_' + type + '[description]', item.description !== '' ? item.description : item.title);
+            data.append('media_' + type + '[urltitle]', item.urltitle);
+            data.append('media_' + type + '[legal]', item.legal !== '' ? item.legal : 'unknow');
+            data.append('media_' + type + '[publicdomain]', item.publicdomain);
+            data.append('media_' + type + '[mediaExtra]', JSON.stringify(getMediaExtraData()));
+            if (item.mediaExtra.isUpload) {
+                data.append('media_' + type + '[file]', dataURItoBlob());
             }
             return data;
         }
-        
+
+
+        function getMediaExtraData() {
+            var data = $.extend({}, item.mediaExtra);
+            delete data.file;
+            delete data.fileData;
+            return data;
+        }
+
         function dataURItoBlob() {
             // convert base64 to raw binary data held in a string
             // doesn't handle URLEncoded DataURIs

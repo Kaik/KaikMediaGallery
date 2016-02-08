@@ -37,11 +37,7 @@ class PluginController extends AbstractController {
                                       'isXmlHttpRequest' => $request->isXmlHttpRequest()]
                 
         );
-
-        $media = $this->get('doctrine.entitymanager')
-                ->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')
-                ->getAll(array('publicdomain' => 'include', 'author' => \UserUtil::getVar('uid')));
-        
+ 
         \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.settings.js");  
         //\PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.SettingsManager.js");         
        // \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
@@ -52,7 +48,7 @@ class PluginController extends AbstractController {
 
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Plugin:manager.html.twig', array(
-                    'media' => $media,
+                   // 'media' => $media,
                     'mediaTypes' => $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes(),
                     'objects' => $this->get('kaikmedia_gallery_module.settings_manager')->getObjects(),
                     'mode' => $mode,

@@ -178,7 +178,7 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      * @ORM\PreUpdate()
      */
     public function preUpload() {
-        $this->setDescription('lala2');
+        //$this->setDescription('lala2');
         if (null !== $this->getFile()) {
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
@@ -215,15 +215,14 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
     }
 
     private function addMediaExtra() {
-        $mediaEx = [
-            'path' => $this->path,
-            'mimeType' => $this->mimeType,
-            'size' => $this->size,
-            'ext' => $this->ext,
-            'name' => $this->name
-        ];
+        
+        $mediaxxEx = $this->getMediaExtra();
+        $mediaEx = json_decode($mediaxxEx, true);
+        
+        $mediaEx['path'] = array_key_exists('path', $mediaEx) ? $mediaEx['path']  : $this->path ;
+        //$mediaEx['size'] = array_key_exists('size', $mediaEx) ? $mediaEx['size']  : $this->size ;
         $this->setMediaExtra($mediaEx);
-        return $this;
+        //return $this;
     }
 
     /**

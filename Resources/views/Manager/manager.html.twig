@@ -24,6 +24,7 @@
             </div>
             <div class="modal-body">                  
                 <div class="row"> 
+
                     <div id="kmgallery_manager_selected" class="col-xs-12 col-md-2">  
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="kmgallery_manager_info_box">     
@@ -37,46 +38,61 @@
                                 {% endif %}
                             {% endfor %}  	            
                         </div>                                 
-                    </div>                              
+                    </div>         
+
+
                     <div id="kmgallery_manager_library" class="col-xs-12 col-md-8" > 
+
                         <div id="kmgallery_manager_library_info" class="col-md-12">
                             <h4>{{ __('This is place where you can select media') }}</h4>
-                        </div>        	       	 
+                        </div>     
+
                         <ul id="kmgallery_manager_origins" class="nav nav-tabs">
                             {% for origin in obj_features %}
                                 {% if origin.enabled and origin.type == 'origin' %}
-                                <li role="presentation" class="origins {% if origin.name == 'addmedia' %} pull-right{% endif %} ">   
-                                    {% if origin.name == 'addmedia' %}
-                                    <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
-                                    {% else %}
-                                    <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
-                                    {% endif %}    
-                                </li> 
+                                    <li role="presentation" class="origins {% if origin.name == 'addmedia' %} pull-right{% endif %} ">   
+                                        {% if origin.name == 'addmedia' %}
+                                            <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
+                                        {% else %}
+                                            <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
+                                        {% endif %}    
+                                    </li> 
                                 {% endif %}
                             {% endfor %}  
                         </ul>   
 
                         <div class="tab-content">        		
                             <div role="tabpanel" class="tab-pane" id="kmgallery_manager_media_box">
-                                <div id="kmgallery_manager_library_search" class="col-md-12">    
+
+                                <div id="kmgallery_manager_library_search" class="col-md-12">  
+                                    <div class="btn-group col-md-3 pull-right" role="group" aria-label="...">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-th "> </i></button>
+                                        <button type="button" class="btn btn-default"><i class="fa fa-th-list "> </i> </button>
+                                        <button type="button" class="btn btn-default"><i class="fa fa-refresh "> </i> </button>
+                                    </div>                                                                      
                                     <div class="col-md-3 pull-right"><input type="text" class="form-control" placeholder="{{ __('Search') }}"></div>
                                 </div>  
-                                {% include "KaikmediaGalleryModule:Origins:internal.origin.html.twig" %}                     
-                            </div>          		
+                                <div id="kmgallery_manager_library_box" class="row">
+                                </div>    
+                                {#% include "KaikmediaGalleryModule:Origins:internal.origin.html.twig" %#}       
+
+                            </div>  
+
                             <div role="tabpanel" class="tab-pane" id="kmgallery_manager_addmedia_box">
                                 {% include "KaikmediaGalleryModule:Origins:addmedia.origin.html.twig" %}                     
                             </div>
-                        </div>              
+                        </div>    
+
                     </div>          
                     <div id="kmgallery_manager_details" class="col-xs-12 col-md-2">  
                         {% include "KaikmediaGalleryModule:Manager:details.html.twig" %}         
                     </div>  
-                 {{ dump() }}                    
+                    {#{ dump() }#}                    
                 </div>   
             </div>         
             <div class="modal-footer" style="background:#E4F2FF;">       
                 <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>
-           
+
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
