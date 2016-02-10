@@ -4,21 +4,54 @@
 
 var KaikMedia = KaikMedia || {};
 KaikMedia.Gallery = KaikMedia.Gallery || {};
-KaikMedia.Gallery.settings = {};
-KaikMedia.Gallery.settings.data = KaikMedia.Gallery.settings.data || {};
 
-(function ($) {
 
-    KaikMedia.Gallery.settings.set = function ($settings)
+KaikMedia.Gallery.settings = (function ($) {
+    
+    //
+    var mode = 'info';
+    
+    var mediaTypes = {};
+    
+    var functionality = {};
+    
+    var modules = {};
+    
+    var upload = {};    
+    
+    var settings = {};
+    
+    var obj = { name: 'KaikmediaGalleryModule' };
+
+    function set(data)
     {
-        KaikMedia.Gallery.settings.data = $settings;
+        settings = data;
+        mediaTypes = data.mediaTypes;
+        
+        //if(data.obj_name !== ''){
+           this.mode = 'info attach insert';
+          // obj.name = data.obj_name;
+          // obj.reference = data.obj_reference;
+          // obj.settings = data.settings[obj.name];
+       // }
+        
+        //KaikMedia.Gallery.Manager.init();  
         //console.log('Gallery:init:0: module set settings');
-        //console.log(KaikMedia.Gallery.settings.data);
+        //console.log(mode);
     };
+    
+    
+    function getObject() { return obj; };
 
-    KaikMedia.Gallery.settings.get = function (module)
-    {
-        return KaikMedia.Gallery.settings.data[module];
+    function getMediaTypes() { return mediaTypes; };
+    
+    function getUpload() { return upload; };    
+    
+    return { set:set,
+             mode:mode,
+             getObject:getObject,
+             getMediaTypes:getMediaTypes,
+             getUpload:getUpload
     };
 
 })(jQuery);

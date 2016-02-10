@@ -8,11 +8,12 @@
 
 namespace Kaikmedia\GalleryModule\Media\Handlers;
 
+use Zikula\Core\Doctrine\EntityAccess;
 /**
  *
  * @author Kaik
  */
-class AbstractMediaHandler {
+class AbstractMediaHandler extends EntityAccess {
 //put your code here
     
     public $name;
@@ -75,5 +76,6 @@ class AbstractMediaHandler {
         $class = explode('\\', $class);
         $class = $class[count($class) - 1];
         return lcfirst($class);
-    }      
+    }     
+      
 }

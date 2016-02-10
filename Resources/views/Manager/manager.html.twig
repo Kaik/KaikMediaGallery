@@ -2,10 +2,11 @@
     <a href="#" data-toggle="modal" data-target="#kmgallery_manager"> <i class="fa fa-picture-o"></i> {{ __('Manage media') }}</a>	
 </div> 
 <div id="kmgallery_manager" class="modal fade">
-    <div class="modal-dialog modal-lg" style="width: 90%;">
+    <div class="modal-dialog modal-lg" style="width: 100%; margin-top:0px;">
         <div class="modal-content">
             <div class="modal-header" style="background:#E4F2FF;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>              			
+               {#
                 <div id="kmgallery_manager_msg_box" class="col-md-3 pull-right">		
                 </div>                         
                 <ul id="kmgallery_manager_features" class="nav nav-pills">
@@ -20,7 +21,7 @@
                         {% endif %}
                     {% endfor %}  
                 </ul> 
-
+#}
             </div>
             <div class="modal-body">                  
                 <div class="row"> 
@@ -44,7 +45,7 @@
                     <div id="kmgallery_manager_library" class="col-xs-12 col-md-8" > 
 
                         <div id="kmgallery_manager_library_info" class="col-md-12">
-                            <h4>{{ __('This is place where you can select media') }}</h4>
+                            
                         </div>     
 
                         <ul id="kmgallery_manager_origins" class="nav nav-tabs">
@@ -91,7 +92,7 @@
                 </div>   
             </div>         
             <div class="modal-footer" style="background:#E4F2FF;">       
-                <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>
+               {# <button id="kmgallery_manager_action_button" type="button" class="btn btn-primary" data-dismiss="modal" >{{  __('Save changes') }}</button>#} 
 
             </div>
         </div><!-- /.modal-content -->

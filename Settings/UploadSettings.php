@@ -8,13 +8,17 @@
 
 namespace Kaikmedia\GalleryModule\Settings;
 
+use Kaikmedia\GalleryModule\Form\Settings\AbstractSettingsType;
+
+
 /**
  * Description of UploadSettings
  *
  * @author Kaik
  */
-class UploadSettings {
-    //put your code here
+class UploadSettings extends AbstractSettingsType {
+    
+
     public $name;
     public $uploadDir;
     public $uploadMaxFiles;
@@ -66,4 +70,12 @@ class UploadSettings {
     public function getFormClass() {
       return '\Kaikmedia\\GalleryModule\\Form\\Settings\\UploadSettingsType';  
     }    
+    
+    public function toArray() {
+        
+        $array = parent::toArray();
+        $array['name'] = $this->getName();
+        return $array;
+    }
+    
 }

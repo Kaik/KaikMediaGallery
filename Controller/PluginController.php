@@ -29,33 +29,31 @@ class PluginController extends AbstractController {
             throw new AccessDeniedException();
         }
         
-        $masterRequest = $this->get('request_stack')->getMasterRequest();
-        $obj_name = $masterRequest->attributes->get('_zkModule');
+        $gallerySettings = ['mode' => $mode,
+                            'obj_reference' => $obj_reference ];
         
+        $masterRequest = $this->get('request_stack')->getMasterRequest();
+        $gallerySettings['obj_name'] = $masterRequest->attributes->get('_zkModule');
+        /*
         $addMediaForm = $this->createForm(
-                new AddMediaType(), null , ['allowed_mime_types' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject($obj_name),
+                new AddMediaType(), null , ['allowed_mime_types' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject($gallerySettings['obj_name']),
                                       'isXmlHttpRequest' => $request->isXmlHttpRequest()]
                 
         );
- 
+        */
+        //$gallerySettings['mediaTypes'] = $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes();
+        $gallerySettings['settings'] = $this->get('kaikmedia_gallery_module.settings_manager')->getSettingsArray();
+        
         \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.settings.js");  
-        //\PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.SettingsManager.js");         
-       // \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Plugin.js");
-        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.mediaItem.css");
         \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.mediaItem.js");        
         \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
         \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.manager.css");
+        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.mediaItem.css");        
 
         $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Plugin:manager.html.twig', array(
-                   // 'media' => $media,
-                    'mediaTypes' => $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes(),
-                    'objects' => $this->get('kaikmedia_gallery_module.settings_manager')->getObjects(),
-                    'mode' => $mode,
-                    'addMediaForm' => $addMediaForm->createView(),
-                    'obj_name' => $obj_name,
-                    'obj_reference' => $obj_reference,
-                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings(),
+                    'gallerySettings' => $gallerySettings,
+                 //   'addMediaForm' => $addMediaForm->createView()
         ));
     }
 

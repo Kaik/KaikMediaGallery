@@ -15,7 +15,6 @@ namespace Kaikmedia\GalleryModule\Media;
  */
 class MediaHandlersManager {
     
-    private $name;
     private $mediaHandlers;
     private $supportedMimeTypes;
 
@@ -23,7 +22,7 @@ class MediaHandlersManager {
      * construct
      */
     public function __construct() {
-        $this->name = 'KaikmediaGalleryModule';
+
         $this->mediaHandlers = ['image', 'pdf', 'youtube', 'url'];
         $this->supportedMimeTypes = $this->getSupportedMimeTypesArray();
     }    

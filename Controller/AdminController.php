@@ -297,17 +297,18 @@ class AdminController extends AbstractController {
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
-
-        $form = $this->createForm(
-                new SettingsType($this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm(), ['isXmlHttpRequest' => $request->isXmlHttpRequest()]
-                )
-        );
+        
+        $form = $this->createForm(new SettingsType(), 
+                $this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm(),
+                ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
 
         $form->handleRequest($request);
-
         if ($form->isValid()) {
-
-            if (!$this->get('kaikmedia_gallery_module.settings_manager')->setSettingsFromForm($form->get('modules')->getData())) {
+            
+           // $sets = $form->get('settings')->getData();
+            
+           
+            if (!$this->get('kaikmedia_gallery_module.settings_manager')->setSettings($form->get('settings')->getData())) {
                 $request->getSession()
                         ->getFlashBag()
                         ->add('status', 'Error! Settings not set! Please try again');
@@ -316,7 +317,7 @@ class AdminController extends AbstractController {
                         ->getFlashBag()
                         ->add('status', 'Settings set.');
             }
-
+            
             if (!$this->get('kaikmedia_gallery_module.settings_manager')->saveSettings()) {
                 $request->getSession()
                         ->getFlashBag()
@@ -326,6 +327,7 @@ class AdminController extends AbstractController {
                         ->getFlashBag()
                         ->add('status', 'Settings saved.');
             }
+
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -343,8 +345,7 @@ class AdminController extends AbstractController {
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
                     'form' => $form->createView(),
-                    //'modules' => $modules,
-                    'supported_objects' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject('KaikmediaPagesModule'),
+                    'su' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettingsArray(),
                     'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings()
         ]);
     }

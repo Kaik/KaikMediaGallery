@@ -7,22 +7,21 @@ namespace Kaikmedia\GalleryModule\Form\Settings;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Kaikmedia\GalleryModule\Form\Settings\ModuleSettingsType;
+use Kaikmedia\GalleryModule\Form\Settings\ObjectSettingsType;
 
 class SettingsType extends AbstractType
 {
-    private $data;
-    public function __construct($data) {
-        $this->data = $data;
-    }
+    //private $data;
+    //public function __construct($data) {
+    //    $this->data = $data;
+    //}
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
         
-        $builder->add('modules', 'collection', array(
-            'type' => new ModuleSettingsType(),
-            'mapped' => false,
-            'data' => $this->data
-        ));        
+        $builder->add('settings', 'collection', [
+            'type' => new ObjectSettingsType()
+            ]
+                );
         
         if ($options['isXmlHttpRequest'] == false) {
             $builder->add('save', 'submit', array('label' => 'Save'));

@@ -24,35 +24,26 @@ class AddmediaFeature extends AbstractFeature {
 
      */
 
-    public $settings;
-
     public function __construct() {
         parent::__construct();
         $this->name = 'addmedia';
         $this->type = 'origin';
         $this->enabled = 0;
         $this->icon = 'fa fa-plus';
-        $this->settings = new ArrayCollection();
-        $this->setDefaultSettings();
+       // $this->setDefaultSettings();
     }
 
     public function getDisplayName() {
         return 'Add media';
     }
 
-    public function getSettings() {
-        return $this->settings;
-    }
 
-    public function setSettings($settings) {
-        $this->settings = $settings;
-        return $this;
-    }
 
     public function mergeSettings($global_settings) {
         $enabled = ($global_settings->getEnabled() == 1) ? $this->getEnabled() : 0;
         $this->setEnabled($enabled);
         $thisGlobalSettings = $global_settings->getSettings();
+        dump($thisGlobalSettings);
         if ($thisGlobalSettings instanceof ArrayCollection) {
             foreach ($this->settings as $setting) {
                 if ($setting instanceof UploadSettings) {
@@ -106,5 +97,5 @@ class AddmediaFeature extends AbstractFeature {
             $this->settings->add($mimeTypeSettings);
         }
     }
-
+    
 }

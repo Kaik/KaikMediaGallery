@@ -8,12 +8,14 @@
 
 namespace Kaikmedia\GalleryModule\Settings;
 
+use Kaikmedia\GalleryModule\Form\Settings\AbstractSettingsType;
+
 /**
  * Description of UploadSettings
  *
  * @author Kaik
  */
-class MimeTypeSettings {
+class MimeTypeSettings extends AbstractSettingsType {
     //put your code here
     
     public $name;
@@ -75,5 +77,6 @@ class MimeTypeSettings {
     
     public function getFormClass() {
       return '\Kaikmedia\\GalleryModule\\Form\\Settings\\MimeTypeSettingsType';  
-    }    
+    } 
+    
 }

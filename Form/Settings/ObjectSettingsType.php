@@ -7,8 +7,9 @@ namespace Kaikmedia\GalleryModule\Form\Settings;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Kaikmedia\GalleryModule\Form\Type\FeaturesType;
 
-class ModuleSettingsType extends AbstractType
+class ObjectSettingsType extends AbstractType
 {   
     public function buildForm(FormBuilderInterface $builder, array $options)
     {    
@@ -22,18 +23,21 @@ class ModuleSettingsType extends AbstractType
             'required' => true
         ));            
 
-        $builder->add('features', 'features');                
+        $builder->add('features', 'features',[
+            'type' => new FeaturesType()
+            ]);                
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'isXmlHttpRequest' => false         
+            'isXmlHttpRequest' => false,        
+            'data_class' => 'Kaikmedia\GalleryModule\Settings\SettingsObject'
         ));
     }
 
     public function getName()
     {
-        return 'kaikmedia_gallery_module_settings';
+        return 'kaikmedia_gallery_object_settings';
     }
 }

@@ -38,7 +38,12 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
      //switch origin to defautl
      //manager.view.switchOrigin(manager.current.origin.name);     
      */
-    manager.init = function (config) {
+    manager.init = function () {
+        
+        console.log(KaikMedia);
+        
+        console.log(KaikMedia.Gallery.settings.getObject());
+        /*
         //add vars from config
         manager.obj = config.obj;
         // view as singelton
@@ -48,6 +53,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         manager.upload = config.addmedia[0];
         manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
         loadData(true);
+        */
     };
 
     /*

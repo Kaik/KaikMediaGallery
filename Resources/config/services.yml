@@ -22,6 +22,12 @@ services:
         class: Kaikmedia\GalleryModule\Media\MediaManager    
    
   # form fields management     
+    kaikmedia_gallery_module.form.type.settings:
+        class: Kaikmedia\GalleryModule\Form\Type\SettingsType
+        tags:
+            - { name: form.type, alias: settings }    
+            
+  # form fields management     
     kaikmedia_gallery_module.form.type.features:
         class: Kaikmedia\GalleryModule\Form\Type\FeaturesType
         tags:

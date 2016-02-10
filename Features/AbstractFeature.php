@@ -8,6 +8,8 @@
 
 namespace Kaikmedia\GalleryModule\Features;
 
+use Kaikmedia\GalleryModule\Features\FeatureSettingsCollection;
+
 /**
  * Description of AbstractFeature
  *
@@ -24,7 +26,10 @@ class AbstractFeature {
     
     public $icon;
     
+    public $settings;
+    
     public function __construct() {
+       $this->settings = new FeatureSettingsCollection();
     }   
     
     public function getName(){
@@ -35,6 +40,10 @@ class AbstractFeature {
         $this->name = $name;
         return $this;
     }
+    
+    public function getDisplayName() {
+        return 'Feature';
+    }   
     
     public function getType() {
         return $this->type;
@@ -63,6 +72,15 @@ class AbstractFeature {
         return $this;
     }   
     
+    public function getSettings() {
+        return $this->settings;
+    }
+
+    public function setSettings($settings) {
+        //$this->settings = $settings;
+        return $this;
+    }    
+    
     public function getFormClass() {
       return '\Kaikmedia\\GalleryModule\\Form\\Features\\' . ucfirst($this->getAlias()) . 'Type';  
     }  
@@ -85,4 +103,18 @@ class AbstractFeature {
         $class = $class[count($class) - 1];
         return lcfirst($class);
     }    
+    
+    public function toArray() {
+        
+        $array = ['name' => $this->getName(),
+                  'displayName' => $this->getDisplayName(),
+                  'enabled' => $this->getEnabled(), 
+                  'formClass' => $this->getFormClass()
+        ];
+        
+        $array['settings'] = ($this->settings instanceof FeatureSettingsCollection ) ? $this->settings->toArray() : null ;
+        
+        return $array;
+    }
+   
 }
