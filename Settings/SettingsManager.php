@@ -16,7 +16,7 @@ class SettingsManager {
     private $displayName;
     //managers
     protected $variablesManager;
-    //settings
+    //settings collection
     private $settings;
 
 
@@ -26,30 +26,34 @@ class SettingsManager {
     public function __construct(VariableApi $variablesManager) {
         $this->name = 'KaikmediaGalleryModule';
         $this->displayName = 'KMGallery';
-
-        //managers
+        $this->settings = new SettingsCollection();  
+        //manager
         $this->variablesManager = $variablesManager;
-        //settings init
-        $this->settings = new SettingsCollection();        
-        $this->settings->addDefault();
-        
         $dbSettings = $this->variablesManager->getAll($this->name);
-        
-        if(is_array($dbSettings)){
+        dump($dbSettings);
+        if(is_array($dbSettings) && !empty($dbSettings)){
             $this->settings->clear();
+            $global = $dbSettings[$this->name];
+            unset($dbSettings[$this->name]);
+            $this->settings->set($this->name, $global);
             foreach($dbSettings as $settingObject){
-                $this->settings->addObject($settingObject);
+                $this->settings->set($settingObject->getName(), $settingObject);
             }            
         }else {
-            
-        }
+        //settings init      
+        $this->settings->addDefault();            
+        }         
     }
     
     public function setSettings(SettingsCollection $settings) {
+ 
+        if(!$settings->containsKey($this->name)){
+           return false; 
+        }
         
-      
-        
-        return $this->settings = $settings;
+        $this->settings->postSubmit($settings);
+                   
+        return true;
     }    
 
     public function getSettings() {
@@ -62,7 +66,6 @@ class SettingsManager {
         return $array;
     }
    
-
     public function getSettingsForForm() {
         return ['settings' => $this->settings];
     }

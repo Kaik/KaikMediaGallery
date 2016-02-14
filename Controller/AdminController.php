@@ -298,36 +298,32 @@ class AdminController extends AbstractController {
             throw new AccessDeniedException();
         }
         
+        $settingsManager = $this->get('kaikmedia_gallery_module.settings_manager');
+        
         $form = $this->createForm(new SettingsType(), 
-                $this->get('kaikmedia_gallery_module.settings_manager')->getSettingsForForm(),
+                $settingsManager->getSettingsForForm(),
                 ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            
-           // $sets = $form->get('settings')->getData();
-            
-           
-            if (!$this->get('kaikmedia_gallery_module.settings_manager')->setSettings($form->get('settings')->getData())) {
+            if (!$settingsManager->setSettings($form->get('settings')->getData())) {
                 $request->getSession()
                         ->getFlashBag()
-                        ->add('status', 'Error! Settings not set! Please try again');
+                        ->add('error', 'Error! Settings not set! Please try again');
             } else {
                 $request->getSession()
                         ->getFlashBag()
                         ->add('status', 'Settings set.');
+                if (!$settingsManager->saveSettings()) {
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('error', 'Error! Settings not saved! Please try again');
+                } else {
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('status', 'Settings saved.');
+                }                              
             }
-            
-            if (!$this->get('kaikmedia_gallery_module.settings_manager')->saveSettings()) {
-                $request->getSession()
-                        ->getFlashBag()
-                        ->add('status', 'Error! Settings not saved! Please try again');
-            } else {
-                $request->getSession()
-                        ->getFlashBag()
-                        ->add('status', 'Settings saved.');
-            }
-
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -335,7 +331,7 @@ class AdminController extends AbstractController {
             $response->setData([
                 'html' => $this->renderView('KaikmediaGalleryModule:Admin:settings.form.html.twig', [
                     'form' => $form->createView(),
-                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings()
+                    'settings' => $settingsManager->getSettings()
                 ])
             ]);
 
@@ -345,8 +341,7 @@ class AdminController extends AbstractController {
         $request->attributes->set('_legacy', true); // forces template to render inside old them
         return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
                     'form' => $form->createView(),
-                    'su' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettingsArray(),
-                    'settings' => $this->get('kaikmedia_gallery_module.settings_manager')->getSettings()
+                    'settings' => $settingsManager->getSettings()
         ]);
     }
 

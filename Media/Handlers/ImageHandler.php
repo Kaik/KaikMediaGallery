@@ -23,9 +23,9 @@ class ImageHandler extends AbstractMediaHandler {
 
     public function getSupportedMimeTypes() {
         return [
-            'image/gif' => ['handler' => 'image', 'icon' => 'fa fa-image-o'],
-            'image/jpeg' => ['handler' => 'image', 'icon' => 'fa fa-image-o'],
-            'image/png' => ['handler' => 'image', 'icon' => 'fa fa-image-o'],
+            'image/gif' => ['handler' => 'image', 'icon' => 'fa fa-image-o', 'name' => 'image:gif'],
+            'image/jpeg' => ['handler' => 'image', 'icon' => 'fa fa-image-o', 'name' => 'image:jpeg'],
+            'image/png' => ['handler' => 'image', 'icon' => 'fa fa-image-o', 'name' => 'image:png'],
         ];
     }
 

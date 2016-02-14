@@ -24,22 +24,9 @@ class SettingsCollection extends ArrayCollection {
     //managers
    // protected $featuresManager;
     protected $mediaHandlersManager;
-    
-    /**
-     * An array containing the entries of this collection.
-     *
-     * @var array
-     */
-    protected $default;
-    protected $data;
-    
-    //
-    private $globalSettings;
-    //objects    
-    private $objects;   
-    
+
     //other
-    private $features;
+    //private $features;
     private $mediaHandlers;    
     
     /**
@@ -51,14 +38,9 @@ class SettingsCollection extends ArrayCollection {
     {             
         //$this->featuresManager = new FeaturesManager();
         $this->mediaHandlersManager = new MediaHandlersManager();
-        //now we have all features with default settings as array collection
-
+        //
         $this->mediaHandlers = $this->mediaHandlersManager->getMediaHandlers();
-        
-        //$this->data = $settings;
-        
-        
-        
+         
         $elements = [];
         parent::__construct($elements);
         
@@ -66,56 +48,73 @@ class SettingsCollection extends ArrayCollection {
 
     public function addDefault() {
         $default = new SettingsObject();
-        $this->add($default);    
+        $this->set($default->getName(), $default); 
+        $this->addSupportedObjects();
     }    
 
-    public function setDefault($default) {
-        $this->default = $default;       
-    }
-
-    public function getDefault() {
-        return $this->default;       
-    }
-    
-    
-    public function getGalleryObject() {
-        
-        $g = new SettingsObject();
-        $g->setName('KaikmediaGalleryModule');
-        $g->setEnabled(1);
-        $g->setDisplayName('Gallery');
-        $g->setEntity('');
-        $g->setFeatures($this->featuresManager->getFeaturesCollection()); 
-        return $g;
-    }
-
-    public function getSupportedObjects() {
+    public function addSupportedObjects() {
         
         $users = new SettingsObject();
         $users->setName('ZikulaUsersModule');
         $users->setEnabled(0);
         $users->setDisplayName('Users');
         $users->setEntity('Zikula\UsersModule\Entity\UserEntity');
-        $users->setFeatures($this->featuresManager->getFeaturesCollection()); 
+        $this->set($users->getName(), $users);
         
         $pages = new SettingsObject();
         $pages->setName('KaikmediaPagesModule');
         $pages->setEnabled(0);
         $pages->setDisplayName('Pages');
         $pages->setEntity('Kaikmedia\PagesModule\Entity\PageEntity');        
-        $pages->setFeatures($this->featuresManager->getFeaturesCollection());
+        $this->set($pages->getName(), $pages);
         
-        return [$users, $pages];
+        return true;
+    }   
+    
+    
+    public function postSubmit($settings) {
+        
+        $global = $settings->get('KaikmediaGalleryModule'); 
+        $this->set('KaikmediaGalleryModule', $global);
+        foreach($this->toArray() as $key => $element ) {
+            if($key === 'KaikmediaGalleryModule'){
+                continue;
+            }
+            $newElement = $settings->get($key);
+            if($newElement === null){
+                $element->setEnabled(0);
+                $element->features->postSubmit(false, $global->getFeatures()); 
+            }
+            $element->setEnabled($newElement->getEnabled());
+            $element->features->postSubmit($newElement->getFeatures(),$global->getFeatures());    
+            
+        }
+                
     }
 
-    public function getDefaultSettings() {
+        /**
+     * {@inheritDoc}
+     */
+    public function toArray()
+    {
+        $elements = parent::toArray();     
+        $array = [];
+        foreach ($elements as $element) {
+            if ($element instanceof SettingsObject) {
+                $array[$element->getName()] = $element;
+            }
+        }
         
-        
-        
-        
-    }    
+        return $array;
+    }
+}
 
 
+ /*
+    
+    
+    
+    
     public function getSettingsForObject($object) {
         return (array_key_exists($object, $this->settings)) ? $this->settings[$object] : false;
     }
@@ -130,6 +129,9 @@ class SettingsCollection extends ArrayCollection {
     }
     
     public function addObject(SettingsObject $object) {
+        
+        
+        
         $this->add($object);
     }   
 
@@ -190,9 +192,7 @@ class SettingsCollection extends ArrayCollection {
         //objects 
         
         
-        /*
-         * 
-         *         if ($features === null) {
+        if ($features === null) {
             $features = new FeaturesCollection();
         }
         
@@ -209,7 +209,7 @@ class SettingsCollection extends ArrayCollection {
                     )->first();
             (!is_object($feature_object_db)) ? $objectFeatures->add($feature_object) : $objectFeatures->add($feature_object_db);
         }
-         */
+    
         //dump();
         
         //$default = $this->objects->get($this->objects->key('KaikmediaGalleryModule'));
@@ -224,7 +224,7 @@ class SettingsCollection extends ArrayCollection {
         
         return true;
     }
-    /*
+    
     public function getDefaultGlobalSettings() {
         
         $globalSettings = $this->getGalleryObject();
@@ -232,7 +232,7 @@ class SettingsCollection extends ArrayCollection {
 
         return $globalSettings;
     }
-*/
+
     public function mergeObjectSettings($object = [], $settings = []) {
 
         $objectSettings = [];
@@ -258,10 +258,6 @@ class SettingsCollection extends ArrayCollection {
 
         return $objectSettings;
     }
-
-    /*
-     * Features
-     */
 
     public function mergeObjectFeatures($features = null) {
 
@@ -291,24 +287,4 @@ class SettingsCollection extends ArrayCollection {
     
     
     
-
-    
-        /**
-     * {@inheritDoc}
-     */
-    public function toArray()
-    {
-        $elements = parent::toArray();     
-        $array = [];
-        foreach ($elements as $element) {
-            if ($element instanceof SettingsObject) {
-                $array[$element->getName()] = $element;
-            }
-        }
-        
-        return $array;
-    }
-
-    
-    //put your code here
-}
+*/

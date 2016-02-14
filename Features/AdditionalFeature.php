@@ -20,7 +20,7 @@ class AdditionalFeature extends AbstractFeature {
     public function __construct() {
         parent::__construct();    
         $this->name = 'additional';
-        $this->type = 'feature';
+        $this->type = 'attachment';
         $this->enabled = 0;
         $this->icon = 'fa fa-paperclip';
     }  

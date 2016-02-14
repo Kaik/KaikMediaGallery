@@ -77,7 +77,7 @@ class AbstractFeature {
     }
 
     public function setSettings($settings) {
-        //$this->settings = $settings;
+        $this->settings = $settings;
         return $this;
     }    
     

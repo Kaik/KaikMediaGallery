@@ -32,20 +32,41 @@ class FeatureSettingsCollection extends ArrayCollection {
         
         //Add upload settings
         $uploadSettings = new UploadSettings();
-        $this->add($uploadSettings);
+        $this->set($uploadSettings->getName(), $uploadSettings);
         
         $mediaHandlersManager = new MediaHandlersManager();
         //now we have all features with default settings as array collection
         $mimeTypes = $mediaHandlersManager->getSupportedMimeTypes();
         foreach ($mimeTypes as $mimeType => $data) {
             $mimeTypeSettings = new MimeTypeSettings();
+            $mimeTypeSettings->setName($data['name']);
             $mimeTypeSettings->setMimeType($mimeType);
             $mimeTypeSettings->setHandler($data['handler']);
-            $this->add($mimeTypeSettings);
+            $this->set($mimeTypeSettings->getName(), $mimeTypeSettings);
         }
  
     }    
-    
+
+   public function postSubmit($new, $global) {
+
+        $elements = parent::toArray();
+       
+        foreach($elements as $key => $element ) {
+
+            $globalSettingData = $global->get($key);
+            
+            if($new === null){    
+                $element->setEnabled(0);
+                continue;
+            }
+            
+            $newSettingData = $new->get($key);
+            
+            $enabled = $globalSettingData->getEnabled() === 1 ? $newSettingData->getEnabled() : 0;  
+            $element->setEnabled($enabled);       
+            
+        } 
+    }        
     
     /**
      * {@inheritDoc}
@@ -55,7 +76,7 @@ class FeatureSettingsCollection extends ArrayCollection {
         $elements = parent::toArray();
         $array = [];
         foreach ($elements as $key => $element) {
-            if ($element instanceof \Kaikmedia\GalleryModule\Form\Settings\AbstractSettingsType) {
+            if ($element instanceof \Kaikmedia\GalleryModule\Settings\AbstractFeatureSetting) {
                 $array[$key] = $element->toArray();
             }
         }

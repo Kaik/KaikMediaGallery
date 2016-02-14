@@ -33,12 +33,32 @@ class FeaturesCollection extends ArrayCollection {
         $featuresManager = new FeaturesManager();
         $features = $featuresManager->getFeatures();
          foreach($features as $featureAlias){
-          $this->add($featuresManager->getFeature($featureAlias));  
+          $this->set($featureAlias ,$featuresManager->getFeature($featureAlias));  
          }   
     }     
     
-    
-    
+    public function postSubmit($new, $global) {
+
+        $elements = parent::toArray();
+
+        foreach($elements as $key => $element ) {
+            
+            $globalFeatureData = $global->get($key);
+            
+            if($new === null){
+                $element->setEnabled(0);
+                $element->settings->postSubmit(false, $globalFeatureData->getSettings()); 
+                continue;
+            }
+            $newFeatureData = $new->get($key);
+            $enabled = $globalFeatureData->getEnabled() === 1 ? $newFeatureData->getEnabled() : 0;  
+            $element->setEnabled($enabled);       
+            $element->settings->postSubmit($newFeatureData->getSettings(), $globalFeatureData->getSettings());    
+            
+        }        
+
+    }    
+
     
     /**
      * {@inheritDoc}
@@ -56,3 +76,31 @@ class FeaturesCollection extends ArrayCollection {
     }
     
 }
+        
+        
+
+        /*
+        $featuresMappedSettings  = $this->map(
+            function($entry) use ($global) {  
+            
+                $globalFeature = $global->get($entry->getName());
+                if( $globalFeature === null ) {
+                    //no global settings for this entry
+                    return false;
+                }  
+                $enabled = $globalFeature->getEnabled() == 1 ? $entry->getEnabled() : 0 ;
+                $entry->setEnabled($enabled);
+                //map settings
+                $mappedFeatureSettings = $entry->settings->postSubmit($globalFeature->getSettings());
+                if($mappedFeatureSettings instanceof FeatureSettingsCollection){
+                    $entry->setSettings($mappedFeatureSettings);
+                    return true;
+                }else{
+                    return false;
+                }  
+            }
+        );
+
+        return $featuresMappedSettings;
+         * 
+         */

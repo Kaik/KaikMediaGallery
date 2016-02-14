@@ -8,34 +8,23 @@
 
 namespace Kaikmedia\GalleryModule\Settings;
 
-use Kaikmedia\GalleryModule\Form\Settings\AbstractSettingsType;
+use Kaikmedia\GalleryModule\Settings\AbstractFeatureSetting;
 
 /**
  * Description of UploadSettings
  *
  * @author Kaik
  */
-class MimeTypeSettings extends AbstractSettingsType {
+class MimeTypeSettings extends AbstractFeatureSetting {
     //put your code here
     
-    public $name;
     public $handler;
     public $mimeType;
-    public $enabled;
     
     public function __construct() {
         $this->name = 'mimetype';
-        $this->enabled = 1;      
+        $this->enabled = 0;      
     } 
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
-    }
 
     public function getHandler() {
         return $this->handler;
@@ -65,18 +54,9 @@ class MimeTypeSettings extends AbstractSettingsType {
     public function getMimeType() {
         return $this->mimeType;
     }    
-    
-    public function getEnabled() {
-        return $this->enabled;
-    }
-
-    public function setEnabled($enabled) {
-        $this->enabled = $enabled;
-        return $this;
-    }
-    
+       
     public function getFormClass() {
       return '\Kaikmedia\\GalleryModule\\Form\\Settings\\MimeTypeSettingsType';  
-    } 
-    
+    }
+ 
 }

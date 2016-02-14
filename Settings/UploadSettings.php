@@ -8,7 +8,7 @@
 
 namespace Kaikmedia\GalleryModule\Settings;
 
-use Kaikmedia\GalleryModule\Form\Settings\AbstractSettingsType;
+use Kaikmedia\GalleryModule\Settings\AbstractFeatureSetting;
 
 
 /**
@@ -16,29 +16,20 @@ use Kaikmedia\GalleryModule\Form\Settings\AbstractSettingsType;
  *
  * @author Kaik
  */
-class UploadSettings extends AbstractSettingsType {
+class UploadSettings extends AbstractFeatureSetting {
     
 
-    public $name;
     public $uploadDir;
     public $uploadMaxFiles;
     public $uploadMaxSingleSize;
     
     public function __construct() {
         $this->name = 'upload';
+        $this->enabled = 0; 
         $this->uploadDir = 'userdata';
         $this->uploadMaxFiles = 0;
         $this->uploadMaxSingleSize = 0;      
     } 
-    
-    public function getName() {
-        return $this->name;
-    }
-
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
-    }
     
     public function getUploadDir() {
         return $this->uploadDir;
@@ -66,15 +57,14 @@ class UploadSettings extends AbstractSettingsType {
         $this->uploadMaxSingleSize = $uploadMaxSingleSize;
         return $this;
     }
-    
+           
     public function getFormClass() {
       return '\Kaikmedia\\GalleryModule\\Form\\Settings\\UploadSettingsType';  
-    }    
-    
-    public function toArray() {
+    }
         
+    
+    public function toArray() {    
         $array = parent::toArray();
-        $array['name'] = $this->getName();
         return $array;
     }
     

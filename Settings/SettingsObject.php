@@ -33,7 +33,7 @@ class SettingsObject extends EntityAccess {
         
         $this->name = 'KaikmediaGalleryModule';
         $this->displayName = 'KMGallery';
-        $this->enabled = true;
+        $this->enabled = 0;
         $this->default = $this->IsDefault();
         $this->entity = false;
         $this->extra = false;
