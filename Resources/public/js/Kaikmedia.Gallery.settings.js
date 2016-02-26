@@ -9,7 +9,7 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 KaikMedia.Gallery.settings = (function ($) {
     
     //
-    var mode = 'info';
+    var mode = ['info'];
     
     var mediaTypes = {};
     
@@ -21,26 +21,30 @@ KaikMedia.Gallery.settings = (function ($) {
     
     var settings = {};
     
+    var global = {};
+    
     var obj = { name: 'KaikmediaGalleryModule' };
 
     function set(data)
     {
         settings = data;
-        mediaTypes = data.mediaTypes;
+       // mediaTypes = data.mediaTypes;
+        global = data.settings[obj.name];
+               
+        if(settings.obj_name !== ''){
+           this.mode = ['info','attachment', 'insert'];
+           obj.name = data.obj_name;
+           obj.reference = data.obj_reference;
+           obj.settings = data.settings[obj.name];
+        }
         
-        //if(data.obj_name !== ''){
-           this.mode = 'info attach insert';
-          // obj.name = data.obj_name;
-          // obj.reference = data.obj_reference;
-          // obj.settings = data.settings[obj.name];
-       // }
-        
-        //KaikMedia.Gallery.Manager.init();  
+        //  
         //console.log('Gallery:init:0: module set settings');
-        //console.log(mode);
+        console.log(settings);
+        console.log(global);
     };
     
-    
+    function isGalleryEnabled() { return global.enabled; };   
     function getObject() { return obj; };
 
     function getMediaTypes() { return mediaTypes; };
@@ -49,6 +53,7 @@ KaikMedia.Gallery.settings = (function ($) {
     
     return { set:set,
              mode:mode,
+             isGalleryEnabled:isGalleryEnabled,
              getObject:getObject,
              getMediaTypes:getMediaTypes,
              getUpload:getUpload

@@ -107,8 +107,10 @@ class AbstractFeature {
     public function toArray() {
         
         $array = ['name' => $this->getName(),
+                  'icon' => $this->getIcon(),
                   'displayName' => $this->getDisplayName(),
                   'enabled' => $this->getEnabled(), 
+                  'type' => $this->getType(),
                   'formClass' => $this->getFormClass()
         ];
         

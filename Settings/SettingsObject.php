@@ -106,13 +106,12 @@ class SettingsObject extends EntityAccess {
     public function toArray() {
         
         $array = parent::toArray();
-        /*
-        $array = ['name' => $this->getName(),
-                  'displayName' => $this->getDisplayName(),
-                  'features' => $this->features->toArray(),
-                  'enabled' => $this->getEnabled(),            
-        ];
-        */
+       
+        $array['name'] = $this->getName();
+        $array['displayName'] = $this->getDisplayName();
+        $array['features'] = $this->features->toArray();
+        $array['enabled'] = $this->getEnabled();
+        
         return $array;
     }
 }

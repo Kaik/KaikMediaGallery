@@ -19,11 +19,12 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
      */
 
     //Public Property
+    manager.enabled = 0;
     manager.upload = [];
     manager.mediaTypes = [];
     manager.obj = false;
     manager.functionality = [];
-    manager.features = {};
+    manager.features = [];
     manager.origins = {};
     manager.insert = [];
     manager.library = [];
@@ -39,21 +40,69 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
      //manager.view.switchOrigin(manager.current.origin.name);     
      */
     manager.init = function () {
-        
-        console.log(KaikMedia);
-        
-        console.log(KaikMedia.Gallery.settings.getObject());
+
+        //console.log(KaikMedia);
+        manager.enabled = KaikMedia.Gallery.settings.isGalleryEnabled();
+        if (manager.enabled) {
+            manager.obj = KaikMedia.Gallery.settings.getObject();
+            manager.enabled = manager.obj.settings.enabled;
+        }
+        //manager.enabled = 0;
+
+        if (manager.enabled === 0) {
+            manager.view = view.getInstance($('#kmgallery_manager_container'));
+            return;
+        }
+        console.log(KaikMedia.Gallery.settings.mode);
+        manager.functionality = manager.obj.settings.features;
+        manager.features = $.map(manager.functionality, function (feature, index) {
+            console.log(feature.type);
+            if (feature.enabled === 0) {
+                return null;
+            }
+            if ($.inArray(feature.type, KaikMedia.Gallery.settings.mode) === -1) {
+                return null;
+            }
+            //var obj = {};
+            //obj[feature.name] = feature;
+            return feature;
+
+        });
+        manager.origins = $.map(manager.functionality, function (origin, index) {
+            console.log(origin.type);
+            if (origin.enabled === 0) {
+                return null;
+            }
+            if (origin.type !== 'origin') {
+                return null;
+            }
+            //var obj = {};
+            //obj[feature.name] = feature;
+            return origin;
+
+        });
+
         /*
-        //add vars from config
-        manager.obj = config.obj;
-        // view as singelton
-        manager.mediaTypes = config.mediaTypes;
-        manager.functionality = config.features;
-        manager.addmedia = config.addmedia;
-        manager.upload = config.addmedia[0];
-        manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
-        loadData(true);
-        */
+         manager.features = $.grep(manager.functionality, function (feature) {
+         console.log(feature);
+         return true;//$.inArray(feature.type, KaikMedia.Gallery.settings.mode);
+         });
+         */
+
+        manager.view = view.getInstance($('#kmgallery_manager_container'));
+        console.log(manager);
+        /*
+         //add vars from config
+         = config.obj;
+         // view as singelton
+         manager.mediaTypes = config.mediaTypes;
+         manager.functionality = config.features;
+         manager.addmedia = config.addmedia;
+         manager.upload = config.addmedia[0];
+         manager.view = view.getInstance(config.$container.find('#kmgallery_manager'));
+         loadData(true);
+         */
+
     };
 
     /*
@@ -69,12 +118,12 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
             }).success(function (result) {
                 var mediaArray = result.media;
                 $.each(mediaArray, function (index, mediaItemData) {
-                        var mediaItem = new KaikMedia.Gallery.model.mediaItem(); 
-                        mediaItem.setMediaItemData(mediaItemData);
-                        manager.library.push(mediaItem);
-            });
-            manager.view.refreshLibrary();
-            //console.log(manager);
+                    var mediaItem = new KaikMedia.Gallery.model.mediaItem();
+                    mediaItem.setMediaItemData(mediaItemData);
+                    manager.library.push(mediaItem);
+                });
+                manager.view.refreshLibrary();
+                //console.log(manager);
             }).error(function (result) {
                 //console.log(result);
                 //view.setProgressType('progress-bar-danger');
@@ -84,7 +133,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 //manager.view.hideBusy();           
             });
 
-            
+
         } else {
             //console.log('load data from view');
             // manager.view.getDataFromView();
@@ -93,16 +142,16 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         getEnabledFeaturesAndOrigins();
         //console.log(manager);
         manager.current = {feature: getDefaultFeature(),
-                            origin: getDefaultOrigin()
+            origin: getDefaultOrigin()
         };
-        
-        manager.view.switchOrigin(manager.current.origin.name);  
+
+        manager.view.switchOrigin(manager.current.origin.name);
     }
     ;
     //     
     function getEnabledFeaturesAndOrigins() {
         /* set origins according to settings */
-        $.each(manager.functionality, function (feature_key, feature) {   
+        $.each(manager.functionality, function (feature_key, feature) {
             if (feature.type === 'origin' && feature.enabled === 1) {
                 manager.origins[feature.name] = feature;
             }
@@ -112,8 +161,8 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
             }
             ;
         });
-        
-                console.log(manager);
+
+        console.log(manager);
     }
 
     function getDefaultOrigin() {
@@ -180,8 +229,8 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         f.error = false;
         if (f.size > manager.upload.uploadMaxSingleSize) {
             f.error = 'File is too big. Maximum single file size is ' + manager.upload.uploadMaxSingleSize;
-        }   
-        
+        }
+
         return f;
     };
 
@@ -194,29 +243,46 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
         // Instance stores a reference to the Singleton
         var instance;
 
-        function Init($modal) {
+        function Init($container) {
 
             /*
              * manager.view properties
              * 
              */
             //container
-            var $modal = $modal;
-            //features menu container
-            var $features_menu = $modal.find('#kmgallery_manager_features');
-            //origins menu container
-            var $origins_menu = $modal.find('#kmgallery_manager_origins');
-            //details container
-            var $details_box = $modal.find('#kmgallery_manager_details');
-            // msg box
-            var $msg_box = $modal.find('#kmgallery_manager_msg_box');
-            var $library_box = $modal.find('#kmgallery_manager_library_box');
-            var $upload_preview = $modal.find('#upload_preview');
+            var $container = $container;
+
+            if (manager.enabled === 0) {
+                displayDisabled();
+                return false;
+            }
+
+            
+            $managerContent = createManagerContent();
+            $featuresMenu = createFeaturesMenu();
+            createManagerModal($featuresMenu, $managerContent);
+            
+            
+            
+            addOpenButton();
+            //$('.modal .modal-body').css('overflow-y', 'auto'); 
+            //$('.modal .modal-body').css('max-height', $(window).height() * 0.7);
             /*
+             //features menu containervar $manager = 
+             var $features_menu = $modal.find('#kmgallery_manager_features');
+             //origins menu container
+             var $origins_menu = $modal.find('#kmgallery_manager_origins');
+             //details container
+             var $details_box = $modal.find('#kmgallery_manager_details');
+             // msg box
+             var $msg_box = $modal.find('#kmgallery_manager_msg_box');
+             var $library_box = $modal.find('#kmgallery_manager_library_box');
+             var $upload_preview = $modal.find('#upload_preview');
+             /*
              * manager.view init
              */
             //start listening for actions
-            bindViewEvents();
+            //bindViewEvents();
 
             //console.log(itemTemplate())
             /*
@@ -251,12 +317,12 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                  });
                  */
                 /* bind mode switch */
-                 $origins_menu.find('a').each(function () {
-                 $(this).on('click', function (e) {
-                 manager.switchOrigin($(this).attr('data-origin'));
-                 });
-                 });
-                
+                $origins_menu.find('a').each(function () {
+                    $(this).on('click', function (e) {
+                        manager.switchOrigin($(this).attr('data-origin'));
+                    });
+                });
+
                 /* item hover action over selected icon - unselect   
                  $modal.find('a.media-unselect').each(function () {
                  $(this).hover(
@@ -293,30 +359,134 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
             /*
              * manager.view functions 
              * Data
-            
-            function getDataFromView() {
-
-                var $origins_box = $modal.find('#kmgallery_manager_media_box');
-                $origins_box.find('div.media-item').each(function () {              
-                    var mediaItem = new KaikMedia.Gallery.model.mediaItem(); 
-                        mediaItem.getItemFromElement($(this));
-                        manager.library.push(mediaItem);
-                });
-                
-                //console.log(manager);
-               
-                var $features_box = $modal.find('#kmgallery_manager_selected');
-                $features_box.find('div.media-item').each(function () {
-                    manager.selected.push(getItemDataFromElement($(this)));
-                });
-               
-            }
-            */
+             
+             function getDataFromView() {
+             
+             var $origins_box = $modal.find('#kmgallery_manager_media_box');
+             $origins_box.find('div.media-item').each(function () {              
+             var mediaItem = new KaikMedia.Gallery.model.mediaItem(); 
+             mediaItem.getItemFromElement($(this));
+             manager.library.push(mediaItem);
+             });
+             
+             //console.log(manager);
+             
+             var $features_box = $modal.find('#kmgallery_manager_selected');
+             $features_box.find('div.media-item').each(function () {
+             manager.selected.push(getItemDataFromElement($(this)));
+             });
+             
+             }
+             */
             //
             function getSelectedFromView() {
 
             }
+            function displayDisabled() {
+                $container.html('<div class="alert alert-warning"><a class="close" data-dismiss="alert">×</a><span> Gallery is disabled </span></div>');
+            }
 
+            function addOpenButton() {
+                $container.html('<a href="#" data-toggle="modal" data-target="#kmgallery_manager"> <i class="fa fa-picture-o"></i> Manage media </a>');
+            }
+
+            //function  {
+            //     $container.html('<div class="alert alert-warning"><a class="close" data-dismiss="alert">×</a><span> Gallery is disabled </span></div>');
+            //}
+
+            function createManagerModal(heading, formContent) {
+                html = '<div id="kmgallery_manager" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">';
+                html += '<div class="modal-dialog">';
+                html += '<div class="modal-content">';
+                html += '<div class="modal-header">';
+                html += '<a class="close" data-dismiss="modal">×</a>';
+                html += heading;
+                html += '</div>';
+                html += '<div class="modal-body">';
+                html += formContent;
+                html += '</div>';
+                html += '<div class="modal-footer">';
+                html += '<span class="btn btn-primary" data-dismiss="modal">Close</span>';
+                html += '</div>';  // content
+                html += '</div>';  // dialog
+                html += '</div>';  // footer
+                html += '</div>';  // modalWindow
+                $('body').append(html);
+                $("#dynamicModal").modal();
+                // $("#dynamicModal").modal('show');
+
+                //$('#dynamicModal').on('hidden.bs.modal', function (e) {
+                //    $(this).remove();
+                //});
+            }
+                       
+            function createFeaturesMenu() {
+                html = '<ul id="kmgallery_manager_features" class="nav nav-pills">';
+                $.each(manager.features, function (index, feature) {
+                var active = index === 0 ? ' active' : '' ;
+                html += '<li role="presentation"  class="mode mode-'+ feature.type + active +'">';
+                html += '<a data-feature="'+ feature.type +'"  href="#kmgallery_manager_'+ feature.type +'_box" aria-controls="kmgallery_manager_'+ feature.type +'_box" role="tab" data-toggle="pill"><i class="'+ feature.icon +'"></i> '+ feature.displayName +' </a>';
+                html += '</li>';
+                });
+                html += '</ul>';  // modalWindow
+                return html;
+            }
+            
+            function createManagerContent() {
+                html = '<div class="row">';
+                html += '<div id="kmgallery_manager_selected" class="col-xs-12 col-md-2">';
+                html += createSelected();
+                html += '</div>';
+                html += '<div id="kmgallery_manager_library" class="col-xs-12 col-md-8">';
+                html += createLibrary();
+                html += '</div>';
+                html += '<div id="kmgallery_manager_details" class="col-xs-12 col-md-2">';
+                html += createDetails();
+                html += '</div>';
+                html += '</div>';
+                return html;
+            }
+            
+            function createSelected() {
+                html = '<div class="tab-content">';
+                html += '<div role="tabpanel" class="tab-pane active" id="kmgallery_manager_info_box">';
+                html += '<h4>Using Media menager</h4>';
+                html += '</div>';   
+                
+                
+                
+                html += '</div>';                
+                        
+                return html;
+            }
+            
+            function createLibrary() {
+                html = '<div id="kmgallery_manager_library_info" class="col-md-12">';
+                //info?
+                html += '</div>'; 
+                html += '<ul id="kmgallery_manager_origins" class="nav nav-tabs">';
+                $.each(manager.origins, function (index, origin) {
+                var active = index === 0 ? ' active' : '' ;
+                html += '<li role="presentation"  class="origins origin-'+ origin.name + active +'">';
+                html += '<a data-origin="'+ origin.name +'"  href="#kmgallery_manager_'+ origin.name +'_box" aria-controls="kmgallery_manager_'+ origin.type +'_box" role="tab" data-toggle="pill"><i class="'+ origin.icon +'"></i> '+ origin.displayName +' </a>';
+                html += '</li>';
+                });
+                html += '</ul>';  // modalWindow
+                html += '<div class="tab-content">';
+                
+                html += '</div>';                
+                        
+                return html;
+            }
+            
+            function createDetails() {
+                html = '<div class="item-details-info-box row">';
+                html += '<div><h4><i class="fa fa-hand-o-right"> </i> Media view and edit </h4>';
+                html += '</div>';                   
+                html += '</div>';                
+                        
+                return html;
+            }
             //origins and features
             function switchFeature() {
                 libraryCleanSelection();
@@ -353,7 +523,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 var files = e.target.files || (dt && dt.files);
                 if (files) {
                     for (var i = 0, f; f = files[i]; i++) {
-                        var mediaItem = new KaikMedia.Gallery.model.mediaItem(); 
+                        var mediaItem = new KaikMedia.Gallery.model.mediaItem();
                         mediaItem.setDatafromUpload(manager.prepareForUpload(f));
                         $upload_preview.append(mediaItem.view.render());
                         manager.library.push(mediaItem);
@@ -377,14 +547,14 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
                 });
 
             }
-            
+
             //Item
             function refreshLibrary() {
                 /* set origins according to settings */
                 $.each(manager.library, function (index, mediaItem) {
-                          $library_box.append(mediaItem.view.render());
-                    });
-            }            
+                    $library_box.append(mediaItem.view.render());
+                });
+            }
 
             //modal
             function Open() {
@@ -431,7 +601,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
             return {
                 open: Open,
                 close: Close,
-                refreshLibrary : refreshLibrary,
+                refreshLibrary: refreshLibrary,
                 switchOrigin: switchOrigin,
                 switchFeature: switchFeature,
                 showBusy: showBusy,

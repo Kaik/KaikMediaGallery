@@ -101,7 +101,7 @@ class SettingsCollection extends ArrayCollection {
         $array = [];
         foreach ($elements as $element) {
             if ($element instanceof SettingsObject) {
-                $array[$element->getName()] = $element;
+                $array[$element->getName()] = $element->toArray();
             }
         }
         

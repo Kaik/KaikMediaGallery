@@ -17,8 +17,18 @@
     overflow:auto;
 }
 
+#kmgallery_manager .modal-dialog {
+        width: auto;
+        height: auto; 
+        max-height: 100%;
+        margin:0px;
+}
 
 /* Manager columns - layout */
+
+#kmgallery_manager .modal-header {
+    background-color: #E4F2FF;	
+}
 
 
 #kmgallery_manager .modal-body {
