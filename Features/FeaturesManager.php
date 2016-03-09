@@ -14,7 +14,7 @@ class FeaturesManager {
      * construct
      */
     public function __construct() {
-        $this->features = ['addmedia', 'icon', 'featured', 'additional', 'user', 'public', 'album', 'gallery', 'insert', 'avatar'];     
+        $this->features = ['info', 'icon', 'featured', 'additional', 'user', 'public', 'album', 'gallery', 'insert', 'avatar', 'addmedia'];     
         //$this->getFeaturesCollection();
     }
 

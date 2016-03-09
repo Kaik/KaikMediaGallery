@@ -30,7 +30,7 @@ class SettingsManager {
         //manager
         $this->variablesManager = $variablesManager;
         $dbSettings = $this->variablesManager->getAll($this->name);
-        dump($dbSettings);
+        //dump($dbSettings);
         if(is_array($dbSettings) && !empty($dbSettings)){
             $this->settings->clear();
             $global = $dbSettings[$this->name];
@@ -71,6 +71,6 @@ class SettingsManager {
     }
     
     public function saveSettings() {
-        return $this->variablesManager->setAll($this->name, $this->settings->toArray());
+        return $this->variablesManager->setAll($this->name, $this->settings->toArrayForStorage());
     }
 }

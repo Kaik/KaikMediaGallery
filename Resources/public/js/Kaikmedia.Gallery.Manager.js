@@ -53,10 +53,10 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
             manager.view = view.getInstance($('#kmgallery_manager_container'));
             return;
         }
-        console.log(KaikMedia.Gallery.settings.mode);
+        //console.log(KaikMedia.Gallery.settings.mode);
         manager.functionality = manager.obj.settings.features;
         manager.features = $.map(manager.functionality, function (feature, index) {
-            console.log(feature.type);
+            //console.log(feature.type);
             if (feature.enabled === 0) {
                 return null;
             }
@@ -69,7 +69,7 @@ KaikMedia.Gallery.Manager = KaikMedia.Gallery.Manager || {};
 
         });
         manager.origins = $.map(manager.functionality, function (origin, index) {
-            console.log(origin.type);
+            //console.log(origin.type);
             if (origin.enabled === 0) {
                 return null;
             }

@@ -29,6 +29,9 @@ class SettingsCollection extends ArrayCollection {
     //private $features;
     private $mediaHandlers;    
     
+    //private $elements;
+
+
     /**
      * Initializes a new ArrayCollection.
      *
@@ -76,7 +79,11 @@ class SettingsCollection extends ArrayCollection {
         
         $global = $settings->get('KaikmediaGalleryModule'); 
         $this->set('KaikmediaGalleryModule', $global);
-        foreach($this->toArray() as $key => $element ) {
+        
+       // dump();
+        
+        
+        foreach(parent::toArray() as $key => $element ) {
             if($key === 'KaikmediaGalleryModule'){
                 continue;
             }
@@ -92,7 +99,7 @@ class SettingsCollection extends ArrayCollection {
                 
     }
 
-        /**
+    /**
      * {@inheritDoc}
      */
     public function toArray()
@@ -107,6 +114,23 @@ class SettingsCollection extends ArrayCollection {
         
         return $array;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function toArrayForStorage()
+    {
+        $elements = parent::toArray();     
+        $array = [];
+        foreach ($elements as $element) {
+            if ($element instanceof SettingsObject) {
+                $array[$element->getName()] = $element;
+            }
+        }
+        
+        return $array;
+    }    
+    
 }
 
 

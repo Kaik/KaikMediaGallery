@@ -27,8 +27,12 @@ KaikMedia.Gallery.settings = (function ($) {
 
     function set(data)
     {
+       console.log(data);
+       if($.isEmptyObject(data)){
+        global.enabled = 0;           
+       }else{     
+           
         settings = data;
-       // mediaTypes = data.mediaTypes;
         global = data.settings[obj.name];
                
         if(settings.obj_name !== ''){
@@ -36,12 +40,12 @@ KaikMedia.Gallery.settings = (function ($) {
            obj.name = data.obj_name;
            obj.reference = data.obj_reference;
            obj.settings = data.settings[obj.name];
-        }
-        
-        //  
+        }            
+       }
+       
         //console.log('Gallery:init:0: module set settings');
-        console.log(settings);
-        console.log(global);
+        //console.log(settings);
+        //console.log(global);
     };
     
     function isGalleryEnabled() { return global.enabled; };   
