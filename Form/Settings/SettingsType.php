@@ -16,25 +16,25 @@ class SettingsType extends AbstractType
     //    $this->data = $data;
     //}
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {    
-        
+    {
+
         $builder->add('settings', 'collection', [
             'type' => new ObjectSettingsType()
             ]
                 );
-        
+
         if ($options['isXmlHttpRequest'] == false) {
-            $builder->add('save', 'submit', array('label' => 'Save'));
-        }                       
+            $builder->add('save', 'submit', ['label' => 'Save']);
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'isXmlHttpRequest' => false
-        ));
+        ]);
     }
-    
+
 
     public function getName()
     {

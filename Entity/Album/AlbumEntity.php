@@ -1,7 +1,12 @@
 <?php
 
-/**
- * Copyright (c) KaikMedia.com 2015
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Entity\Album;
@@ -18,8 +23,8 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractDocumentEntity;
  * @ORM\Table(name="kmgallery_albums")
  * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\AlbumsRepository")
  */
-class AlbumEntity extends AbstractDocumentEntity {
-
+class AlbumEntity extends AbstractDocumentEntity
+{
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
@@ -69,9 +74,10 @@ class AlbumEntity extends AbstractDocumentEntity {
     /**
      * constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
-        
+
         $this->category = new ArrayCollection();
     }
 
@@ -80,7 +86,8 @@ class AlbumEntity extends AbstractDocumentEntity {
      *
      * @return string
      */
-    public function setParent(AlbumEntity $parent = null) {
+    public function setParent(AlbumEntity $parent = null)
+    {
         $this->parent = $parent;
     }
 
@@ -89,7 +96,8 @@ class AlbumEntity extends AbstractDocumentEntity {
      *
      * @return string
      */
-    public function getParent() {
+    public function getParent()
+    {
         return $this->parent;
     }
 
@@ -98,36 +106,40 @@ class AlbumEntity extends AbstractDocumentEntity {
      *
      * @return integer
      */
-    public function getAsJsTreeArray() {
+    public function getAsJsTreeArray()
+    {
         $parent = $this->parent == null ? '#' : $this->parent->getId();
-        $arrayTree = array('id' => $this->id,
+        $arrayTree = ['id' => $this->id,
             'text' => $this->getTitle(),
             'parent' => $parent
-        );
+        ];
 
         return $arrayTree;
     }
 
-    public function getMedia() {
+    public function getMedia()
+    {
         //$em = \ServiceUtil::getService('doctrine.entitymanager');
-       // $thisMedia = $em->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
-       //         ->getAll(array('obj_name' => 'KaikmediaGalleryModule',
-       //     'obj_id' => $this->id
-       // ));
-         $thisMedia = false;
+        // $thisMedia = $em->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')
+        //         ->getAll(array('obj_name' => 'KaikmediaGalleryModule',
+        //     'obj_id' => $this->id
+        // ));
+        $thisMedia = false;
         return $thisMedia;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->title;
     }
-    
+
     /**
      * Get page category assignments
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getCategory() {
+    public function getCategory()
+    {
         return $this->category;
     }
 
@@ -136,7 +148,8 @@ class AlbumEntity extends AbstractDocumentEntity {
      *
      * @param ArrayCollection $assignments
      */
-    public function setCategory(ArrayCollection $assignments) {
+    public function setCategory(ArrayCollection $assignments)
+    {
         foreach ($this->category as $categoryAssignment) {
             if (false === $key = $this->collectionContains($assignments, $categoryAssignment)) {
                 $this->category->removeElement($categoryAssignment);
@@ -147,5 +160,5 @@ class AlbumEntity extends AbstractDocumentEntity {
         foreach ($assignments as $assignment) {
             $this->category->add($assignment);
         }
-    }    
+    }
 }

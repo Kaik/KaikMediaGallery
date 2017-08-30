@@ -1,9 +1,12 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Entity\Media;
@@ -20,17 +23,17 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractDocumentEntity;
  * @ORM\Table(name="kmgallery_media")
  * @ORM\Entity(repositoryClass="Kaikmedia\GalleryModule\Entity\Repository\MediaRepository")
  * @ORM\HasLifecycleCallbacks()
- * 
+ *
  * @ORM\InheritanceType(value="SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discr") 
+ * @ORM\DiscriminatorColumn(name="discr")
  * @ORM\DiscriminatorMap({"image" = "ImageEntity",
  *                         "pdf" = "PdfEntity",
  *                         "youtube" = "YoutubeEntity",
  *                         "url" = "UrlEntity",
  *                         "file"  = "AbstractUploadableEntity"})
  */
-abstract class AbstractMediaEntity extends AbstractDocumentEntity {
-
+abstract class AbstractMediaEntity extends AbstractDocumentEntity
+{
     /**
      * @ORM\Column(type="text", length=255)
      */
@@ -39,13 +42,13 @@ abstract class AbstractMediaEntity extends AbstractDocumentEntity {
     /**
      * @ORM\Column(type="boolean")
      */
-    private $publicdomain;   
-    
+    private $publicdomain;
+
     /**
      * @ORM\Column(type="array")
      */
-    private $mediaExtra;      
-    
+    private $mediaExtra;
+
     /**
      * @ORM\OneToMany(targetEntity="Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationEntity", mappedBy="media")
      */
@@ -54,56 +57,72 @@ abstract class AbstractMediaEntity extends AbstractDocumentEntity {
     /**
      * constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->publicdomian = 0;
         $this->legal = 'unknow';
         $this->relations = new ArrayCollection();
     }
 
-    public function getLegal() {
+    public function getLegal()
+    {
         return $this->legal;
     }
 
-    public function setLegal($legal) {
+    public function setLegal($legal)
+    {
         $this->legal = $legal;
+
         return $this;
     }
 
-    public function getPublicdomain() {
+    public function getPublicdomain()
+    {
         return $this->publicdomain;
     }
 
-    public function setPublicdomain($publicdomain) {
+    public function setPublicdomain($publicdomain)
+    {
         $this->publicdomain = $publicdomain;
+
         return $this;
     }
-    public function getMediaExtra() {
+
+    public function getMediaExtra()
+    {
         return $this->mediaExtra;
     }
 
-    public function setMediaExtra($mediaExtra) {
+    public function setMediaExtra($mediaExtra)
+    {
         $this->mediaExtra = $mediaExtra;
+
         return $this;
     }
+
     /**
      *
      * @return object array
      */
-    public function getRelations() {
+    public function getRelations()
+    {
         return $this->relations;
     }
 
     /**
      *
-     * @param object array $relations            
+     * @param object array $relations
      */
-    public function setRelations($relations) {
+    public function setRelations($relations)
+    {
         $this->relations = $relations;
+
         return $this;
     }
-    
-    public function isUploadable() {
+
+    public function isUploadable()
+    {
         return false;
     }
 }

@@ -1,30 +1,55 @@
 <?php
 
-/**
- * Copyright 
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Container;
 
 use Symfony\Component\Routing\RouterInterface;
-use Zikula\Common\Translator\Translator;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\LinkContainer\LinkContainerInterface;
+use Zikula\PermissionsModule\Api\ApiInterface\PermissionApiInterface;
 
-class LinkContainer implements LinkContainerInterface {
-
+class LinkContainer implements LinkContainerInterface
+{
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
-
     /**
      * @var RouterInterface
      */
     private $router;
-
-    public function __construct($translator, RouterInterface $router) {
+    /**
+     * @var PermissionApiInterface
+     */
+    private $permissionApi;
+    /**
+     * @var bool
+     */
+    private $enableCategorization;
+    /**
+     * LinkContainer constructor.
+     * @param TranslatorInterface $translator
+     * @param RouterInterface $router
+     * @param PermissionApiInterface $permissionApi
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        RouterInterface $router,
+        PermissionApiInterface $permissionApi,
+        $enableCategorization
+    ) {
         $this->translator = $translator;
         $this->router = $router;
+        $this->permissionApi = $permissionApi;
+        $this->enableCategorization = $enableCategorization;
     }
 
     /**
@@ -34,13 +59,14 @@ class LinkContainer implements LinkContainerInterface {
      * @param string $type
      * @return array
      */
-    public function getLinks($type = LinkContainerInterface::TYPE_ADMIN) {
+    public function getLinks($type = LinkContainerInterface::TYPE_ADMIN)
+    {
         $method = 'get' . ucfirst(strtolower($type));
         if (method_exists($this, $method)) {
             return $this->$method();
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -48,39 +74,40 @@ class LinkContainer implements LinkContainerInterface {
      *
      * @return array
      */
-    private function getAdmin() {
-        $links = array();
-        if (\SecurityUtil::checkPermission('KaikmediaGalleryModule::', '::', ACCESS_ADMIN)) {
-            $links[] = array(
+    private function getAdmin()
+    {
+        $links = [];
+        if ($this->permissionApi->hasPermission('KaikmediaGalleryModule::', '::', ACCESS_ADMIN)) {
+            $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_admin_info'),
                 'text' => $this->translator->__('Info'),
                 'title' => $this->translator->__('Here you can view gallery informations and statistics'),
-                'icon' => 'dashboard');
-            $links[] = array(
+                'icon' => 'dashboard'];
+            $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_admin_preferences'),
                 'text' => $this->translator->__('General settings'),
                 'title' => $this->translator->__('Adjust module settings'),
-                'icon' => 'magic');
-            $links[] = array(
+                'icon' => 'magic'];
+            $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_admin_albums'),
                 'text' => $this->translator->__('Albums'),
                 'title' => $this->translator->__('Here you can view gallery album tree'),
-                'icon' => 'wrench');
-            $links[] = array(
+                'icon' => 'wrench'];
+            $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_admin_mediarelations'),
                 'text' => $this->translator->__('Media relations'),
                 'title' => $this->translator->__('Media object map manager'),
-                'icon' => 'dashboard');
-            $links[] = array(
+                'icon' => 'dashboard'];
+            $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_admin_mediastore'),
                 'text' => $this->translator->__('Media'),
                 'title' => $this->translator->__('Media store manager'),
-                'icon' => 'magic');
-            $links[] = array(
+                'icon' => 'magic'];
+            $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_admin_addnew'),
                 'text' => $this->translator->__('Add media'),
                 'title' => $this->translator->__('Add media'),
-                'icon' => 'wrench');
+                'icon' => 'wrench'];
         }
         return $links;
     }
@@ -90,21 +117,22 @@ class LinkContainer implements LinkContainerInterface {
      *
      * @return array
      */
-    private function getUser() {
-        $links = array();
-        if (\UserUtil::isLoggedIn()) {
-            $links[] = array(
+    private function getUser()
+    {
+        $links = [];
+        if ($this->permissionApi->hasPermission('KaikmediaGalleryModule::', '::', ACCESS_OVERVIEW)) {
+            $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_user_index'),
                 'text' => $this->translator->__('Gallery'),
                 'title' => $this->translator->__('Manage your media'),
                 'icon' => 'image'
-            );
+            ];
         }
         return $links;
     }
 
-    public function getBundleName() {
+    public function getBundleName()
+    {
         return 'KaikmediaGalleryModule';
     }
-
 }

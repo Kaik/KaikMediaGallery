@@ -25,7 +25,7 @@ class ValueResizeFormListener extends ResizeFormListener {
         $data = $event->getData();
 
         if (null === $data) {
-            $data = array();
+            $data = [];
         }
 
         if (!is_array($data) && !($data instanceof \Traversable && $data instanceof \ArrayAccess)) {
@@ -41,9 +41,9 @@ class ValueResizeFormListener extends ResizeFormListener {
         foreach ($data as $name => $value) {
             $class = $value->getFormClass();
             $type = new $class();
-            $form->add($name, $type ,array_replace(array(
+            $form->add($name, $type ,array_replace([
                 'property_path' => '[' . $name . ']',
-                            ), $this->options));
+                            ], $this->options));
         }
     }
 

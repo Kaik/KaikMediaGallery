@@ -1,7 +1,12 @@
 <?php
 
-/**
- * Copyright (c) KaikMedia.com 2015
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Controller;
@@ -23,8 +28,8 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @Route("/manager")
  */
-class ManagerController extends AbstractController {
-
+class ManagerController extends AbstractController
+{
     /**
      * @Route(
      *     "/load/{_format}",
@@ -48,40 +53,35 @@ class ManagerController extends AbstractController {
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function loadAction(Request $request, $_format) {
+    public function loadAction(Request $request, $_format)
+    {
         // Permission check
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
 
-        
         $media = $this->get('doctrine.entitymanager')
                 ->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')
-                ->getAll(array('publicdomain' => 'include', 'author' => \UserUtil::getVar('uid')));
+                ->getAll(['publicdomain' => 'include', 'author' => \UserUtil::getVar('uid')]);
 
-        
         $mediaArr = [];
-        foreach ($media as $mediaItem){
+        foreach ($media as $mediaItem) {
             $mediaArr[] = $mediaItem->toArray();
         }
-        
-        
+
         //json
         if ($_format == 'json') {
-            $data = array(
+            $data = [
                 'media' => $mediaArr,
                 '_format' => $_format
-            );
+            ];
 
             $response = new JsonResponse($data);
 
             return $response;
         }
 
-        //html
-        $request->attributes->set('_legacy', true); // forces template to render inside old theme
         return $this->render('KaikmediaGalleryModule:Media:get.html.twig', [
-                    'ZUserLoggedIn' => \UserUtil::isLoggedIn(),
         ]);
     }
 
@@ -102,7 +102,8 @@ class ManagerController extends AbstractController {
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function editAction(Request $request) {
+    public function editAction(Request $request)
+    {
         // Permission check
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
@@ -126,12 +127,12 @@ class ManagerController extends AbstractController {
             $options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
             $original_form = $this->createForm('media', $original, $options);
 
-            $template = $this->renderView('KaikmediaGalleryModule:Media:item.modify.html.twig', array(
+            $template = $this->renderView('KaikmediaGalleryModule:Media:item.modify.html.twig', [
                 'form' => $original_form->createView(),
                 'relation' => false,
                 'original' => $original,
                 'settings' => ModUtil::getVar($this->name)
-            ));
+            ]);
         } else {
             if ($relation_id == 'new') {
                 $original = $this->entityManager
@@ -142,7 +143,7 @@ class ManagerController extends AbstractController {
                     $relation->setOriginal($original);
                     $relation->setType($mode);
                 } else {
-                    //original not found error	
+                    //original not found error
                 }
             } elseif (is_numeric($relation_id)) {
                 $relation = $this->entityManager
@@ -157,18 +158,18 @@ class ManagerController extends AbstractController {
             $options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
             $relation_form = $this->createForm('media_relation', $relation, $options);
 
-            $template = $this->renderView('KaikmediaGalleryModule:Features:' . $mode . '.feature.modify.html.twig', array(
+            $template = $this->renderView('KaikmediaGalleryModule:Features:' . $mode . '.feature.modify.html.twig', [
                 'form' => $relation_form->createView(),
                 'relation' => $relation,
                 'original' => $relation->getOriginal(),
                 'previews' => $settings->getPreviewsSelect(),
                 'settings' => ModUtil::getVar($this->name)
-            ));
+            ]);
         }
 
-        $response = new Response(json_encode(array('template' => $template)));
+        $response = new Response(json_encode(['template' => $template]));
         $response->headers->set('Content-Type', 'application/json');
+        
         return $response;
     }
-
 }

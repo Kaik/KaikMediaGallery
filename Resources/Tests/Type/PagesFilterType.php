@@ -15,30 +15,30 @@ class PagesFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->setMethod('GET')
-            ->add('limit', 'choice', array(
-            'choices' => array(
+            ->add('limit', 'choice', [
+            'choices' => [
                 '10' => '10',
                 '25' => '25',
                 '50' => '50'
-            ),
+            ],
             'required' => false,
             'data' => $options['limit']
-        ))
-            ->add('title', 'text', array(
+        ])
+            ->add('title', 'text', [
             'required' => false,
             'data' => $options['title']
-        ))
-            ->add('online', 'choice', array(
-            'choices' => array(
+        ])
+            ->add('online', 'choice', [
+            'choices' => [
                 'online' => 'Online',
                 'offline' => 'Offline'
-            ),
+            ],
             'required' => false,
             'data' => $options['online']
-        ))
-            ->add('filter', 'submit', array(
+        ])
+            ->add('filter', 'submit', [
             'label' => 'Filter'
-        ));
+        ]);
     }
 
     public function getName()
@@ -49,15 +49,15 @@ class PagesFilterType extends AbstractType
     /**
      * OptionsResolverInterface is @deprecated and is supposed to be replaced by
      * OptionsResolver but docs not clear on implementation
-     * 
-     * @param OptionsResolverInterface $resolver            
+     *
+     * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'limit' => null,
             'title' => null,
             'online' => null
-        ));
+        ]);
     }
 }

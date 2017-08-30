@@ -1,8 +1,12 @@
 <?php
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Entity\Base;
@@ -16,12 +20,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Description of BaseEntity
  *
  * @ORM\MappedSuperclass()
- * 
+ *
  * @author Kaik
  */
-abstract class AbstractBaseEntity extends EntityAccess {
-     
-    // basics
+abstract class AbstractBaseEntity extends EntityAccess
+{
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -37,8 +40,8 @@ abstract class AbstractBaseEntity extends EntityAccess {
     /**
      * @ORM\Column(type="string", length=150)
      */
-    private $status = 'A';   
-    
+    private $status = 'A';
+
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
@@ -74,7 +77,7 @@ abstract class AbstractBaseEntity extends EntityAccess {
     private $deletedBy;
 
     /**
-     * 
+     *
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true, options={"default":null})
      */
     private $deletedAt;
@@ -82,8 +85,8 @@ abstract class AbstractBaseEntity extends EntityAccess {
     /**
      * constructor
      */
-    public function __construct() {
-
+    public function __construct()
+    {
     }
 
     /**
@@ -91,7 +94,8 @@ abstract class AbstractBaseEntity extends EntityAccess {
      *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -102,125 +106,139 @@ abstract class AbstractBaseEntity extends EntityAccess {
      *
      * @return void
      */
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
     /**
      * Get createdBy
      *
-     * @return string 
+     * @return string
      */
-    public function getCreatedBy() {
+    public function getCreatedBy()
+    {
         return $this->createdBy;
     }
 
     /**
      * Set createdBy
      *
-     * @return $this 
+     * @return $this
      */
-    public function setCreatedBy($createdBy) {
+    public function setCreatedBy($createdBy)
+    {
         $this->createdBy = $createdBy;
     }
 
     /**
      * Get createdAt
      *
-     * @return string 
+     * @return string
      */
-    public function getCreatedAt() {
+    public function getCreatedAt()
+    {
         return $this->createdAt;
     }
 
     /**
      * Set createdAt
      *
-     * @return $this 
+     * @return $this
      */
-    public function setCreatedAt(\DateTime $createdAt) {
+    public function setCreatedAt(\DateTime $createdAt)
+    {
         $this->createdAt = $createdAt;
     }
 
     /**
      * Get updatedBy
      *
-     * @return string 
+     * @return string
      */
-    public function getUpdatedBy() {
+    public function getUpdatedBy()
+    {
         return $this->updatedBy;
     }
 
     /**
      * Set updatedBy
      *
-     * @return $this 
+     * @return $this
      */
-    public function setUpdatedBy($updatedBy) {
+    public function setUpdatedBy($updatedBy)
+    {
         $this->updatedBy = $updatedBy;
     }
 
     /**
      * Get updatedAt
      *
-     * @return string 
+     * @return string
      */
-    public function getUpdatedAt() {
+    public function getUpdatedAt()
+    {
         return $this->updatedAt;
     }
 
     /**
      * Set updatedAt
      *
-     * @return $this 
+     * @return $this
      */
-    public function setUpdatedAt(\DateTime $updatedAt) {
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
         $this->updatedAt = $updatedAt;
     }
 
     /**
      * Get deletedBy
      *
-     * @return string 
+     * @return string
      */
-    public function getDeletedBy() {
+    public function getDeletedBy()
+    {
         return $this->deletedBy;
     }
 
     /**
      * Set deletedBy
      *
-     * @return $this 
+     * @return $this
      */
-    public function setDeletedBy($deletedBy) {
+    public function setDeletedBy($deletedBy)
+    {
         $this->deletedBy = $deletedBy;
     }
 
     /**
      * Get deletedAt
      *
-     * @return string 
+     * @return string
      */
-    public function getDeletedAt() {
+    public function getDeletedAt()
+    {
         return $this->deletedAt;
     }
 
     /**
      * Set deletedAt
      *
-     * @return $this 
+     * @return $this
      */
-    public function setDeletedAt($deletedAt) {
+    public function setDeletedAt($deletedAt)
+    {
         $this->deletedAt = $deletedAt;
     }
 
     /**
      * Set obj_status
-     * 
-     * @param string $status            
+     *
+     * @param string $status
      * @return Pages
      */
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->status = $status;
 
         return $this;
@@ -228,10 +246,11 @@ abstract class AbstractBaseEntity extends EntityAccess {
 
     /**
      * Get obj_status
-     * 
+     *
      * @return string
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
@@ -239,7 +258,8 @@ abstract class AbstractBaseEntity extends EntityAccess {
      * ToString interceptor implementation.
      * This method is useful for debugging purposes.
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getId();
     }
 
@@ -254,7 +274,8 @@ abstract class AbstractBaseEntity extends EntityAccess {
      * (3) http://stackoverflow.com/questions/185934/how-do-i-create-a-copy-of-an-object-in-php
      * (4) http://www.pantovic.com/article/26/doctrine2-entity-cloning
      */
-    public function __clone() {
+    public function __clone()
+    {
         // If the entity has an identity, proceed as normal.
         if ($this->id) {
             // unset identifiers
@@ -267,5 +288,4 @@ abstract class AbstractBaseEntity extends EntityAccess {
         }
         // otherwise do nothing, do NOT throw an exception!
     }
-
 }

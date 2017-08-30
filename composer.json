@@ -20,14 +20,11 @@
 	},
 	"extra" : {
 		"zikula" : {
-			"core-compatibility" : ">=1.4.1",                       
+			"core-compatibility" : ">=2.0.0",                       
 			"class" : "Kaikmedia\\GalleryModule\\KaikmediaGalleryModule",
 			"displayname" : "KMGallery",
 			"url" : "kmgallery",
-			"capabilities" : {
-                                "hook_subscriber": {"class": "Kaikmedia\\GalleryModule\\Container\\HookContainer"},
-                                "hook_provider": {"class": "Kaikmedia\\GalleryModule\\Container\\HookContainer"},                                
-                                "searchable": {"class": "Kaikmedia\\GalleryModule\\Helper\\SearchHelper"},
+			"capabilities" : {                              
                                 "categorizable": ["Kaikmedia\\GalleryModule\\Entity\\AlbumEntity"],                            
 				"user" : { "route" : "kaikmediagallerymodule_user_index"},
 				"admin" : {"route" : "kaikmediagallerymodule_admin_info"}

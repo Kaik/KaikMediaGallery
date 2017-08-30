@@ -44,7 +44,7 @@ class MediaType extends AbstractType {
                     'required' => false
                 ])
                 ->add('mediaExtra', 'textarea', [
-                    'required' => false                    
+                    'required' => false
                 ])//->addModelTransformer(new JsonToArrayTransformer())
                 ->add('publicdomain', 'checkbox', [
                     'label' => 'public',
@@ -64,7 +64,7 @@ class MediaType extends AbstractType {
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
         $resolver->setDefaults([
             'isXmlHttpRequest' => false,
-            'data_class' => 'Kaikmedia\\GalleryModule\\Entity\\Media\\' . ucfirst($this->type) . 'Entity'
+//            'data_class' => 'Kaikmedia\\GalleryModule\\Entity\\Media\\' . ucfirst($this->type) . 'Entity'
         ]);
     }
 
@@ -72,7 +72,7 @@ class MediaType extends AbstractType {
      * {@inheritdoc}
      */
     public function getName() {
-        return 'media_' . strtolower($this->type);
+        return 'media'; //media_' . strtolower($this->type);
     }
 
 }

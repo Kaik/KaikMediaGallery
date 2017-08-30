@@ -1,8 +1,12 @@
 <?php
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Entity\Base;
@@ -16,11 +20,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Description of BaseEntity
  *
  * @ORM\MappedSuperclass()
- * 
+ *
  * @author Kaik
  */
-abstract class AbstractDocumentEntity extends AbstractBaseEntity {
-     
+abstract class AbstractDocumentEntity extends AbstractBaseEntity
+{
     /**
      * title
      *
@@ -36,13 +40,13 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
      * @Gedmo\Slug(fields={"title"})
      */
     private $urltitle = '';
-  
+
     /**
      * @ORM\Column(type="text", length=255)
      */
     private $description = '';
-   
-    //status boleans 
+
+    //status boleans
     /**
      * @ORM\Column(type="boolean")
      */
@@ -62,7 +66,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
      * @ORM\Column(type="boolean")
      */
     private $inlist;
-    
+
     //other
     /**
      * @ORM\Column(type="string", length=5)
@@ -78,13 +82,13 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
      * @ORM\Column(type="integer")
      */
     private $views;
-    
+
     /**
      * The author uid
      * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="author", referencedColumnName="uid")
      */
-    private $author;    
+    private $author;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -99,15 +103,12 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
     /**
      * constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->online = 0;
         $this->depot = 0;
         $this->inmenu = 1;
         $this->inlist = 1;
-        $em = \ServiceUtil::getService('doctrine.entitymanager');
-        $this->author = $em->getRepository('Zikula\UsersModule\Entity\UserEntity')->findOneBy(array(
-            'uid' => \UserUtil::getVar('uid')
-        ));
         $this->language = 'all';
         $this->layout = 'default';
         $this->views = 0;
@@ -117,11 +118,12 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Set title
-     * 
-     * @param string $title            
+     *
+     * @param string $title
      * @return Pages
      */
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
 
         return $this;
@@ -129,20 +131,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get title
-     * 
+     *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
     /**
      * Set urltitle
-     * 
-     * @param string $urltitle            
+     *
+     * @param string $urltitle
      * @return Pages
      */
-    public function setUrltitle($urltitle) {
+    public function setUrltitle($urltitle)
+    {
         $this->urltitle = $urltitle;
 
         return $this;
@@ -150,38 +154,42 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get urltitle
-     * 
+     *
      * @return string
      */
-    public function getUrltitle() {
+    public function getUrltitle()
+    {
         return $this->urltitle;
     }
 
     /**
      * Get description
-     * 
+     *
      * @return string
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
     /**
      * Set description
-     * 
+     *
      * @return $this
      */
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
     }
 
     /**
      * Set online
-     * 
-     * @param boolean $online            
+     *
+     * @param boolean $online
      * @return Pages
      */
-    public function setOnline($online) {
+    public function setOnline($online)
+    {
         $this->online = $online;
 
         return $this;
@@ -189,20 +197,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get online
-     * 
+     *
      * @return boolean
      */
-    public function getOnline() {
+    public function getOnline()
+    {
         return $this->online;
     }
 
     /**
      * Set depot
-     * 
-     * @param boolean $depot            
+     *
+     * @param boolean $depot
      * @return Pages
      */
-    public function setDepot($depot) {
+    public function setDepot($depot)
+    {
         $this->depot = $depot;
 
         return $this;
@@ -210,20 +220,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get depot
-     * 
+     *
      * @return boolean
      */
-    public function getDepot() {
+    public function getDepot()
+    {
         return $this->depot;
     }
 
     /**
      * Set inmenu
-     * 
-     * @param boolean $inmenu            
+     *
+     * @param boolean $inmenu
      * @return Pages
      */
-    public function setInmenu($inmenu) {
+    public function setInmenu($inmenu)
+    {
         $this->inmenu = $inmenu;
 
         return $this;
@@ -231,20 +243,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get inmenu
-     * 
+     *
      * @return boolean
      */
-    public function getInmenu() {
+    public function getInmenu()
+    {
         return $this->inmenu;
     }
 
     /**
      * Set inlist
-     * 
-     * @param boolean $inlist            
+     *
+     * @param boolean $inlist
      * @return Pages
      */
-    public function setInlist($inlist) {
+    public function setInlist($inlist)
+    {
         $this->inlist = $inlist;
 
         return $this;
@@ -252,20 +266,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get inlist
-     * 
+     *
      * @return boolean
      */
-    public function getInlist() {
+    public function getInlist()
+    {
         return $this->inlist;
     }
 
     /**
      * Set language
-     * 
-     * @param string $language            
+     *
+     * @param string $language
      * @return Pages
      */
-    public function setLanguage($language) {
+    public function setLanguage($language)
+    {
         $this->language = $language;
 
         return $this;
@@ -273,20 +289,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get language
-     * 
+     *
      * @return string
      */
-    public function getLanguage() {
+    public function getLanguage()
+    {
         return $this->language;
     }
 
     /**
      * Set layout
-     * 
-     * @param string $layout            
+     *
+     * @param string $layout
      * @return Pages
      */
-    public function setLayout($layout) {
+    public function setLayout($layout)
+    {
         $this->layout = $layout;
 
         return $this;
@@ -294,20 +312,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get layout
-     * 
+     *
      * @return string
      */
-    public function getLayout() {
+    public function getLayout()
+    {
         return $this->layout;
     }
 
     /**
      * Set views
-     * 
-     * @param integer $views            
+     *
+     * @param integer $views
      * @return Pages
      */
-    public function setViews($views) {
+    public function setViews($views)
+    {
         $this->views = $views;
 
         return $this;
@@ -315,20 +335,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get views
-     * 
+     *
      * @return integer
      */
-    public function getViews() {
+    public function getViews()
+    {
         return $this->views;
     }
 
     /**
      * Set author
-     * 
-     * @param integer $author            
+     *
+     * @param integer $author
      * @return Pages
      */
-    public function setAuthor(\Zikula\UsersModule\Entity\UserEntity $author = null) {
+    public function setAuthor(\Zikula\UsersModule\Entity\UserEntity $author = null)
+    {
         $this->author = $author;
 
         return $this;
@@ -336,20 +358,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get author
-     * 
+     *
      * @return integer
      */
-    public function getAuthor() {
+    public function getAuthor()
+    {
         return $this->author;
     }
 
     /**
      * Set published
-     * 
-     * @param \DateTime $publishedAt            
+     *
+     * @param \DateTime $publishedAt
      * @return Pages
      */
-    public function setPublishedAt(\DateTime $publishedAt = null) {
+    public function setPublishedAt(\DateTime $publishedAt = null)
+    {
         $this->publishedAt = $publishedAt;
 
         return $this;
@@ -357,20 +381,22 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get published
-     * 
+     *
      * @return \DateTime
      */
-    public function getPublishedAt() {
+    public function getPublishedAt()
+    {
         return $this->publishedAt;
     }
 
     /**
      * Set expired
-     * 
-     * @param \DateTime $expiredAt            
+     *
+     * @param \DateTime $expiredAt
      * @return Pages
      */
-    public function setExpiredAt(\DateTime $expiredAt = null) {
+    public function setExpiredAt(\DateTime $expiredAt = null)
+    {
         $this->expiredAt = $expiredAt;
 
         return $this;
@@ -378,10 +404,11 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
 
     /**
      * Get expired
-     * 
+     *
      * @return \DateTime
      */
-    public function getExpiredAt() {
+    public function getExpiredAt()
+    {
         return $this->expiredAt;
     }
 
@@ -389,7 +416,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
      * ToString interceptor implementation.
      * This method is useful for debugging purposes.
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getId();
     }
 
@@ -404,7 +432,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
      * (3) http://stackoverflow.com/questions/185934/how-do-i-create-a-copy-of-an-object-in-php
      * (4) http://www.pantovic.com/article/26/doctrine2-entity-cloning
      */
-    public function __clone() {
+    public function __clone()
+    {
         // If the entity has an identity, proceed as normal.
         if ($this->id) {
             // unset identifiers
@@ -417,5 +446,4 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity {
         }
         // otherwise do nothing, do NOT throw an exception!
     }
-
 }

@@ -1,9 +1,12 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Entity\Media;
@@ -13,11 +16,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of ImageEntity
  * @ORM\Entity()
- * 
+ *
  * @author Kaik
  */
-class YoutubeEntity extends AbstractMediaEntity {
+class YoutubeEntity extends AbstractMediaEntity
+{
     //put your code here
-
-
 }

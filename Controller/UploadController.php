@@ -1,15 +1,16 @@
 <?php
-/**
- * Copyright (c) KaikMedia.com 2015
+
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
+
 namespace Kaikmedia\GalleryModule\Controller;
 
-use ModUtil;
-use System;
-use SecurityUtil;
-use ServiceUtil;
-use UserUtil;
-use PageUtil;
 use Zikula\Core\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -23,21 +24,20 @@ use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
 use Kaikmedia\GalleryModule\Entity\MediaObjMapEntity as MediaMap;
 use Kaikmedia\GalleryModule\Util\Common as Utils;
 
-
 /**
  * @Route("/ajax/upload")
  * Class AplicantsAjaxController
- * 
+ *
  * @package Kaikmedia\GalleryModule\Controller
  */
 class UploadController extends AbstractController
-{  
+{
     /**
      * @Route("/newmedia/", options={"expose"=true})
      * @Method("POST")
      * Modify aplicant information.
-     * 
-     * @param Request $request            
+     *
+     * @param Request $request
      * @param integer $id
      *            Parameters passed via GET:
      *            --------------------------------------------------
@@ -52,37 +52,36 @@ class UploadController extends AbstractController
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
-        
-        $media = new Media();    
-        $options = array();
+
+        $media = new Media();
+        $options = [];
         $options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
         $form = $this->createForm('media', $media, $options);
 
-        if ($request->getMethod() == "POST"){
+        if ($request->getMethod() == "POST") {
             $a = $form->isValid();
             $form->handleRequest($request);
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($media);
                 $em->flush();
-                $data = array();
+                $data = [];
                 $data['media'] = $media->toArray();
-               // $data['homeurl'] = $this->getRequest()->getScheme().'://'.$this->getRequest()->getHttpHost();                                                              
+                // $data['homeurl'] = $this->getRequest()->getScheme().'://'.$this->getRequest()->getHttpHost();
                 $response = new Response(json_encode($data));
                 $response->headers->set('Content-Type', 'application/json');
                 return $response;
-            }else {          
-	           $response = new Response(json_encode(array('template' => $form->getErrorsAsString())));
-	           $response->headers->set('Content-Type', 'application/json');
-	           return $response;	           
-	       }
-        }            
-        
-        $response = new Response(json_encode(array(
-            'template' => 'no post method'
-        )));
+            } else {
+                $response = new Response(json_encode(['template' => $form->getErrorsAsString()]));
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
+        }
+
+        $response = new Response(json_encode([
+                    'template' => 'no post method'
+        ]));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-    }  
+    }
 }

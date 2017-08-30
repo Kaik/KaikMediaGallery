@@ -27,7 +27,7 @@ use Kaikmedia\GalleryModule\Entity\MediaEntity as File;
 /**
  * @Route("/ajax/gallery")
  * Class AplicantsAjaxController
- * 
+ *
  * @package Kaikmedia\KmdModule\Controller
  */
 class GalleryAjaxController extends AbstractController
@@ -54,66 +54,66 @@ class GalleryAjaxController extends AbstractController
     	}
 
     	$mode = 'html';
-    	
+
         if($id == null){
 	        $file = new File();
 	        $file->setPromoted(false);
-	        	        
+
         }else{
 	        $file = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')
-	                    ->getOneBy(array('id' => $id));    
+	                    ->getOneBy(['id' => $id]);
         }
-         
-        $options = array();
+
+        $options = [];
         $options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
-        $options['action'] =  $this->get('router')->generate('kaikmediagallerymodule_galleryajax_modify', array(), RouterInterface::ABSOLUTE_URL);
+        $options['action'] =  $this->get('router')->generate('kaikmediagallerymodule_galleryajax_modify', [], RouterInterface::ABSOLUTE_URL);
         $form = $this->createForm('media', $file, $options);
 
         //$form->bindRequest($request);
-        
+
         if ($request->getMethod() == "POST"){
         	$form->handleRequest($request);
         	if ($form->isValid())
         	{
 			    $em = $this->getDoctrine()->getManager();
 			    $em->persist($file);
-			    $em->flush();              	
+			    $em->flush();
 			    $template = $file->getName();
-			$response = new Response(json_encode(array('template' => $template)));
+			$response = new Response(json_encode(['template' => $template]));
 			$response->headers->set('Content-Type', 'application/json');
 			return $response;
 	       }else {
-	           $errors = array();
+	           $errors = [];
 	           foreach ($form->getErrors() as $key => $error) {
 	               $errors[] = $error->getMessage();
-	           }	           
-	           $response = new Response(json_encode(array('template' => $errors)));
+	           }
+	           $response = new Response(json_encode(['template' => $errors]));
 	           $response->headers->set('Content-Type', 'application/json');
-	           return $response;	           
+	           return $response;
 	       }
         }
-        
+
         if($mode == 'html'){
-	       $template = $this->renderView('KaikmediaGalleryModule:Gallery:new.form.html.twig', array(
+	       $template = $this->renderView('KaikmediaGalleryModule:Gallery:new.form.html.twig', [
             'form' => $form->createView(),
-            'file' => $file));
+            'file' => $file]);
         }else {
         	$template['id'] = $file->getId();
         	$template['name'] = $file->getName();
-        }        
-         
-        
-		$response = new Response(json_encode(array('template' => $template)));
+        }
+
+
+		$response = new Response(json_encode(['template' => $template]));
 		$response->headers->set('Content-Type', 'application/json');
 		return $response;
     }
-    
+
     /**
      * @Route("/add/", options={"expose"=true})
      * @Method("POST")
      * Modify aplicant information.
-     * 
-     * @param Request $request            
+     *
+     * @param Request $request
      * @param integer $id
      *            Parameters passed via GET:
      *            --------------------------------------------------
@@ -128,10 +128,10 @@ class GalleryAjaxController extends AbstractController
         if (! SecurityUtil::checkPermission($this->name . '::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
-        
-        $file = new File(); 
-        $file->setPromoted(false);       
-        $options = array();
+
+        $file = new File();
+        $file->setPromoted(false);
+        $options = [];
         $options['isXmlHttpRequest'] = $request->isXmlHttpRequest();
         $form = $this->createForm('media', $file, $options);
 
@@ -143,26 +143,26 @@ class GalleryAjaxController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($file);
                 $em->flush();
-                $data = array();
+                $data = [];
                 $data['file'] = $file->toArray();
-                $data['homeurl'] = $this->getRequest()->getScheme().'://'.$this->getRequest()->getHttpHost();                                                              
+                $data['homeurl'] = $this->getRequest()->getScheme().'://'.$this->getRequest()->getHttpHost();
                 $response = new Response(json_encode($data));
                 $response->headers->set('Content-Type', 'application/json');
                 return $response;
-            }else {          
-	           $response = new Response(json_encode(array('template' => $form->getErrorsAsString())));
+            }else {
+	           $response = new Response(json_encode(['template' => $form->getErrorsAsString()]));
 	           $response->headers->set('Content-Type', 'application/json');
-	           return $response;	           
+	           return $response;
 	       }
-        }        
-               
-        $response = new Response(json_encode(array(
+        }
+
+        $response = new Response(json_encode([
             'template' => $a
-        )));
+        ]));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
-    
+
     /**
      * @Route("/get/{file}", options={"expose"=true})
      * @Method("GET")
@@ -183,26 +183,26 @@ class GalleryAjaxController extends AbstractController
         if (!SecurityUtil::checkPermission($this->name . '::view', '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
-        
+
         if (!$file){
-            throw new AccessDeniedException();            
+            throw new AccessDeniedException();
         }
-        
-        $mode = 'html';       
+
+        $mode = 'html';
         if($mode == 'html'){
-            $template = $this->renderView('KaikmediaGalleryModule:Gallery:element.html.twig', array(
-                'file' => $file));
+            $template = $this->renderView('KaikmediaGalleryModule:Gallery:element.html.twig', [
+                'file' => $file]);
         }else {
             $template['id'] = $file->getId();
             $template['name'] = $file->getName();
         }
-                
-        $response = new Response(json_encode(array('template' => $template)));
+
+        $response = new Response(json_encode(['template' => $template]));
         $response->headers->set('Content-Type', 'application/json');
-        return $response;        
-         
+        return $response;
+
     }
-    
+
     /**
      * Create and configure the view for the controller.
      *
@@ -213,5 +213,5 @@ class GalleryAjaxController extends AbstractController
         $this->setView();
         $this->view->setController($this);
         $this->view->assign('controller', $this);
-    }    
+    }
 }

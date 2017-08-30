@@ -1,15 +1,21 @@
 <?php
-/**
- * Copyright (c) KaikMedia.com 2015
+
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
+
 namespace Kaikmedia\GalleryModule\Entity;
 
-use UserUtil;
 use Doctrine\ORM\QueryBuilder;
 
 /**
  * Description of MediaRelationsQueryBuilder
- * 
+ *
  * @author Kaik
  */
 class MediaRelationsQueryBuilder extends QueryBuilder
@@ -37,13 +43,13 @@ class MediaRelationsQueryBuilder extends QueryBuilder
             return $this->andWhere('mo.obj_reference = :obj_reference')->setParameter('obj_reference', $obj_reference);
         }
     }
-    
+
     public function filterType($type)
     {
-    	if ($type !== false) {
-    		return $this->andWhere('mo.type = :type')->setParameter('type', $type);
-    	}
-    }   
+        if ($type !== false) {
+            return $this->andWhere('mo.type = :type')->setParameter('type', $type);
+        }
+    }
 
     public function filterAuthor($author)
     {
@@ -71,21 +77,21 @@ class MediaRelationsQueryBuilder extends QueryBuilder
     {
         $search = $s['search'];
         $search_field = $s['search_field'];
-        
+
         if ($search === false || $search_field === false) {
             return;
         }
-        
+
         switch ($search_field) {
-            case 'author':
-                if (is_numeric($search)) {
-                    return $this->filterAuthor($search);
-                } elseif (is_string($search)) {
-                    $uid = UserUtil::getIdFromName($search);
-                    $uid = $uid !== false ? $uid : 0;
-                    return $this->filterAuthor($uid);
-                }
-                break;
+//            case 'author':
+//                if (is_numeric($search)) {
+//                    return $this->filterAuthor($search);
+//                } elseif (is_string($search)) {
+//                    $uid = UserUtil::getIdFromName($search);
+//                    $uid = $uid !== false ? $uid : 0;
+//                    return $this->filterAuthor($uid);
+//                }
+//                break;
             case 'obj_name':
                 return $this->andWhere('mo.obj_name LIKE :search')->setParameter('search', '%' . $search . '%');
         }

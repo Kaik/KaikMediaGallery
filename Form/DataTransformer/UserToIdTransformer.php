@@ -19,7 +19,7 @@ class UserToIdTransformer implements DataTransformerInterface
 
     /**
      *
-     * @param ObjectManager $om            
+     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -28,8 +28,8 @@ class UserToIdTransformer implements DataTransformerInterface
 
     /**
      * Transforms an object (user) to a string (id).
-     * 
-     * @param Customer|null $customer            
+     *
+     * @param Customer|null $customer
      * @return string
      */
     public function transform($user)
@@ -37,14 +37,14 @@ class UserToIdTransformer implements DataTransformerInterface
         if (null === $user) {
             return "";
         }
-        
+
         return $user->getUname();
     }
 
     /**
      * Transforms a string (uname) to an object (user).
-     * 
-     * @param string $uname            
+     *
+     * @param string $uname
      * @return User|null
      * @throws TransformationFailedException if object (user) is not found.
      */
@@ -53,15 +53,15 @@ class UserToIdTransformer implements DataTransformerInterface
         if (! $uname) {
             return null;
         }
-        
-        $user = $this->om->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy(array(
+
+        $user = $this->om->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy([
             'uname' => $uname
-        ));
-        
+        ]);
+
         if (null === $user) {
             throw new TransformationFailedException(sprintf('A user with uid "%s" does not exist!', $uname));
         }
-        
+
         return $user;
     }
 }

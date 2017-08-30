@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 
+ *
  */
 
 namespace Kaikmedia\GalleryModule\Form\Type;
@@ -21,10 +21,10 @@ class FeaturesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($options['allow_add'] && $options['prototype']) {
-            $prototype = $builder->create($options['prototype_name'], $options['type'], array_replace(array(
+            $prototype = $builder->create($options['prototype_name'], $options['type'], array_replace([
                 'required' => $options['required'],
                 'label' => $options['prototype_name'].'label__',
-            ), $options['options']));
+            ], $options['options']));
             $builder->setAttribute('prototype', $prototype->getForm());
         }
 
@@ -38,12 +38,12 @@ class FeaturesType extends AbstractType
 
         $builder->addEventSubscriber($resizeListener);
     }
-    
+
     public function getParent()
     {
         return 'collection';
-    }    
-  
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -53,17 +53,17 @@ class FeaturesType extends AbstractType
             $value['block_name'] = 'entry';
             return $value;
         };
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'allow_add' => false,
             'allow_delete' => false,
             'prototype' => true,
             'prototype_name' => '__name__',
             'type' => 'text',
-            'options' => array(),
+            'options' => [],
             'delete_empty' => false,
-        ));
+        ]);
         $resolver->setNormalizer('options', $optionsNormalizer);
-    }    
+    }
 
     /**
      * {@inheritdoc}

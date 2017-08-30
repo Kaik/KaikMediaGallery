@@ -79,7 +79,7 @@ class ImageEntity
 
     /**
      * Get id
-     * 
+     *
      * @return integer
      */
     public function getId()
@@ -89,20 +89,20 @@ class ImageEntity
 
     /**
      * Set name
-     * 
-     * @param string $name            
+     *
+     * @param string $name
      * @return Image
      */
     public function setName($name)
     {
         $this->name = $name;
-        
+
         return $this;
     }
 
     /**
      * Get name
-     * 
+     *
      * @return string
      */
     public function getName()
@@ -112,7 +112,7 @@ class ImageEntity
 
     /**
      * Get description
-     * 
+     *
      * @return string
      */
     public function getDescription()
@@ -122,7 +122,7 @@ class ImageEntity
 
     /**
      * Set description
-     * 
+     *
      * @return $this
      */
     public function setDescription($description)
@@ -132,20 +132,20 @@ class ImageEntity
 
     /**
      * Set page
-     * 
-     * @param \Kaikmedia\PagesModule\Entity\PagesEntity $page            
+     *
+     * @param \Kaikmedia\PagesModule\Entity\PagesEntity $page
      * @return Image
      */
     public function setPage(\Kaikmedia\PagesModule\Entity\PagesEntity $page)
     {
         $this->page = $page;
-        
+
         return $this;
     }
 
     /**
      * Get page
-     * 
+     *
      * @return \Kaikmedia\PagesModule\Entity\PagesEntity
      */
     public function getPage()
@@ -166,20 +166,20 @@ class ImageEntity
 
     /**
      * Set author
-     * 
-     * @param integer $author            
+     *
+     * @param integer $author
      * @return Pages
      */
     public function setAuthor(\Zikula\Module\UsersModule\Entity\UserEntity $author = null)
     {
         $this->author = $author;
-        
+
         return $this;
     }
 
     /**
      * Get author
-     * 
+     *
      * @return integer
      */
     public function getAuthor()
@@ -211,20 +211,20 @@ class ImageEntity
 
     /**
      * Set path
-     * 
-     * @param string $path            
+     *
+     * @param string $path
      * @return Image
      */
     public function setPath($path)
     {
         $this->path = $path;
-        
+
         return $this;
     }
 
     /**
      * Get path
-     * 
+     *
      * @return string
      */
     public function getPath()
@@ -262,9 +262,9 @@ class ImageEntity
     public function __construct()
     {
         $em = ServiceUtil::getService('doctrine.entitymanager');
-        $this->author = $em->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy(array(
+        $this->author = $em->getRepository('Zikula\Module\UsersModule\Entity\UserEntity')->findOneBy([
             'uid' => UserUtil::getVar('uid')
-        ));
+        ]);
         $this->publicdomian = 0;
         $this->promoted = 0;
     }
@@ -301,7 +301,7 @@ class ImageEntity
         // be automatically thrown by move(). This will properly prevent
         // the entity from being persisted to the database on error
         $this->file->move($this->getUploadRootDir(), $this->path);
-        
+
         unset($this->file);
     }
 
@@ -322,15 +322,15 @@ class ImageEntity
         if (null === $this->file) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      */
     public function toArray()
-    {    
-        $array =array();
+    {
+        $array =[];
         $array['id'] = $this->id;
         $array['page_id'] = $this->page;
         $array['name'] = $this->name;
@@ -342,5 +342,5 @@ class ImageEntity
         $array['author'] = $this->author;
         $array['absolute_path'] = $this->getUploadDir().'/'.$this->path;
         return $array;
-    }    
+    }
 }

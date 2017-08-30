@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Kaik
  */
-class PdfEntity extends AbstractUploadableEntity
+class ItemEntity extends AbstractUploadableEntity
 {
     //put your code here
 }

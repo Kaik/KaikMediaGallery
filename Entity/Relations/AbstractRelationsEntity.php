@@ -1,8 +1,12 @@
 <?php
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Entity\Relations;
@@ -22,24 +26,24 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({"pages" = "KaikmediaPagesModuleRelationsEntity",
  *                        "users" = "ZikulaUsersModuleRelationsEntity"})
- * 
+ *
  * @author Kaik
  */
-abstract class AbstractRelationsEntity extends AbstractBaseEntity {
-        
-
+abstract class AbstractRelationsEntity extends AbstractBaseEntity
+{
     /**
      * ToString interceptor implementation.
      * This method is useful for debugging purposes.
      */
-    public function __toString() {
+    public function __toString()
+    {
         return parent::__toString();
     }
 
     /**
      */
-    public function __clone() {
+    public function __clone()
+    {
         return parent::__clone();
     }
-
 }

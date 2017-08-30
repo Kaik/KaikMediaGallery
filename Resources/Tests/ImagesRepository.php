@@ -14,7 +14,7 @@ class ImagesRepository extends EntityRepository
 
     /**
      * Query builder helper
-     * 
+     *
      * @return \Kaikmedia\KmdModule\Entity\CustomersQueryBuilder
      */
     public function build()
@@ -26,7 +26,7 @@ class ImagesRepository extends EntityRepository
 
     /**
      * Repository
-     * 
+     *
      * @param integer $page
      *            Current page (defaults to 1)
      * @param integer $limit
@@ -44,15 +44,15 @@ class ImagesRepository extends EntityRepository
         $qb->addSearch($s);
         // sort
         $qb->sort($sortby, $sortorder);
-        
+
         $query = $qb->getQuery();
-        
+
         if ($onlyone) {
             $item = $query->getOneOrNullResult();
             return $item;
         }
         $paginator = $this->paginate($query, $page, $limit);
-        
+
         return $paginator;
     }
 
@@ -64,7 +64,7 @@ class ImagesRepository extends EntityRepository
      * $paginator->getIterator()->count() # Total fetched (ie: `5` posts)
      * $paginator->count() # Count of ALL posts (ie: `20` posts)
      * $paginator->getIterator() # ArrayIterator
-     * 
+     *
      * @param Doctrine\ORM\Query $dql
      *            DQL Query Object
      * @param integer $page
@@ -76,18 +76,18 @@ class ImagesRepository extends EntityRepository
     public function paginate($dql, $page = 1, $limit = 15)
     {
         $paginator = new Paginator($dql);
-        
+
         $paginator->getQuery()
             ->setFirstResult($limit * ($page - 1))
             ->setMaxResults($limit); // Limit
-        
+
         return $paginator;
     }
 
     /**
      * Get all in one function
-     * 
-     * @param array $args            
+     *
+     * @param array $args
      * @param integer $onlyone
      *            Internal switch
      * @param integer $page
@@ -97,7 +97,7 @@ class ImagesRepository extends EntityRepository
      * @return \Doctrine\ORM\Tools\Pagination\Paginator or
      *         object
      */
-    public function getAll($args = array())
+    public function getAll($args = [])
     {
         // internall
         $onlyone = isset($args['onlyone']) ? $args['onlyone'] : false;
@@ -112,18 +112,18 @@ class ImagesRepository extends EntityRepository
         $f['id'] = isset($args['id']) && $args['id'] !== '' ? $args['id'] : false;
         $f['urltitle'] = isset($args['urltitle']) && $args['urltitle'] !== '' ? $args['urltitle'] : false;
         $f['title'] = isset($args['title']) && $args['title'] !== '' ? $args['title'] : false;
-        
+
         // search
         $s['search'] = isset($args['search']) && $args['search'] !== '' ? $args['search'] : false;
         $s['search_field'] = isset($args['search_field']) && $args['search_field'] !== '' ? $args['search_field'] : false;
-        
+
         return $this->getOneOrAll($onlyone, $f, $s, $sortby, $sortorder, $page, $limit);
     }
 
     /**
      * Shortcut to get one item
-     * 
-     * @param array $args            
+     *
+     * @param array $args
      * @param integer $onlyone
      *            Internal switch
      * @param integer $page

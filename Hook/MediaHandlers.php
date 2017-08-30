@@ -53,7 +53,7 @@ class MediaHandlers extends AbstractHookListener
      */
     public function uiView(DisplayHook $hook)
     {
-        
+
         // first check if the user is allowed to do any comments for this module/objectid
         if (!\SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
             return;
@@ -61,17 +61,17 @@ class MediaHandlers extends AbstractHookListener
 
         //$request = $this->view->getRequest();
         //
-        $a = array('obj_name' => $hook->getCaller(),
+        $a = ['obj_name' => $hook->getCaller(),
                    'obj_id' => $hook->getId()
-        );
-        
+        ];
+
         $media = $this->_em->getRepository('Kaikmedia\GalleryModule\Entity\MediaObjMapEntity')->getOneBy($a);
         if (isset($media)) {
-          
+
         } else {
             return;
         }
-        
+
         /*
         // attempt to retrieve return url from hook or create if not available
         $url = $hook->getUrl();
@@ -101,10 +101,10 @@ class MediaHandlers extends AbstractHookListener
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
         PageUtil::addVar('stylesheet', "@ZikulaDizkusModule/Resources/public/css/style.css");
-        */ 
-             
+        */
+
         $this->view->assign('media', $media->toArray());
         $this->view->assign('settings', \ModUtil::getVar(self::MODULENAME));
         $hook->setResponse(new DisplayHookResponse('provider.kaikmediagallery.ui_hooks.media', $this->view, 'Hook/display_media.tpl'));
-    }  
+    }
 }

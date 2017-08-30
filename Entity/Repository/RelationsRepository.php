@@ -1,7 +1,14 @@
 <?php
-/**
- * Copyright (c) KaikMedia.com 2015
+
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
+
 namespace Kaikmedia\GalleryModule\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -10,9 +17,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class RelationsRepository extends EntityRepository
 {
+
     /**
      * Query builder helper
-     * 
+     *
      * @return \Kaikmedia\GalleryModule\Entity\MediaRelationsQueryBuilder
      */
     public function build()
@@ -24,7 +32,7 @@ class RelationsRepository extends EntityRepository
 
     /**
      * Repository
-     * 
+     *
      * @param integer $page
      *            Current page (defaults to 1)
      * @param integer $limit
@@ -42,15 +50,15 @@ class RelationsRepository extends EntityRepository
         $qb->addSearch($s);
         // sort
         $qb->sort($sortby, $sortorder);
-        
+
         $query = $qb->getQuery();
-        
+
         if ($onlyone) {
             $item = $query->getOneOrNullResult();
             return $item;
         }
         $paginator = $this->paginate($query, $page, $limit);
-        
+
         return $paginator;
     }
 
@@ -62,7 +70,7 @@ class RelationsRepository extends EntityRepository
      * $paginator->getIterator()->count() # Total fetched (ie: `5` posts)
      * $paginator->count() # Count of ALL posts (ie: `20` posts)
      * $paginator->getIterator() # ArrayIterator
-     * 
+     *
      * @param Doctrine\ORM\Query $dql
      *            DQL Query Object
      * @param integer $page
@@ -74,18 +82,18 @@ class RelationsRepository extends EntityRepository
     public function paginate($dql, $page = 1, $limit = 15)
     {
         $paginator = new Paginator($dql);
-        
+
         $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1))
-            ->setMaxResults($limit); // Limit
-        
+                ->setFirstResult($limit * ($page - 1))
+                ->setMaxResults($limit); // Limit
+
         return $paginator;
     }
 
     /**
      * Get all in one function
-     * 
-     * @param array $args            
+     *
+     * @param array $args
      * @param integer $onlyone
      *            Internal switch
      * @param integer $page
@@ -95,7 +103,7 @@ class RelationsRepository extends EntityRepository
      * @return \Doctrine\ORM\Tools\Pagination\Paginator or
      *         object
      */
-    public function getAll($args = array())
+    public function getAll($args = [])
     {
         // internall
         $onlyone = isset($args['onlyone']) ? $args['onlyone'] : false;
@@ -110,18 +118,18 @@ class RelationsRepository extends EntityRepository
         $f['id'] = isset($args['id']) && $args['id'] !== '' ? $args['id'] : false;
         $f['obj_name'] = isset($args['obj_name']) && $args['obj_name'] !== '' ? $args['obj_name'] : false;
         $f['obj_id'] = isset($args['obj_id']) && $args['obj_id'] !== '' ? $args['obj_id'] : false;
-        $f['type'] = isset($args['type']) && $args['type'] !== '' ? $args['type'] : false;        
+        $f['type'] = isset($args['type']) && $args['type'] !== '' ? $args['type'] : false;
         // search
         $s['search'] = isset($args['search']) && $args['search'] !== '' ? $args['search'] : false;
         $s['search_field'] = isset($args['search_field']) && $args['search_field'] !== '' ? $args['search_field'] : false;
-        
+
         return $this->getOneOrAll($onlyone, $f, $s, $sortby, $sortorder, $page, $limit);
     }
 
     /**
      * Shortcut to get one item
-     * 
-     * @param array $args            
+     *
+     * @param array $args
      * @param integer $onlyone
      *            Internal switch
      * @param integer $page
@@ -137,4 +145,5 @@ class RelationsRepository extends EntityRepository
         $a['onlyone'] = true;
         return $this->getAll($a);
     }
+
 }

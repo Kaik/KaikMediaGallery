@@ -1,9 +1,12 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Entity\Media;
@@ -15,14 +18,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
-abstract class AbstractUploadableEntity extends AbstractMediaEntity {
-
+abstract class AbstractUploadableEntity extends AbstractMediaEntity
+{
     /**
      */
     protected $path;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $name;
 
@@ -33,7 +36,7 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
     protected $mimeType;
 
     /**
-     * 
+     *
      */
     protected $size;
 
@@ -49,24 +52,28 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      */
     private $temp;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->setTitle('Title');
     }
 
-    public function getPath() {
-        return \FileUtil::getDataDirectory() . '/kmgallery/media';
+    public function getPath()
+    {
+        return '/kmgallery/media';
     }
 
     /**
      * Set path
-     * 
-     * @param string $path            
+     *
+     * @param string $path
      * @return Image
      */
-    public function setPath($path) {
+    public function setPath($path)
+    {
         $this->path = $path;
+
         return $this;
     }
 
@@ -74,16 +81,19 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      *
      * @return the unknown_type
      */
-    public function getSize() {
+    public function getSize()
+    {
         return $this->size;
     }
 
     /**
      *
-     * @param unknown_type $size            
+     * @param unknown_type $size
      */
-    public function setSize($size) {
+    public function setSize($size)
+    {
         $this->size = $size;
+
         return $this;
     }
 
@@ -93,8 +103,10 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      * @param string $ext
      * @return Image
      */
-    public function setExt($ext) {
+    public function setExt($ext)
+    {
         $this->ext = $ext;
+
         return $this;
     }
 
@@ -103,7 +115,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      *
      * @return string
      */
-    public function getExt() {
+    public function getExt()
+    {
         return $this->ext;
     }
 
@@ -113,8 +126,10 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      * @param string $mimeType
      * @return Image
      */
-    public function setMimeType($mimeType) {
+    public function setMimeType($mimeType)
+    {
         $this->mimeType = $mimeType;
+
         return $this;
     }
 
@@ -123,7 +138,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      *
      * @return string
      */
-    public function getMimeType() {
+    public function getMimeType()
+    {
         return $this->mimeType;
     }
 
@@ -133,8 +149,10 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      * @param string $name
      * @return Image
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
+
         return $this;
     }
 
@@ -143,7 +161,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -152,7 +171,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      *
      * @param UploadedFile $file
      */
-    public function setFile(UploadedFile $file = null) {
+    public function setFile(UploadedFile $file = null)
+    {
         $this->file = $file;
         // check if we have an old image path
         if (isset($this->path)) {
@@ -169,7 +189,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      *
      * @return UploadedFile
      */
-    public function getFile() {
+    public function getFile()
+    {
         return $this->file;
     }
 
@@ -177,13 +198,14 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function preUpload() {
+    public function preUpload()
+    {
         //$this->setDescription('lala2');
         if (null !== $this->getFile()) {
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
             $this->path = $filename . '.' . $this->getFile()->guessExtension();
-            $this->addMediaExtra();             
+            $this->addMediaExtra();
         }
     }
 
@@ -191,7 +213,8 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function upload() {      
+    public function upload()
+    {
         if (null === $this->getFile()) {
             return;
         }
@@ -209,17 +232,18 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
         }
         $this->file = null;
     }
-    
-    public function getUploadRootDir() {
-        return \FileUtil::getDataDirectory() . '/kmgallery/media';
+
+    public function getUploadRootDir()
+    {
+        return '/kmgallery/media';
     }
 
-    private function addMediaExtra() {
-        
+    private function addMediaExtra()
+    {
         $mediaxxEx = $this->getMediaExtra();
         $mediaEx = json_decode($mediaxxEx, true);
-        
-        $mediaEx['path'] = array_key_exists('path', $mediaEx) ? $mediaEx['path']  : $this->path ;
+
+        $mediaEx['path'] = array_key_exists('path', $mediaEx) ? $mediaEx['path'] : $this->path;
         //$mediaEx['size'] = array_key_exists('size', $mediaEx) ? $mediaEx['size']  : $this->size ;
         $this->setMediaExtra($mediaEx);
         //return $this;
@@ -228,15 +252,16 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity {
     /**
      * @ORM\PostRemove()
      */
-    public function removeUpload() {
+    public function removeUpload()
+    {
         //$file = $this->getAbsolutePath();
         if ($file) {
             unlink($file);
         }
     }
 
-    public function isUploadable() {
+    public function isUploadable()
+    {
         return true;
     }
-
 }

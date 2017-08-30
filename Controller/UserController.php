@@ -1,7 +1,14 @@
 <?php
-/**
- * Copyright (c) KaikMedia.com 2014
+
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
+
 namespace Kaikmedia\GalleryModule\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +23,9 @@ use Symfony\Component\Routing\RouterInterface;
 
 class UserController extends AbstractController
 {
-
     /**
      * @Route("/index")
-     * 
+     *
      * @todo online defailt in repository
      * Display pages list.
      * @throws AccessDeniedException on failed permission check
@@ -30,9 +36,7 @@ class UserController extends AbstractController
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
-    
-        $request->attributes->set('_legacy', true); // forces template to render inside old theme
-        
+
         return $this->render('KaikmediaGalleryModule:User:index.html.twig');
     }
 }

@@ -13,37 +13,37 @@ class ImageType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array(
+        $builder->add('name', 'text', [
             'required' => false
-        ))
-            ->add('path', 'text', array(
+        ])
+            ->add('path', 'text', [
             'required' => false
-        ))
-            ->add('description', 'textarea', array(
+        ])
+            ->add('description', 'textarea', [
             'required' => false
-        ))
-            ->add('legal', 'textarea', array(
+        ])
+            ->add('legal', 'textarea', [
             'required' => false
-        ))
-            ->add('publicdomain', 'checkbox', array(
+        ])
+            ->add('publicdomain', 'checkbox', [
             'label' => 'public',
             'required' => false
-        ))
-            ->add('promoted', 'checkbox', array(
+        ])
+            ->add('promoted', 'checkbox', [
             'label' => 'promoted',
             'required' => false
-        ))
-            ->add('file', 'file', array(
+        ])
+            ->add('file', 'file', [
             'required' => false
-        ));
+        ]);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'isXmlHttpRequest' => false,
             'data_class' => 'Kaikmedia\PagesModule\Entity\ImageEntity'
-        ));
+        ]);
     }
 
     public function getName()

@@ -1,14 +1,21 @@
 <?php
-/**
- * Copyright (c) KaikMedia.com 2015
+
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
+
 namespace Kaikmedia\GalleryModule\Entity\QueryBuilder;
 
 use Doctrine\ORM\QueryBuilder;
 
 /**
  * Description of MediaQueryBuilder
- * 
+ *
  * @author Kaik
  */
 class MediaQueryBuilder extends QueryBuilder
@@ -29,7 +36,7 @@ class MediaQueryBuilder extends QueryBuilder
             return $this->andWhere('m.name = :name')->setParameter('name', $name);
         }
     }
-    
+
     public function filterPublicdomain($publicdomain)
     {
         if ($publicdomain === false) {
@@ -37,16 +44,14 @@ class MediaQueryBuilder extends QueryBuilder
         }
 
         if ($publicdomain === true) {
-        	return $this->andWhere('m.publicdomain = :publicdomain')->setParameter('publicdomain', true);        
+            return $this->andWhere('m.publicdomain = :publicdomain')->setParameter('publicdomain', true);
         }
-        
-        if ($publicdomain == 'include') {
-        	return $this->orWhere('m.publicdomain = :publicdomain')->setParameter('publicdomain', true);
-        }       
 
-    } 
-        
-    
+        if ($publicdomain == 'include') {
+            return $this->orWhere('m.publicdomain = :publicdomain')->setParameter('publicdomain', true);
+        }
+    }
+
     public function filterAuthor($author)
     {
         if ($author !== false) {
@@ -73,21 +78,21 @@ class MediaQueryBuilder extends QueryBuilder
     {
         $search = $s['search'];
         $search_field = $s['search_field'];
-        
+
         if ($search === false || $search_field === false) {
             return;
         }
-        
+
         switch ($search_field) {
-            case 'author':
-                if (is_numeric($search)) {
-                    return $this->filterAuthor($search);
-                } elseif (is_string($search)) {
-                    $uid = \UserUtil::getIdFromName($search);
-                    $uid = $uid !== false ? $uid : 0;
-                    return $this->filterAuthor($uid);
-                }
-                break;
+//            case 'author':
+//                if (is_numeric($search)) {
+//                    return $this->filterAuthor($search);
+//                } elseif (is_string($search)) {
+////                    $uid = \UserUtil::getIdFromName($search);
+//                    $uid = $uid !== false ? $uid : 0;
+//                    return $this->filterAuthor($uid);
+//                }
+//                break;
             case 'name':
                 return $this->andWhere('m.name LIKE :search')->setParameter('search', '%' . $search . '%');
         }

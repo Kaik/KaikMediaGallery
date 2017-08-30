@@ -22,70 +22,70 @@ class PageType extends AbstractType
         // $entityManager = $options['em'];
         $transformer = new UserToIdTransformer($em);
         $builder->setMethod('POST')
-            ->add('online', 'choice', array(
-            'choices' => array(
+            ->add('online', 'choice', [
+            'choices' => [
                 '0' => 'Offline',
                 '1' => 'Online'
-            ),
+            ],
             'multiple' => false,
             'expanded' => true,
             'required' => true
-        ))
-            ->add('depot', 'choice', array(
-            'choices' => array(
+        ])
+            ->add('depot', 'choice', [
+            'choices' => [
                 '0' => 'Depot',
                 '1' => 'Allowed'
-            ),
+            ],
             'multiple' => false,
             'expanded' => true,
             'required' => true
-        ))
-            ->add('inmenu', 'choice', array(
-            'choices' => array(
+        ])
+            ->add('inmenu', 'choice', [
+            'choices' => [
                 '0' => 'Not in menus',
                 '1' => 'In menus'
-            ),
+            ],
             'multiple' => false,
             'expanded' => true,
             'required' => true
-        ))
-            ->add('inlist', 'choice', array(
-            'choices' => array(
+        ])
+            ->add('inlist', 'choice', [
+            'choices' => [
                 '0' => 'Not in list',
                 '1' => 'In List'
-            ),
+            ],
             'multiple' => false,
             'expanded' => true,
             'required' => true
-        ))
-            ->add('title', 'text', array(
+        ])
+            ->add('title', 'text', [
             'required' => false
-        ))
-            ->add('urltitle', 'text', array(
+        ])
+            ->add('urltitle', 'text', [
             'required' => false
-        ))
+        ])
             ->add($builder->create('author', 'text', [
             'attr' => [
                 'class' => 'author_search'
             ]
         ])
             ->addModelTransformer($transformer))
-            ->add('views', 'text', array(
+            ->add('views', 'text', [
             'required' => false
-        ))
-            ->add('publishedAt', 'datetime', array(
+        ])
+            ->add('publishedAt', 'datetime', [
             'format' => \IntlDateFormatter::SHORT,
             'input' => 'datetime',
             'required' => false,
             'widget' => 'single_text'
-        ))
-            ->add('expiredAt', 'datetime', array(
+        ])
+            ->add('expiredAt', 'datetime', [
             'format' => \IntlDateFormatter::SHORT,
             'input' => 'datetime',
             'required' => false,
             'widget' => 'single_text'
-        ))
-            ->add('images', 'collection', array(
+        ])
+            ->add('images', 'collection', [
             'type' => new ImageType(),
             'allow_add' => true,
             'required' => false,
@@ -93,41 +93,41 @@ class PageType extends AbstractType
             'by_reference' => false,
             'allow_delete' => true,
             'prototype' => true
-        ))
-            ->add('layout', 'choice', array(
-            'choices' => array(
+        ])
+            ->add('layout', 'choice', [
+            'choices' => [
                 'default' => 'Default',
                 'slider' => 'Slider'
-            ),
-            'preferred_choices' => array(
+            ],
+            'preferred_choices' => [
                 'default'
-            ),
+            ],
             'required' => false
-        ))
-            ->add('language', 'choice', array(
-            'choices' => array(
+        ])
+            ->add('language', 'choice', [
+            'choices' => [
                 'any' => 'Any',
                 'en' => 'English',
                 'pl' => 'Polish'
-            )
-        ))
-            ->add('content', 'textarea', array(
+            ]
+        ])
+            ->add('content', 'textarea', [
             'required' => false,
-            'attr' => array(
+            'attr' => [
                 'class' => 'tinymce'
-            )
-        ))
+            ]
+        ])
             -> // Skip it if you want to use default theme))
-add('description', 'textarea', array(
+add('description', 'textarea', [
             'required' => false,
-            'attr' => array(
+            'attr' => [
                 'class' => 'tinymc'
-            )
-        ))
+            ]
+        ])
             -> // Skip it if you want to use default theme))
-add('save', 'submit', array(
+add('save', 'submit', [
             'label' => 'Save'
-        ));
+        ]);
     }
 
     public function getName()
@@ -138,14 +138,14 @@ add('save', 'submit', array(
     /**
      * OptionsResolverInterface is @deprecated and is supposed to be replaced by
      * OptionsResolver but docs not clear on implementation
-     * 
-     * @param OptionsResolverInterface $resolver            
+     *
+     * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'title' => null,
             'content' => null
-        ));
+        ]);
     }
 }

@@ -16,25 +16,25 @@ class SettingsType extends AbstractType
     {
         $em = ServiceUtil::getService('doctrine.entitymanager');
         $builder->setMethod('GET')
-            ->add('itemsperpage', 'text', array(
+            ->add('itemsperpage', 'text', [
             'required' => false,
             'data' => $options['itemsperpage']
-        ))
-            ->add('images_max_count', 'text', array(
+        ])
+            ->add('images_max_count', 'text', [
             'required' => false,
             'data' => $options['images_max_count']
-        ))
-            ->add('images_max_size', 'text', array(
+        ])
+            ->add('images_max_size', 'text', [
             'required' => false,
             'data' => $options['images_max_size']
-        ))
-            ->add('images_ext_allowed', 'text', array(
+        ])
+            ->add('images_ext_allowed', 'text', [
             'required' => false,
             'data' => $options['images_ext_allowed']
-        ))
-            ->add('save', 'submit', array(
+        ])
+            ->add('save', 'submit', [
             'label' => 'Save'
-        ));
+        ]);
     }
 
     public function getName()
@@ -45,16 +45,16 @@ class SettingsType extends AbstractType
     /**
      * OptionsResolverInterface is @deprecated and is supposed to be replaced by
      * OptionsResolver but docs not clear on implementation
-     * 
-     * @param OptionsResolverInterface $resolver            
+     *
+     * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'itemsperpage' => null,
             'images_max_count' => null,
             'images_max_size' => null,
             'images_ext_allowed' => null
-        ));
+        ]);
     }
 }

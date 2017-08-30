@@ -1,67 +1,69 @@
 services:
-    
   # Link container
     kaikmedia_gallery_module.link_container:
         class: Kaikmedia\GalleryModule\Container\LinkContainer
-        lazy: true
+        arguments:
+          - "@translator.default"
+          - "@router"
+          - "@zikula_permissions_module.api.permission"
+          - "@=service('zikula_extensions_module.api.variable').get('KaikmediaGalleryModule', 'enablecategorization', true)"
         tags:
-            - { name: zikula.link_container }
-        arguments: [@translator, @router]
+          - { name: zikula.link_container }
    
-  # management
-    kaikmedia_gallery_module.settings_manager:
-        class: Kaikmedia\GalleryModule\Settings\SettingsManager
-        arguments: [@zikula_extensions_module.api.variable]        
-    kaikmedia_gallery_module.access_manager:
-        class: Kaikmedia\GalleryModule\Security\AccessManager
-    kaikmedia_gallery_module.features_manager:
-        class: Kaikmedia\GalleryModule\Features\FeaturesManager
-    kaikmedia_gallery_module.media_handlers_manager:
-        class: Kaikmedia\GalleryModule\Media\MediaHandlersManager        
-    kaikmedia_gallery_module.media_manager:
-        class: Kaikmedia\GalleryModule\Media\MediaManager    
-   
-  # form fields management     
-    kaikmedia_gallery_module.form.type.settings:
-        class: Kaikmedia\GalleryModule\Form\Type\SettingsType
-        tags:
-            - { name: form.type, alias: settings }    
-            
-  # form fields management     
-    kaikmedia_gallery_module.form.type.features:
-        class: Kaikmedia\GalleryModule\Form\Type\FeaturesType
-        tags:
-            - { name: form.type, alias: features }            
-   # form fields management     
-    kaikmedia_gallery_module.form.type.addmediasettings:
-        class: Kaikmedia\GalleryModule\Form\Type\AddmediaSettingsType
-        tags:
-            - { name: form.type, alias: addmediasettings }   
-  # forms   
-    kaikmedia_gallery_module.form.type.feature_icon:
-        class: Kaikmedia\GalleryModule\Form\Features\IconFeatureType
-        tags:
-            - { name: form.type, alias: kaikmedia_gallery_feature_icon_type }  
- 
- # twig
-    kaikmedia_gallery_module.twig.kmgallery_extension:
-        class: Kaikmedia\GalleryModule\Twig\Extension\KMGalleryExtension
-        arguments: ["@fragment.handler"]
-        tags:
-            - { name: twig.extension }
-  
-    kaikmedia_gallery_module.form.type.addmedia_form:
-        class: Kaikmedia\GalleryModule\Form\Features\AddMediaType
-        tags:
-            - { name: form.type, alias: addmedia }
-  
-    kaikmedia_gallery_module.form.type.media:
-        class: Kaikmedia\GalleryModule\Form\Media\MediaType
-        tags:
-            - { name: form.type, alias: media }
-            
-    kaikmedia_gallery_module.form.type.album:
-        class: Kaikmedia\GalleryModule\Form\Album\AlbumType
-        tags:
-            - { name: form.type, alias: album }
-                       
+#  # management
+#    kaikmedia_gallery_module.settings_manager:
+#        class: Kaikmedia\GalleryModule\Settings\SettingsManager
+#        arguments: [@zikula_extensions_module.api.variable]        
+#    kaikmedia_gallery_module.access_manager:
+#        class: Kaikmedia\GalleryModule\Security\AccessManager
+#    kaikmedia_gallery_module.features_manager:
+#        class: Kaikmedia\GalleryModule\Features\FeaturesManager
+#    kaikmedia_gallery_module.media_handlers_manager:
+#        class: Kaikmedia\GalleryModule\Media\MediaHandlersManager        
+#    kaikmedia_gallery_module.media_manager:
+#        class: Kaikmedia\GalleryModule\Media\MediaManager    
+#   
+#  # form fields management     
+#    kaikmedia_gallery_module.form.type.settings:
+#        class: Kaikmedia\GalleryModule\Form\Type\SettingsType
+#        tags:
+#            - { name: form.type, alias: settings }    
+#            
+#  # form fields management     
+#    kaikmedia_gallery_module.form.type.features:
+#        class: Kaikmedia\GalleryModule\Form\Type\FeaturesType
+#        tags:
+#            - { name: form.type, alias: features }            
+#   # form fields management     
+#    kaikmedia_gallery_module.form.type.addmediasettings:
+#        class: Kaikmedia\GalleryModule\Form\Type\AddmediaSettingsType
+#        tags:
+#            - { name: form.type, alias: addmediasettings }   
+#  # forms   
+#    kaikmedia_gallery_module.form.type.feature_icon:
+#        class: Kaikmedia\GalleryModule\Form\Features\IconFeatureType
+#        tags:
+#            - { name: form.type, alias: kaikmedia_gallery_feature_icon_type }  
+# 
+# # twig
+#    kaikmedia_gallery_module.twig.kmgallery_extension:
+#        class: Kaikmedia\GalleryModule\Twig\Extension\KMGalleryExtension
+#        arguments: ["@fragment.handler"]
+#        tags:
+#            - { name: twig.extension }
+#  
+#    kaikmedia_gallery_module.form.type.addmedia_form:
+#        class: Kaikmedia\GalleryModule\Form\Features\AddMediaType
+#        tags:
+#            - { name: form.type, alias: addmedia }
+#  
+#    kaikmedia_gallery_module.form.type.media:
+#        class: Kaikmedia\GalleryModule\Form\Media\MediaType
+#        tags:
+#            - { name: form.type, alias: media }
+#            
+#    kaikmedia_gallery_module.form.type.album:
+#        class: Kaikmedia\GalleryModule\Form\Album\AlbumType
+#        tags:
+#            - { name: form.type, alias: album }
+#                       

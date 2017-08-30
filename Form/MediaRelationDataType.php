@@ -12,21 +12,21 @@ class MediaRelationDataType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array(
+        $builder->add('name', 'text', [
             'required' => false
-        ));
-        
-        $builder->add('value', 'textarea', array(
+        ]);
+
+        $builder->add('value', 'textarea', [
         		'required' => false
-        ));                       
+        ]);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'isXmlHttpRequest' => false,
             'data_class' => 'Kaikmedia\GalleryModule\Entity\MediaRelationDataEntity'
-        ));
+        ]);
     }
 
     public function getName()

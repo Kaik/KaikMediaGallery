@@ -1,7 +1,12 @@
 <?php
 
-/**
- * Copyright (c) KaikMedia.com 2015
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright (C) 2017 KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Controller;
@@ -21,12 +26,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Media\MediaHandlersManager;
 
-
 /**
  * @Route("/media")
  */
-class MediaController extends AbstractController {
-
+class MediaController extends AbstractController
+{
     /**
      * @Route(
      *     "/get/{urltitle}.{_format}",
@@ -50,33 +54,27 @@ class MediaController extends AbstractController {
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function getAction(Request $request, $_format, $urltitle) {
+    public function getAction(Request $request, $_format, $urltitle)
+    {
         // Permission check
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
         }
 
-
-        
-        
-        
         //json
         if ($_format == 'json') {
-            $data = array(
+            $data = [
                 'urltitle' => $urltitle,
                 '_format' => $_format
-            );
+            ];
 
             $response = new JsonResponse($data);
 
             return $response;
         }
-        
-        //html
-        $request->attributes->set('_legacy', true); // forces template to render inside old theme
+
         return $this->render('KaikmediaGalleryModule:Media:get.html.twig', [
-                    'ZUserLoggedIn' => \UserUtil::isLoggedIn(),
-        ]);        
+        ]);
     }
 
     /**
@@ -88,7 +86,7 @@ class MediaController extends AbstractController {
      *     },
      *      options={"expose"=true}
      * )
-     * 
+     *
      * Get media information.
      *
      * @param string $urltitle
@@ -102,7 +100,8 @@ class MediaController extends AbstractController {
      *
      * @throws AccessDeniedException on failed permission check
      */
-    public function createAction(Request $request, $type, $_format) {
+    public function createAction(Request $request, $type, $_format)
+    {
         // Permission check
         if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
             throw new AccessDeniedException();
@@ -111,28 +110,28 @@ class MediaController extends AbstractController {
         $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
         $mediaItem = $mediaManager->getMediaItem();
         $formClass = $mediaManager->getForm();
-        
-        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);        
-        
+
+        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
+
         $errors = false;
-        if ($request->getMethod() == "POST"){
+        if ($request->getMethod() == "POST") {
             $form->handleRequest($request);
-          //  if ($form->isValid())
-          //  {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($mediaItem);
-                $em->flush();        
-          //  } else {
-           //     $errors = (string) $form->getErrors(true, false);
-          //  }
+            //  if ($form->isValid())
+            //  {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($mediaItem);
+            $em->flush();
+            //  } else {
+            //     $errors = (string) $form->getErrors(true, false);
+            //  }
         }
-            
-            
+
+
         //json
         if ($_format == 'json') {
             $data = [
                 'media' => $mediaItem,
-                'errors' => $errors,               
+                'errors' => $errors,
                 '_format' => $_format
             ];
 
@@ -140,12 +139,9 @@ class MediaController extends AbstractController {
 
             return $response;
         }
-        
-        //html
-        $request->attributes->set('_legacy', true); // forces template to render inside old theme
+
         return $this->render('KaikmediaGalleryModule:Media:create.html.twig', [
-                    'ZUserLoggedIn' => \UserUtil::isLoggedIn(),
-        ]);        
-    }    
-    
+        ]);
+    }
+
 }

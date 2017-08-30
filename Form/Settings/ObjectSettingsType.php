@@ -10,30 +10,30 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Kaikmedia\GalleryModule\Form\Type\FeaturesType;
 
 class ObjectSettingsType extends AbstractType
-{   
+{
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {    
-        $builder->add('enabled','choice', array(
-            'choices' => array(
+    {
+        $builder->add('enabled','choice', [
+            'choices' => [
                 '0' => 'Off',
                 '1' => 'On'
-            ),
+            ],
             'multiple' => false,
             'expanded' => true,
             'required' => true
-        ));            
+        ]);
 
         $builder->add('features', 'features',[
             'type' => new FeaturesType()
-            ]);                
+            ]);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'isXmlHttpRequest' => false,        
+        $resolver->setDefaults([
+            'isXmlHttpRequest' => false,
             'data_class' => 'Kaikmedia\GalleryModule\Settings\SettingsObject'
-        ));
+        ]);
     }
 
     public function getName()
