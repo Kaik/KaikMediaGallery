@@ -1,7 +1,14 @@
 <?php
-/**
- * Copyright (c) KaikMedia.com 2015
+
+/*
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright  KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
+
 namespace Kaikmedia\GalleryModule\Form\Settings;
 
 use Symfony\Component\Form\AbstractType;
@@ -11,10 +18,6 @@ use Kaikmedia\GalleryModule\Form\Settings\ObjectSettingsType;
 
 class SettingsType extends AbstractType
 {
-    //private $data;
-    //public function __construct($data) {
-    //    $this->data = $data;
-    //}
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 

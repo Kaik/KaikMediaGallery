@@ -4,33 +4,35 @@
  * KaikMedia GalleryModule
  *
  * @package    KaikmediaGalleryModule
- * @copyright (C) 2017 KaikMedia.com
+ * @copyright  KaikMedia.com
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
  * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule;
 
-//use Doctrine\Common\Collections\ArrayCollection;
+use Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity;
+use Kaikmedia\GalleryModule\Entity\Media\AbstractUploadableEntity;
+use Kaikmedia\GalleryModule\Entity\Media\ImageEntity;
+use Kaikmedia\GalleryModule\Entity\Media\PdfEntity;
+use Kaikmedia\GalleryModule\Entity\Media\YoutubeEntity;
+use Kaikmedia\GalleryModule\Entity\Media\UrlEntity;
+use Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationsEntity;
 use Zikula\CategoriesModule\Entity\CategoryAttributeEntity;
 use Zikula\CategoriesModule\Entity\CategoryEntity;
 use Zikula\CategoriesModule\Entity\CategoryRegistryEntity;
 use Zikula\Core\AbstractExtensionInstaller;
-//use Zikula\PagesModule\Entity\CategoryAssignmentEntity;
-//use Zikula\PagesModule\Entity\PageEntity;
 
 class GalleryModuleInstaller extends AbstractExtensionInstaller
 {
     private $entities = [
-        'Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity',
-        'Kaikmedia\GalleryModule\Entity\Media\AbstractUploadableEntity',
-        'Kaikmedia\GalleryModule\Entity\Media\ImageEntity',
-        'Kaikmedia\GalleryModule\Entity\Media\PdfEntity',
-        'Kaikmedia\GalleryModule\Entity\Media\YoutubeEntity',
-        'Kaikmedia\GalleryModule\Entity\Media\UrlEntity',
-        'Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationsEntity',
-//        'Kaikmedia\GalleryModule\Entity\Relations\KaikmediaPagesModuleRelationsEntity',
-        'Kaikmedia\GalleryModule\Entity\Relations\ZikulaUsersModuleRelationsEntity'
+        AbstractMediaEntity::class,
+        AbstractUploadableEntity::class,
+        ImageEntity::class,
+        PdfEntity::class,
+        YoutubeEntity::class,
+        UrlEntity::class,
+        AbstractRelationsEntity::class,
     ];
 
     public function install() {

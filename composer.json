@@ -1,6 +1,6 @@
 {
 	"name" : "kaikmedia/gallery-module",
-	"version" : "1.5.0",          
+	"version" : "2.0.0",          
 	"description" : "Gallery module for Zikula",
 	"type" : "zikula-module",
 	"license" : "LGPL-3.0+",
@@ -24,8 +24,7 @@
 			"class" : "Kaikmedia\\GalleryModule\\KaikmediaGalleryModule",
 			"displayname" : "KMGallery",
 			"url" : "kmgallery",
-			"capabilities" : {                              
-                                "categorizable": ["Kaikmedia\\GalleryModule\\Entity\\AlbumEntity"],                            
+			"capabilities" : {                       
 				"user" : { "route" : "kaikmediagallerymodule_user_index"},
 				"admin" : {"route" : "kaikmediagallerymodule_admin_info"}
 			},

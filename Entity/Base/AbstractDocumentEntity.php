@@ -85,6 +85,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
 
     /**
      * The author uid
+     * 
      * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="author", referencedColumnName="uid")
      */

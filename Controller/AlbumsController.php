@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Kaikmedia\GalleryModule\Entity\MediaEntity as Media;
+use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
+use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
  * @Route("/albums")
@@ -43,6 +45,33 @@ class AlbumsController extends AbstractController
 
         return new RedirectResponse($this->get('router')->generate('kaikmediagallerymodule_admin_info', [], RouterInterface::ABSOLUTE_URL));
     }
+
+    /**
+     * @Route("/albums")
+     * @Theme("admin")
+     * the main administration function
+     *
+     * @return RedirectResponse
+     */
+    public function albumsAction(Request $request)
+    {
+        // Permission check
+        $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_ADMIN);
+
+        $repo = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\AlbumEntity');
+        $albumTree = $repo->getAlbumJsTree();
+        $album = $repo->find(1);
+
+//        \PageUtil::addVar('javascript', "/web/jstree/dist/jstree.min.js");
+//        \PageUtil::addVar('stylesheet', "/web/jstree/dist/themes/default/style.min.css");
+
+        return $this->render('KaikmediaGalleryModule:Admin:albums.html.twig', [
+                    'album' => $album,
+                    'albumTree' => $albumTree,
+                    'settings' => $this->getVars()
+        ]);
+    }
+
 
     /**
      * @Route("/refresh/", options={"expose"=true})

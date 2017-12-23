@@ -10,10 +10,19 @@ services:
         tags:
           - { name: zikula.link_container }
    
-#  # management
-#    kaikmedia_gallery_module.settings_manager:
-#        class: Kaikmedia\GalleryModule\Settings\SettingsManager
-#        arguments: [@zikula_extensions_module.api.variable]        
+  # management
+    kaikmedia_gallery_module.access_manager:
+        class: Kaikmedia\GalleryModule\Security\AccessManager
+        arguments:
+          - "@request_stack"
+          - "@translator.default"
+          - "@zikula_permissions_module.api.permission" 
+        
+    kaikmedia_gallery_module.settings_manager:
+        class: Kaikmedia\GalleryModule\Settings\SettingsManager
+        arguments: 
+          - "@zikula_extensions_module.api.variable"
+          
 #    kaikmedia_gallery_module.access_manager:
 #        class: Kaikmedia\GalleryModule\Security\AccessManager
 #    kaikmedia_gallery_module.features_manager:
