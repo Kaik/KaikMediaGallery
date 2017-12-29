@@ -17,7 +17,7 @@ use Kaikmedia\GalleryModule\Entity\Media\ImageEntity;
 use Kaikmedia\GalleryModule\Entity\Media\PdfEntity;
 use Kaikmedia\GalleryModule\Entity\Media\YoutubeEntity;
 use Kaikmedia\GalleryModule\Entity\Media\UrlEntity;
-use Kaikmedia\GalleryModule\Entity\Relations\AbstractRelationsEntity;
+use Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity;
 use Zikula\CategoriesModule\Entity\CategoryAttributeEntity;
 use Zikula\CategoriesModule\Entity\CategoryEntity;
 use Zikula\CategoriesModule\Entity\CategoryRegistryEntity;
@@ -32,10 +32,11 @@ class GalleryModuleInstaller extends AbstractExtensionInstaller
         PdfEntity::class,
         YoutubeEntity::class,
         UrlEntity::class,
-        AbstractRelationsEntity::class,
+        HooksRelationsEntity::class,
     ];
 
-    public function install() {
+    public function install()
+    {
         // create table
         try {
             $this->schemaTool->create($this->entities);
@@ -60,12 +61,13 @@ class GalleryModuleInstaller extends AbstractExtensionInstaller
         return true;
     }
 
-    public function upgrade($oldversion) {
-
+    public function upgrade($oldversion)
+    {
         return true;
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         // drop table
         $this->schemaTool->drop($this->entities);
         // Delete any module variables
@@ -75,8 +77,9 @@ class GalleryModuleInstaller extends AbstractExtensionInstaller
 //        foreach ($registries as $registry) {
 //            $this->entityManager->remove($registry);
 //        }
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
         // Deletion successful
+
         return true;
     }
 
@@ -139,6 +142,7 @@ class GalleryModuleInstaller extends AbstractExtensionInstaller
         $registry->setProperty('Main');
         $this->entityManager->persist($registry);
         $this->entityManager->flush();
+
         return true;
     }
 }

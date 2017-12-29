@@ -55,11 +55,8 @@ class AdminController extends AbstractController
         // Permission check
         $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_ADMIN);
 
-        $a = [];
-        // Get startnum and perpage parameter for pager
-        $a['page'] = $page;
-        $a['limit'] = $request->query->get('limit', 15);
-        $a['name'] = $request->query->get('name', false);
+        $hookCollector = $this->get('zikula_hook_bundle.collector.hook_collector');
+        dump($hookCollector);
 
         return $this->render('@KaikmediaGalleryModule/Admin/info.html.twig', [
         ]);
@@ -79,7 +76,7 @@ class AdminController extends AbstractController
 
         $settingsManager = $this->get('kaikmedia_gallery_module.settings_manager');
 
-        $form = $this->createForm(new SettingsType(),
+        $form = $this->createForm(SettingsType::class,
             $settingsManager->getSettingsForForm(),
             ['isXmlHttpRequest' => $request->isXmlHttpRequest()]
         );

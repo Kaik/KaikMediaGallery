@@ -32,20 +32,20 @@ class SettingsManager {
     ) {
         $this->settings = new SettingsCollection();
         $this->variablesManager = $variablesManager;
-        $dbSettings = $this->variablesManager->getAll($this->name);
+//        $dbSettings = $this->variablesManager->getAll($this->name);
         //dump($dbSettings);
-        if (is_array($dbSettings) && !empty($dbSettings)) {
-            $this->settings->clear();
-            $global = $dbSettings[$this->name];
-            unset($dbSettings[$this->name]);
-            $this->settings->set($this->name, $global);
-            foreach($dbSettings as $settingObject){
-                $this->settings->set($settingObject->getName(), $settingObject);
-            }
-        } else {
-            //settings init
-            $this->settings->addDefault();
-        }
+//        if (is_array($dbSettings) && !empty($dbSettings)) {
+//            $this->settings->clear();
+//            $global = [];// $dbSettings[$this->name];
+////            unset($dbSettings[$this->name]);
+//            $this->settings->set($this->name, $global);
+//            foreach($dbSettings as $settingObject){
+//                $this->settings->set($settingObject->getName(), $settingObject);
+//            }
+//        } else {
+//            //settings init
+//            $this->settings->addDefault();
+//        }
     }
 
     public function setSettings(SettingsCollection $settings)

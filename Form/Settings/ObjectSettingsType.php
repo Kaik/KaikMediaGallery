@@ -4,10 +4,10 @@
  */
 namespace Kaikmedia\GalleryModule\Form\Settings;
 
+use Kaikmedia\GalleryModule\Form\Type\FeaturesType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Kaikmedia\GalleryModule\Form\Type\FeaturesType;
 
 class ObjectSettingsType extends AbstractType
 {

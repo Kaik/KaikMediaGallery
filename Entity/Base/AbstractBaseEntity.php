@@ -12,9 +12,9 @@
 namespace Kaikmedia\GalleryModule\Entity\Base;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zikula\Core\Doctrine\EntityAccess;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Zikula\Core\Doctrine\EntityAccess;
 
 /**
  * Description of BaseEntity

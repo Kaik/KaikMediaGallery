@@ -11,11 +11,11 @@
 
 namespace Kaikmedia\GalleryModule\Entity\Relations;
 
+use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Zikula\Core\Doctrine\EntityAccess;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
-use Kaikmedia\GalleryModule\Entity\Base\AbstractBaseEntity;
+use Zikula\Core\Doctrine\EntityAccess;
 
 /**
  * Description of BaseEntity
@@ -75,6 +75,7 @@ abstract class AbstractRelationEntity extends AbstractBaseEntity
     public function setMedia($media)
     {
         $this->media = $media;
+
         return $this;
     }
 
@@ -96,6 +97,7 @@ abstract class AbstractRelationEntity extends AbstractBaseEntity
     public function setMediaExtra($mediaExtra)
     {
         $this->mediaExtra = $mediaExtra;
+
         return $this;
     }
 
@@ -117,6 +119,7 @@ abstract class AbstractRelationEntity extends AbstractBaseEntity
     public function setFeature($feature)
     {
         $this->feature = $feature;
+
         return $this;
     }
 
@@ -153,12 +156,13 @@ abstract class AbstractRelationEntity extends AbstractBaseEntity
 
     /**
      * Set
-     * 
+     *
      * @param
      */
     public function setRelationExtra($relationExtra)
     {
         $this->relationExtra = $relationExtra;
+
         return $this;
     }
 

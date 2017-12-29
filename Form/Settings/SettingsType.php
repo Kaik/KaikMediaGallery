@@ -11,33 +11,37 @@
 
 namespace Kaikmedia\GalleryModule\Form\Settings;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Kaikmedia\GalleryModule\Form\Settings\ObjectSettingsType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 
 class SettingsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        $builder->add('settings', 'collection', [
-            'type' => new ObjectSettingsType()
+        $builder->add('settings', CollectionType::class, [
+                'entry_type' => new ObjectSettingsType()
             ]
-                );
+        );
 
         if ($options['isXmlHttpRequest'] == false) {
-            $builder->add('save', 'submit', ['label' => 'Save']);
+            $builder->add('save', SubmitType::class);
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'isXmlHttpRequest' => false
+            'isXmlHttpRequest' => false,
         ]);
     }
-
 
     public function getName()
     {

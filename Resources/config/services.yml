@@ -23,6 +23,58 @@ services:
         arguments: 
           - "@zikula_extensions_module.api.variable"
           
+    kaikmedia_gallery_module.hook_provider.media_ui_hooks_provider:
+        class: Kaikmedia\GalleryModule\Hooks\MediaProBundle
+        arguments:
+            - "@kernel"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_permissions_module.api.permission"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.media" }
+          
+    kaikmedia_gallery_module.hook_provider.gallery_ui_hooks_provider:
+        class: Kaikmedia\GalleryModule\Hooks\GalleryProBundle
+        arguments:
+            - "@kernel"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_permissions_module.api.permission"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.gallery" }
+            
+    kaikmedia_gallery_module.hook_provider.main_image_ui_hooks_provider:
+        class: Kaikmedia\GalleryModule\Hooks\MainImageProBundle
+        arguments:
+            - "@kernel"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_permissions_module.api.permission"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.main_image" }            
+
+    kaikmedia_gallery_module.hook_provider.additional_images_ui_hooks_provider:
+        class: Kaikmedia\GalleryModule\Hooks\AdditionalImagesProBundle
+        arguments:
+            - "@kernel"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_permissions_module.api.permission"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.additional_images" } 
+
 #    kaikmedia_gallery_module.access_manager:
 #        class: Kaikmedia\GalleryModule\Security\AccessManager
 #    kaikmedia_gallery_module.features_manager:

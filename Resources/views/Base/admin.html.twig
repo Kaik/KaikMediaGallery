@@ -1,14 +1,14 @@
 {% block header %}
-{{ adminHeader() }}
-{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/style.css')) }}
-{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.settings.js')) }}
-<script>
-(function($) {
-	$(function(){
-            KaikMedia.Gallery.settings.set({{ settings|json_encode|raw }});  
-	});
-})(jQuery);
-</script>
+    {{ adminHeader() }}
+    {{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/style.css')) }}
+    {{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.settings.js')) }}
+    <script>
+    (function($) {
+            $(function(){
+                KaikMedia.Gallery.settings.set({{ settings|json_encode|raw }});
+            });
+    })(jQuery);
+    </script>
 {% endblock %}
 {% block title %}
       <h1>
@@ -19,5 +19,5 @@
 {% endblock %} 
 {% block content %}{% endblock %}
 {% block footer %}
-{{ adminFooter() }}
-{% endblock %}{# empty Twig template #}
+    {{ adminFooter() }}
+{% endblock %}

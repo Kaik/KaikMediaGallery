@@ -54,19 +54,19 @@ class SettingsCollection extends ArrayCollection
 
     public function addSupportedObjects()
     {
-        $users = new SettingsObject();
-        $users->setName('ZikulaUsersModule');
-        $users->setEnabled(0);
-        $users->setDisplayName('Users');
-        $users->setEntity('Zikula\UsersModule\Entity\UserEntity');
-        $this->set($users->getName(), $users);
-
-        $pages = new SettingsObject();
-        $pages->setName('KaikmediaPagesModule');
-        $pages->setEnabled(0);
-        $pages->setDisplayName('Pages');
-        $pages->setEntity('Kaikmedia\PagesModule\Entity\PageEntity');
-        $this->set($pages->getName(), $pages);
+//        $users = new SettingsObject();
+//        $users->setName('ZikulaUsersModule');
+//        $users->setEnabled(0);
+//        $users->setDisplayName('Users');
+//        $users->setEntity('Zikula\UsersModule\Entity\UserEntity');
+//        $this->set($users->getName(), $users);
+//
+//        $pages = new SettingsObject();
+//        $pages->setName('KaikmediaPagesModule');
+//        $pages->setEnabled(0);
+//        $pages->setDisplayName('Pages');
+//        $pages->setEntity('Kaikmedia\PagesModule\Entity\PageEntity');
+//        $this->set($pages->getName(), $pages);
 
         return true;
     }
