@@ -1,21 +1,14 @@
 {# #}
-<script>
-    (function ($) {
-        $(function () {    
-            $.when( KaikMedia.Gallery.settings.set({{ gallerySettings|json_encode|raw }}) ).then(KaikMedia.Gallery.Manager.init() ); 
-        });
-    })(jQuery);
-</script>
 <div id="kmgallery_manager_container">
-</div><!-- /#kmgallery_plugin_container -->
+</div>
+<!-- /#kmgallery_plugin_container -->
+
+{% include "KaikmediaGalleryModule:Manager:manager.html.twig" %} 
 
 
-{{ dump() }}
-{#
- {% include "KaikmediaGalleryModule:Manager:manager.html.twig" %} 
-{% set obj_settings = attribute(settings, obj_name) %}
-{% set obj_features = attribute(obj_settings, 'features') %}
-                var config = [];
+{#{% set obj_settings = attribute(settings, obj_name) %}#}
+{#{% set obj_features = attribute(obj_settings, 'features') %}#}
+{#                var config = [];
                 config.$container = $('#kmgallery_plugin_container');
                 config.mediaTypes = {{ mediaTypes|json_encode|raw }};
                 config.features = {{ obj_features.toArray()|json_encode|raw }};
@@ -24,5 +17,23 @@
                 config.obj.name = 'KaikmediaPagesModule';
 	    	config.obj.reference = 'new';
 	    	config.obj.settings = KaikMedia.Gallery.settings.get(config.obj.name);
-	    	//init manager
-#}
+	    	//init manager#}
+
+
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.settings.js')) }}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.Manager.js')) }}
+
+
+<script>
+    window.onload = function(){
+        console.log(this);
+        (function ($) {
+            $(function () {
+                $.when( KaikMedia.Gallery.settings.set({{ gallerySettings|json_encode|raw }}) ).then(KaikMedia.Gallery.Manager.init() );
+            });
+        })(jQuery); 
+    };
+</script>
+
+
+{#{{ dump() }}#}

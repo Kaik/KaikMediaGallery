@@ -163,7 +163,7 @@ class MediaController extends AbstractController
 
         $media = new Media();
 
-        $form = $this->createForm('media', $media);
+        $form = $this->createForm(MediaType::class, $media);
 
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
@@ -178,7 +178,7 @@ class MediaController extends AbstractController
             $em->flush();
             $request->getSession()
                     ->getFlashBag()
-                    ->add('status', "Media added!");
+                    ->add('status', $this->__('Media added!'));
             return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
         }
 

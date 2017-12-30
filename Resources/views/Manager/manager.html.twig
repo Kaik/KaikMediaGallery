@@ -30,14 +30,17 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="kmgallery_manager_info_box">     
                                 {% include "KaikmediaGalleryModule:Features:info.feature.html.twig" %}                           
-                            </div>          	
-                            {% for feature in obj_features %}
-                                {% if feature.enabled and feature.type == 'feature' %}
-                                    <div role="tabpanel" class="tab-pane" id="kmgallery_manager_{{ feature.name }}_box">     
-                                        {% include "KaikmediaGalleryModule:Features:" ~ feature.name ~ ".feature.html.twig" %}                           
-                                    </div> 
-                                {% endif %}
-                            {% endfor %}  	            
+                            </div>
+                            {% if obj_features is defined %}
+                                {% for feature in obj_features %}
+                                    {% if feature.enabled and feature.type == 'feature' %}
+                                        <div role="tabpanel" class="tab-pane" id="kmgallery_manager_{{ feature.name }}_box">
+                                            {% include "KaikmediaGalleryModule:Features:" ~ feature.name ~ ".feature.html.twig" %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            
                         </div>                                 
                     </div>         
 
@@ -49,17 +52,19 @@
                         </div>     
 
                         <ul id="kmgallery_manager_origins" class="nav nav-tabs">
-                            {% for origin in obj_features %}
-                                {% if origin.enabled and origin.type == 'origin' %}
-                                    <li role="presentation" class="origins {% if origin.name == 'addmedia' %} pull-right{% endif %} ">   
-                                        {% if origin.name == 'addmedia' %}
-                                            <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
-                                        {% else %}
-                                            <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
-                                        {% endif %}    
-                                    </li> 
-                                {% endif %}
-                            {% endfor %}  
+                            {% if obj_features is defined %}
+                                {% for origin in obj_features %}
+                                    {% if origin.enabled and origin.type == 'origin' %}
+                                        <li role="presentation" class="origins {% if origin.name == 'addmedia' %} pull-right{% endif %} ">
+                                            {% if origin.name == 'addmedia' %}
+                                                <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
+                                            {% else %}
+                                                <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         </ul>   
 
                         <div class="tab-content">        		
@@ -80,7 +85,7 @@
                             </div>  
 
                             <div role="tabpanel" class="tab-pane" id="kmgallery_manager_addmedia_box">
-                                {% include "KaikmediaGalleryModule:Origins:addmedia.origin.html.twig" %}                     
+{#                                {% include "KaikmediaGalleryModule:Origins:addmedia.origin.html.twig" %}                     #}
                             </div>
                         </div>    
 

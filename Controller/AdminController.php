@@ -11,7 +11,7 @@
 
 namespace Kaikmedia\GalleryModule\Controller;
 
-use Kaikmedia\GalleryModule\Form\Settings\SettingsType;
+use Kaikmedia\GalleryModule\Form\Type\Settings\SettingsType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -55,15 +55,13 @@ class AdminController extends AbstractController
         // Permission check
         $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_ADMIN);
 
-        $hookCollector = $this->get('zikula_hook_bundle.collector.hook_collector');
-        dump($hookCollector);
-
         return $this->render('@KaikmediaGalleryModule/Admin/info.html.twig', [
         ]);
     }
 
     /**
      * @Route("/preferences")
+     *
      * @Theme("admin")
      *
      * @return Response symfony response object
@@ -76,49 +74,34 @@ class AdminController extends AbstractController
 
         $settingsManager = $this->get('kaikmedia_gallery_module.settings_manager');
 
-        $form = $this->createForm(SettingsType::class,
-            $settingsManager->getSettingsForForm(),
-            ['isXmlHttpRequest' => $request->isXmlHttpRequest()]
-        );
-
+        $form = $this->createForm(SettingsType::class, $settingsManager->getSettingsForForm(), ['settingsManager' => $settingsManager]);
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            if (!$settingsManager->setSettings($form->get('settings')->getData())) {
-                $request->getSession()
-                        ->getFlashBag()
-                        ->add('error', 'Error! Settings not set! Please try again');
-            } else {
-                $request->getSession()
-                        ->getFlashBag()
-                        ->add('status', 'Settings set.');
-                if (!$settingsManager->saveSettings()) {
-                    $request->getSession()
-                            ->getFlashBag()
-                            ->add('error', 'Error! Settings not saved! Please try again');
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('save')->isClicked()) {
+                if (!$settingsManager->setSettings($request->request->get($form->getName()))) {
+                    $this->addFlash('error', $this->__('Error! Settings not set! Please try again'));
                 } else {
-                    $request->getSession()
-                            ->getFlashBag()
-                            ->add('status', 'Settings saved.');
+                    $this->addFlash('status', $this->__('Settings set.'));
+                    if (!$settingsManager->saveSettings()) {
+                        $this->addFlash('error', $this->__('Error! Settings not saved! Please try again'));
+                    } else {
+                        $this->addFlash('status', $this->__('Settings saved.'));
+                    }
                 }
             }
+            if ($form->get('restore')->isClicked()) {
+                if (!$settingsManager->restoreSettings()) {
+                    $this->addFlash('error', $this->__('Error! Settings not set! Please try again'));
+                } else {
+                    $this->addFlash('error', $this->__('Error! Settings not restored! Please try again'));
+                }
+            }
+
+            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_preferences'));
         }
 
-        if ($request->isXmlHttpRequest()) {
-            $response = new JsonResponse();
-            $response->setData([
-                'html' => $this->renderView('KaikmediaGalleryModule:Admin:settings.form.html.twig', [
-                    'form' => $form->createView(),
-                    'settings' => $settingsManager->getSettings()
-                ])
-            ]);
-
-            return $response;
-        }
-
-        return $this->render('KaikmediaGalleryModule:Admin:settings.html.twig', [
-                    'form' => $form->createView(),
-                    'settings' => $settingsManager->getSettings()
+        return $this->render('@KaikmediaGalleryModule/Admin/settings.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
-
 }

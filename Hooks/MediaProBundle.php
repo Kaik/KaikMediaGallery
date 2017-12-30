@@ -160,8 +160,10 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
 //        if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
 //            return;
 //        }
-        dump('test');
-        $content = '<p> test</p>';
+
+
+//        dump('test');
+//        $content = '<p> test</p>';
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
     }
 
@@ -175,7 +177,35 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function edit(DisplayHook $hook)
     {
-        $content = '<p> test</p>';
+//        // Permission check
+//        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
+//            throw new AccessDeniedException();
+//        }
+
+        $gallerySettings = ['mode' => 'info',
+            'obj_reference' => null];
+
+        $gallerySettings['obj_name'] = $this->request->attributes->get('_zkModule');
+        /*
+          $addMediaForm = $this->createForm(
+          new AddMediaType(), null , ['allowed_mime_types' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject($gallerySettings['obj_name']),
+          'isXmlHttpRequest' => $request->isXmlHttpRequest()]
+
+          );
+         */
+        //$gallerySettings['mediaTypes'] = $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes();
+        $gallerySettings['settings'] = [];//$this->get('kaikmedia_gallery_module.settings_manager')->getSettingsArray();
+
+//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.settings.js");
+//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.mediaItem.js");
+//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
+//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.manager.css");
+//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.mediaItem.css");
+
+        $content =  $this->renderEngine->render('KaikmediaGalleryModule:Plugin:manager.html.twig', [
+                    'gallerySettings' => $gallerySettings,
+                        //   'addMediaForm' => $addMediaForm->createView()
+        ]);
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
     }
 
