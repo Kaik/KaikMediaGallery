@@ -12,7 +12,8 @@
 {% form_theme form with ['bootstrap_3_layout.html.twig',
     'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
     'KaikmediaGalleryModule:Form:radio.html.twig',
-    'KaikmediaGalleryModule:Form:hooks.widget.html.twig'
+    'KaikmediaGalleryModule:Form:hooks.widget.html.twig',
+    'KaikmediaGalleryModule:Form:jquery.collection.html.twig'
 ] %}
 <div id="km_gallery_admin_settings">
     {{ showflashes() }}
@@ -79,16 +80,56 @@
 {% endblock %}
 {% block footer %}
     {{ parent() }}
-{#    {{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.SettingsManager.js')) }}#}
+    {{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/jquery.collection.js')) }}
+
+    <script>
+        window.onload = function() {
+            (function($) {
+                    $(function(){
+{#                        $('[data-collection]').each(function() {
+                                console.log($(this).data('collection'));
+                                $('.' + $(this).data('collection')).collection();
+                                // Do somting with element
+                        });#}
+                        
+                        
+{#                        console.log('test');#}
+                        $('.my-selector').collection();
+                    });
+            })(jQuery);
+        };
+    </script>
+    
 {#    <script>
     (function($) {
             $(function(){
                 KaikMedia.Gallery.SettingsManager.init();  
             });
     })(jQuery);
+
+
+        <script>
+            window.onload = function() {
+                (function($) {
+                        $(function(){
+                            console.log('test');
+                            $('.{{collection_id}}').collection({
+                                min: 0,
+                                max: 5,
+                                up: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span> Move collection up</a>',
+                                down: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span> Move collection down</a>',
+                                add: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add collection</a>',
+                                remove: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Remove collection</a>'
+                            });
+                        });
+                })(jQuery);
+            };
+        </script>
+
+
     </script>#}
     
-    {{dump()}}
+{#    {{dump()}}#}
 {% endblock %}
 
 {#    {{ include('KaikmediaGalleryModule:Admin:settings.form.html.twig') }}#}

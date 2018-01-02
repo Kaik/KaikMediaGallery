@@ -12,35 +12,32 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class JsonToArrayTransformer implements DataTransformerInterface {
 
     /**
-     *
-     * @param ObjectManager $om            
-     */
-    public function __construct() {
-        
-    }
-
-    /**          
      * @return string
      */
     public function transform($array) {
+
+        dump($array);
         if (!is_array($array)) {
-            return [];
+            return '';
         }
         //return json
         return json_encode($array);
+//        return '';
     }
 
-    /**          
+    /**
      * @return User|null
      * @throws TransformationFailedException if object (user) is not found.
      */
     public function reverseTransform($string) {
-        $modelData = json_decode($string, true);
-        if ($modelData == null) {
-            throw new TransformationFailedException('String is not a valid JSON.');
-        }
-        // return array
-        return $modelData;
-    }
 
+          dump($string);
+//        $modelData = json_decode($string, true);
+//        if ($modelData == null) {
+//            return [];
+//        }
+//        // return array
+//        return $modelData;
+        return [];
+    }
 }

@@ -78,9 +78,12 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
+//                dump($form->getData());
                 if (!$settingsManager->setSettings($request->request->get($form->getName()))) {
+
                     $this->addFlash('error', $this->__('Error! Settings not set! Please try again'));
                 } else {
+//                    dump($request->request->get($form->getName()));
                     $this->addFlash('status', $this->__('Settings set.'));
                     if (!$settingsManager->saveSettings()) {
                         $this->addFlash('error', $this->__('Error! Settings not saved! Please try again'));

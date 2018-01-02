@@ -20,3 +20,110 @@
     </div>
     {% include "KaikmediaGalleryModule:Manager:manager.html.twig" %}  
 </div><!-- /#kmgallery_plugin_container -->
+
+<script>
+    window.onload = function(){
+        console.log(this);
+        (function ($) {
+            $(function () {
+{#                $.when( KaikMedia.Gallery.settings.set({{ gallerySettings|json_encode|raw }}) ).then(KaikMedia.Gallery.Manager.init() );#}
+            });
+
+                $('.upload-action').click(function (e) {
+                    e.preventDefault();
+                    fileDialog()
+                        .then(file => {
+                            const data = new FormData();
+                            data.append('file', file[0]);
+                            data.append('media[title]', 'testTitle');
+                            data.append('media[publicdomain]', 1);
+                            console.log(file[0]);
+                            // Post to server
+             $.ajax({
+                type: "POST",
+                url: Routing.generate('kaikmediagallerymodule_media_create', {"type": 'image', "_format": 'json'}),
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                xhr: function () {
+                    var xhr = new window.XMLHttpRequest();
+{#                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = (evt.loaded / evt.total) * 100;
+                            updateProgress(percentComplete);
+                            if (percentComplete === 100) {
+                                view.setProgressType('progress-bar-success');
+                            }
+                        }
+                    }, false);
+
+                    xhr.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = (evt.loaded / evt.total) * 100;
+                            updateProgress(percentComplete);
+                        }
+                    }, false);#}
+                    return xhr;
+                }
+            }).success(function (result) {
+                console.log(result);
+                //var template = result.template;
+                //manager.view.itemEdit(template);
+{#                view.setProgressType('progress-bar-success');#}
+{#                view.removeProgress();#}
+            }).error(function (result) {
+                console.log(result);
+{#                view.setProgressType('progress-bar-danger');#}
+                //manager.view.displayError(result.status + ': ' + result.statusText);
+            }).always(function () {
+{#                console.log('always');#}
+                //manager.view.hideBusy();
+            });
+
+
+                        })
+
+                    return false;
+                });
+
+
+
+
+
+        })(jQuery);
+
+
+
+    };
+
+
+
+
+
+
+
+
+</script>
+
+{#
+
+
+
+
+#}
+
+{#{% include "KaikmediaGalleryModule:Manager:manager.html.twig" %} #}
+{#{% set obj_settings = attribute(settings, obj_name) %}#}
+{#{% set obj_features = attribute(obj_settings, 'features') %}#}
+{#                var config = [];
+                config.$container = $('#kmgallery_plugin_container');
+                config.mediaTypes = {{ mediaTypes|json_encode|raw }};
+                config.features = {{ obj_features.toArray()|json_encode|raw }};
+                config.addmedia = {{ obj_features.first().settings.toArray()|json_encode|raw }};
+                config.obj = [];
+                config.obj.name = 'KaikmediaPagesModule';
+	    	config.obj.reference = 'new';
+	    	config.obj.settings = KaikMedia.Gallery.settings.get(config.obj.name);
+	    	//init manager#}
+{#{{ dump() }}#}

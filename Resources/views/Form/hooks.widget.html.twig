@@ -53,7 +53,6 @@
             {% else %}
             {% endif %}
         </fieldset>
-        {{ dump(form.children) }}
     {% endspaceless %}
 {% endblock %}
 
@@ -112,14 +111,17 @@
                 {% endfor %}
             </div>
         </div>
+        
     {% endspaceless %}
 {% endblock %}
 
 {% block _settings_hooks_providers_entry_modules_entry_areas_entry_entry_widget %}
     {% spaceless %}
+        {% set collection_id = 'collection' ~ random() %}
         {% for child in form %}
-            {{ form_row(child, {'attr': {'class': 'input-sm' }, 'label_attr': {'class': 'input-sm'}}) }}
+            {{ form_row(child, {'attr': {'class': collection_id ~ ' input-sm my-selector', 'data-coll': collection_id}, 'label_attr': {'class': ' input-sm'}}) }}
         {% endfor %}
+{#        {{ dump(form) }}#}
     {% endspaceless %}
 {% endblock %}
 

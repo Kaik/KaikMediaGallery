@@ -12,6 +12,7 @@
 
 namespace Kaikmedia\GalleryModule\Hooks;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -79,6 +80,11 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
     private $permissionApi;
 
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * @var area
      */
     private $area = 'provider.gallery.ui_hooks.media';
@@ -93,6 +99,7 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
      * @param EngineInterface $renderEngine
      * @param VariableApi $variableApi
      * @param PermissionApi $permissionApi
+     * @param EntityManager $entityManager
      */
     public function __construct(
         ZikulaHttpKernelInterface $kernel,
@@ -101,7 +108,8 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
         RequestStack $requestStack,
         EngineInterface $renderEngine,
         VariableApi $variableApi,
-        PermissionApi $permissionApi
+        PermissionApi $permissionApi,
+        EntityManager $entityManager
     ) {
         $this->kernel = $kernel;
         $this->translator = $translator;
@@ -111,6 +119,7 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
         $this->renderEngine = $renderEngine;
         $this->variableApi = $variableApi;
         $this->permissionApi = $permissionApi;
+        $this->entityManager = $entityManager;
         parent::__construct();
     }
 
@@ -161,10 +170,10 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
 //            return;
 //        }
 
-
+        $media = $this->entityManager->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')->findAll();
 //        dump('test');
 //        $content = '<p> test</p>';
-        $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
+        $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $media));
     }
 
     /**
@@ -181,30 +190,20 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
 //        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
 //            throw new AccessDeniedException();
 //        }
+        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+        dump($config);
 
-        $gallerySettings = ['mode' => 'info',
-            'obj_reference' => null];
 
-        $gallerySettings['obj_name'] = $this->request->attributes->get('_zkModule');
-        /*
-          $addMediaForm = $this->createForm(
-          new AddMediaType(), null , ['allowed_mime_types' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject($gallerySettings['obj_name']),
-          'isXmlHttpRequest' => $request->isXmlHttpRequest()]
 
-          );
-         */
-        //$gallerySettings['mediaTypes'] = $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes();
+
+        $gallerySettings = ['mode' => 'info', 'obj_reference' => null];
+
         $gallerySettings['settings'] = [];//$this->get('kaikmedia_gallery_module.settings_manager')->getSettingsArray();
 
-//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.settings.js");
-//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.mediaItem.js");
-//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
-//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.manager.css");
-//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.mediaItem.css");
 
         $content =  $this->renderEngine->render('KaikmediaGalleryModule:Plugin:manager.html.twig', [
-                    'gallerySettings' => $gallerySettings,
-                        //   'addMediaForm' => $addMediaForm->createView()
+                'gallerySettings' => $gallerySettings,
+                'config' => $config
         ]);
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
     }
@@ -289,15 +288,7 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
     public function getHookConfig($module, $areaid = null)
     {
         $default = [
-            'forum' => null,
-            // 0 - only admin is allowed to enable comments (create topic)
-            // 1 - object owner is allowed to enable comments (create topic)
-            // 2 - topic is created automatically with first comment
-            'topic_mode' => 2,
-            // none - nothing happens to topic when object is deleted
-            // lock - topic is locked
-            // delete - topic is removed
-            'delete_action' => 'none',
+            'features' => null,
         ];
         // module settings
         $settings = $this->variableApi->get($this->getOwner(), 'hooks', false);
@@ -307,20 +298,29 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
         if (null == $config) {
             return $default;
         } else {
-            $default['forum'] = array_key_exists('forum', $config) ? $config['forum'] : $default['forum'];
-            $default['topic_mode'] = array_key_exists('topic_mode', $config) ? $config['topic_mode'] : $default['topic_mode'];
-            $default['delete_action'] = array_key_exists('delete_action', $config) ? $config['delete_action'] : $default['delete_action'];
+            $default['features'] = array_key_exists('features', $config) ? $config['features'] : $default['features'];
         }
         // module provider area module area settings
         if (array_key_exists($module, $config['modules']) && array_key_exists('areas', $config['modules'][$module]) && array_key_exists(str_replace('.', '-', $areaid), $config['modules'][$module]['areas'])) {
             $subscribedModuleAreaSettings = $config['modules'][$module]['areas'][str_replace('.', '-', $areaid)];
             if (array_key_exists('settings', $subscribedModuleAreaSettings)) {
-                $default['forum'] = array_key_exists('forum', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['forum'] : $default['forum'];
-                $default['topic_mode'] = array_key_exists('topic_mode', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['topic_mode'] : $default['topic_mode'];
-                $default['delete_action'] = array_key_exists('delete_action', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['delete_action'] : $default['delete_action'];
+                $default['features'] = array_key_exists('features', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['features'] : $default['features'];
             }
         }
 
         return $default;
     }
 }
+//        $gallerySettings['obj_name'] = $this->request->attributes->get('_zkModule');
+
+//          $addMediaForm = $this->createForm(
+//          new AddMediaType(), null , ['allowed_mime_types' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject($gallerySettings['obj_name']),
+//          'isXmlHttpRequest' => $request->isXmlHttpRequest()]
+//
+//          );
+        //$gallerySettings['mediaTypes'] = $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes();
+//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.settings.js");
+//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.mediaItem.js");
+//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
+//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.manager.css");
+//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.mediaItem.css");

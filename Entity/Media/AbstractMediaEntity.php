@@ -35,14 +35,14 @@ use Kaikmedia\GalleryModule\Entity\Base\AbstractDocumentEntity;
 abstract class AbstractMediaEntity extends AbstractDocumentEntity
 {
     /**
-     * @ORM\Column(type="text", length=255)
+     * @ORM\Column(type="text", length=255, nullable=true)
      */
-    private $legal;
+    private $legal = null;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $publicdomain;
+    private $publicdomain = false;
 
     /**
      * @ORM\Column(type="array")
@@ -60,7 +60,7 @@ abstract class AbstractMediaEntity extends AbstractDocumentEntity
     public function __construct()
     {
         parent::__construct();
-        $this->publicdomian = 0;
+        $this->publicdomian = false;
         $this->legal = 'unknow';
         $this->relations = new ArrayCollection();
     }

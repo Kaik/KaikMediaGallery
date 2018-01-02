@@ -40,8 +40,12 @@ services:
             - "@templating"
             - "@zikula_extensions_module.api.variable"
             - "@zikula_permissions_module.api.permission"
+            - "@doctrine.orm.default_entity_manager"
         tags:
             - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.media" }
+        
+    kaikmedia_gallery_module.media_manager:
+        class: Kaikmedia\GalleryModule\Media\MediaManager   
           
 #    kaikmedia_gallery_module.hook_provider.gallery_ui_hooks_provider:
 #        class: Kaikmedia\GalleryModule\Hooks\GalleryProBundle
@@ -88,8 +92,7 @@ services:
 #        class: Kaikmedia\GalleryModule\Features\FeaturesManager
 #    kaikmedia_gallery_module.media_handlers_manager:
 #        class: Kaikmedia\GalleryModule\Media\MediaHandlersManager        
-#    kaikmedia_gallery_module.media_manager:
-#        class: Kaikmedia\GalleryModule\Media\MediaManager    
+  
 #   
 #  # form fields management     
 #    kaikmedia_gallery_module.form.type.settings:

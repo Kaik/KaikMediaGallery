@@ -11,10 +11,10 @@
 {% endblock %}
 {% block content %}
     <div id="km_gallery_user_index" class="col-md-12 clearfix">   
-        {% form_theme form 'bootstrap_3_layout.html.twig' %}
+{#        {% form_theme form 'bootstrap_3_layout.html.twig' %}#}
         <div class="row">
             <div class="list-group col-md-12">
-                <div class="list-group-item col-md-12 clearfix" style="background: #d9edf7;">
+{#                <div class="list-group-item col-md-12 clearfix" style="background: #d9edf7;">
                     {{ form_start(form) }}
                     {{ form_errors(form) }}                    
                     <div class="col-xs-2 col-md-2">
@@ -24,7 +24,7 @@
                         {{ form_widget(form.filter, {'attr': {'class': 'btn btn-sm btn-info'}}) }}
                     </div>
                     {{ form_end(form) }} 
-                </div>
+                </div>#}
                 <div class="list-group-item col-md-12 clearfix hidden-xs hidden-sm" style="background: #eee;">
                     <div class="col-md-3">{{ __('Name')}}</div>
                     <div class="col-md-1">{{ __('Ext')}}</div>
@@ -34,10 +34,10 @@
                     <div class="col-md-2">{{ __('Author')}}</div>
                     <div class="col-md-1 pull-right text-right">{{ __('Options')}}</div>
                 </div>
-                {%for file in media %}
+                {% for file in media %}
                     <div class="list-group-item col-md-12 clearfix">
                         <div class="col-md-3">
-                            <span class="hidden-md hidden-lg"> {{ __('Name')}}: </span><a href="{{ path('kaikmediagallerymodule_admin_mediastore', {'page': file.id}) }}">{{ file.name }}</a>
+                            <span class="hidden-md hidden-lg"> {{ __('Name')}}: </span><a href="{{ path('kaikmediagallerymodule_media_mediastore', {'page': file.id}) }}">{{ file.title }}</a>
                         </div>
                         <div class="col-md-1">
                             <p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Ext')}}: </span> {{ file.ext }}</p>
@@ -52,15 +52,15 @@
                             <p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Created')}}: </span> {{ file.createdAt|date('d/m/Y') }}</p>
                         </div>			
                         <div class="col-md-2">
-                            <p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Author')}}: </span> {{ file.author.uname }}</p>
+{#                            <p class="list-group-item-text"><span class="hidden-md hidden-lg"> {{ __('Author')}}: </span> {{ file.author.uname }}</p>#}
                         </div>			
                         <div class="col-md-1 text-right">
-                            <a href="{{ path('kaikmediagallerymodule_admin_modify', {'id': file.id}) }}"><i
+                            <a href="{{ path('kaikmediagallerymodule_media_modify', {'id': file.id}) }}"><i
                                     class="fa fa-pencil"></i> </a>
                             <a data-toggle="collapse" data-target="#file-details-{{ file.id }}"  href="#" > <i class="fa fa-angle-down fa-1x" title="{{  __('Read') }}"> </i></a> 	
                         </div>	
                         <div id="file-details-{{ file.id }}" class="row collapse">
-                            {% include "KaikmediaGalleryModule:Admin:file.details.html.twig" with {'file': file, 'settings': settings} %} 
+{#                            {% include "KaikmediaGalleryModule:Admin:file.details.html.twig" with {'file': file, 'settings': settings} %} #}
                         </div>			
                     </div>
                 {% else %}
@@ -73,13 +73,13 @@
                         <ul class="pagination pagination-sm">
                             {# `«` arrow #}
                             <li  {{ thisPage == 1 ? 'class="disabled"' }}><a
-                                    href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">«</a>
+                                    href="{{ path('kaikmediagallerymodule_media_mediastore', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">«</a>
                             </li> {# Render each page number #} {% for i in 1..maxPages %}
                             <li  {{ thisPage == i ? 'class="active"' }}><a
-                                    href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: i}) }}">{{
+                                    href="{{ path('kaikmediagallerymodule_media_mediastore', {page: i}) }}">{{
 						i }}</a></li> {% endfor %} {# `»` arrow #}
                             <li  {{ thisPage == maxPages ? 'class="disabled"' }}><a
-                                    href="{{ path('kaikmediagallerymodule_admin_mediastore', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">»</a>
+                                    href="{{ path('kaikmediagallerymodule_media_mediastore', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">»</a>
                             </li>
                         </ul>
                     {% endif %}

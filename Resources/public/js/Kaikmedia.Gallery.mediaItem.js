@@ -8,11 +8,11 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 /*
  * Media
- * 
+ *
  */
 (function ($) {
 
-// constructor
+    // constructor
     KaikMedia.Gallery.model.mediaItem = function () {
 
         var item = {
@@ -166,7 +166,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                 var width = typeof (x) !== 'undefined' && x !== null ? x : 0;
 
                 if (width === 100) {
-                    // setProgressType('progress-bar-success'); 
+                    // setProgressType('progress-bar-success');
                 }
 
                 var $progres_bar = $progress.find('.progress-bar');
@@ -237,11 +237,11 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                     view.updatePreview();
                     if (!item.id) {
                         create();
-                    }else{
+                    } else {
                         view.setProgressType('progress-bar-success');
-                        view.removeProgress();                        
+                        view.removeProgress();
                     }
-                    
+
                 };
             })(item.mediaExtra.fileData);
 
@@ -250,12 +250,12 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                 reader.readAsDataURL(item.mediaExtra.fileData);
 
             } else {
-                var success = function (result){                
+                var success = function (result) {
                     item.mediaExtra.fileData = result;
                     reader.readAsDataURL(item.mediaExtra.fileData);
                 };
-                var url = Routing.getBaseUrl().replace(/\w+\.php$/gi,'') + '/' + item.path + '/' + item.mediaExtra.path;
-                               
+                var url = Routing.getBaseUrl().replace(/\w+\.php$/gi, '') + '/' + item.path + '/' + item.mediaExtra.path;
+
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', url, true);
                 xhr.responseType = "blob";
@@ -265,7 +265,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                             success(xhr.response);
                     }
                 };
-                xhr.send(null);              
+                xhr.send(null);
             }
         }
         ;
@@ -298,7 +298,6 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
         }
 
         this.setDatafromUpload = function (f) {
-
             item.title = f.name;
             view.displayTitle();
             item.mediaExtra.fileData = f;
@@ -337,7 +336,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
             var data = getMediaItemDataForm();
             //var token = $newLi.find('input[name="upload_token"]').val();
             //console.log(token);
-            //data.append('images[_token]',token);  
+            //data.append('images[_token]',token);
 
             $.ajax({
                 type: "POST",
@@ -378,9 +377,8 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
                 //manager.view.displayError(result.status + ': ' + result.statusText);
             }).always(function () {
                 //console.log('always');
-                //manager.view.hideBusy();           
+                //manager.view.hideBusy();
             });
-
 
 
 
@@ -411,18 +409,15 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
         }
 
         function dataURItoBlob() {
-            // convert base64 to raw binary data held in a string
-            // doesn't handle URLEncoded DataURIs
+            // convert base64 to raw binary data held in a string             // doesn't handle URLEncoded DataURIs
 
             var byteString = window.atob(item.mediaExtra.file.split(',')[1]);
             // separate out the mime component
-
             //var ab = new ArrayBuffer(byteString.length);
             var ia = new Uint8Array(byteString.length);
             for (var i = 0; i < byteString.length; i++) {
                 ia[i] = byteString.charCodeAt(i);
             }
-
             // write the ArrayBuffer to a blob, and you're done
             var blob = new Blob([ia], {type: item.mediaExtra.mimeType});
 
@@ -434,9 +429,9 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
 }(jQuery));
 
 /*
- 
+
  KaikMedia.Gallery.Media = (function($) {
- 
+
  this.item = {
  id: false,
  title: '',
@@ -469,18 +464,18 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  deletedAt: false,
  deletedBy: false
  };
- 
+
  this.item.view = (function () {
- 
+
  //this is item as jquery dom element..
  var $item = $('<div/>').addClass('media-item col-md-2 ');
- 
+
  function addPreview() {
- 
+
  var $preview = $('<div/>')
  .addClass('media-preview')
  .appendTo($item);
- 
+
  if (item.isImage !== false) {
  $preview.append(imagePreview());
  } else if (item.mediaExtra.mediaType.icon !== false) {
@@ -488,7 +483,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  }
  }
  ;
- 
+
  function imagePreview() {
  return $('<img/>')
  .addClass('media-preview-file thumbnail img-responsive')
@@ -496,38 +491,38 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  .attr('title', escape(item.title));
  }
  ;
- 
+
  function imagePreviewUpdate() {
  $item.find('.media-preview-file').attr('src', item.mediaExtra.file);
  }
  ;
- 
+
  function iconPreview() {
  return $('<i/>')
  .addClass('media-preview-icon ' + item.mediaExtra.mediaType.icon + ' fa-5x')
  .attr('title', escape(item.title));
- 
+
  }
  ;
- 
+
  function addDetails() {
- 
+
  var details = $('<div/>')
  .addClass('media-preview-details')
  .appendTo($item);
- 
+
  $('<p/>')
  .addClass('name file-name')
  .html(item.title)
  .appendTo(details);
- 
+
  if (item.mediaExtra.error !== false) {
  $('<p/>')
  .addClass('error text-danger')
  .html(item.mediaExtra.error)
  .appendTo(details);
  }
- 
+
  $('<p/>')
  .addClass('size')
  .html(item.mediaExtra.size)
@@ -536,31 +531,31 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  .addClass('type')
  .html(item.mediaExtra.type)
  .appendTo(details);
- 
+
  }
  ;
- 
+
  function render() {
  addPreview();
  addDetails();
  return $item;
  }
  ;
- 
+
  return {
  render: render,
  imagePreviewUpdate: imagePreviewUpdate
  };
  })();
- 
+
  return {
  Item: function(data) {
- this.data = data;       
+ this.data = data;
  return this;
  }
  };
  }(jQuery));
- 
+
  /*
  namespace = (function() {
  function a() {};
@@ -575,7 +570,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  b: b
  }
  })();
- 
+
  KaikMedia.Gallery.mediaItem = {
  id: false,
  title: '',
@@ -608,54 +603,54 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  deletedAt: false,
  deletedBy: false
  };
- 
- 
+
+
  (function (item, $, undefined) {
- 
- 
+
+
  item.set = function ()
  {
  //KaikMedia.Gallery.settings.data = $settings;
  //console.log('Gallery:init:0: module set settings');
  //console.log(KaikMedia.Gallery.settings.data);
  };
- 
+
  item.get = function ()
  {
  return item;
  };
- 
+
  item.select = function (item) {
  item.view.select(item);
  };
- 
+
  item.UnSelect = function (item) {
- add remove item from selected 
- 
+ add remove item from selected
+
  item.view.UnSelect(item);
  };
- 
+
  item.GetDetails = function (item) {
- change item data acording to view need's like size in kb 
- 
+ change item data acording to view need's like size in kb
+
  item.view.itemDetails(item);
  };
- 
+
  item.isImage = function () {
  return item.type.match('image.*');
- };    
- 
+ };
+
  item.edit = function (item) {
- /* get ajax form 
- 
+ /* get ajax form
+
  var pars = {
  mode: manager.current.feature.name,
  original: item.id,
  relation: item.relation
  };
- 
+
  //manager.view.showBusy();
- 
+
  $.ajax({
  type: "GET",
  url: Routing.generate('kaikmediagallerymodule_manager_edit'),
@@ -666,13 +661,13 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  }).error(function (result) {
  manager.view.displayError(result.status + ': ' + result.statusText);
  }).always(function () {
- //manager.view.hideBusy();           
+ //manager.view.hideBusy();
  });
- 
+
  };
- 
+
  item.setDatafromUpload = function (f) {
- 
+
  item.title = f.name;
  item.mediaExtra.name = f.name;
  item.mediaExtra.size = f.size;
@@ -681,12 +676,12 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  item.mediaExtra.mediaType = f.mediaType;
  item.readFile(f);
  console.log(item);
- 
+
  };
- 
- 
+
+
  item.readFile = function (f) {
- 
+
  //based on actual media data;
  var reader = new FileReader();
  // Closure to capture the file information.
@@ -696,33 +691,33 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  item.view.imagePreviewUpdate();
  };
  })(f);
- 
- 
- 
+
+
+
  // Read in the image file as a data URL.
  reader.readAsDataURL(f);
  };
- 
+
  item.upload = function () {
- 
+
  //return item;
  };
- 
+
  /*
  * manager.view
- * 
- 
+ *
+
  item.view = (function () {
- 
+
  //this is item as jquery dom element..
  var $item = $('<div/>').addClass('media-item col-md-2 ');
- 
+
  function addPreview() {
- 
+
  var $preview = $('<div/>')
  .addClass('media-preview')
  .appendTo($item);
- 
+
  if (item.isImage !== false) {
  $preview.append(imagePreview());
  } else if (item.mediaExtra.mediaType.icon !== false) {
@@ -730,7 +725,7 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  }
  }
  ;
- 
+
  function imagePreview() {
  return $('<img/>')
  .addClass('media-preview-file thumbnail img-responsive')
@@ -738,38 +733,38 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  .attr('title', escape(item.title));
  }
  ;
- 
+
  function imagePreviewUpdate() {
  $item.find('.media-preview-file').attr('src', item.mediaExtra.file);
  }
  ;
- 
+
  function iconPreview() {
  return $('<i/>')
  .addClass('media-preview-icon ' + item.mediaExtra.mediaType.icon + ' fa-5x')
  .attr('title', escape(item.title));
- 
+
  }
  ;
- 
+
  function addDetails() {
- 
+
  var details = $('<div/>')
  .addClass('media-preview-details')
  .appendTo($item);
- 
+
  $('<p/>')
  .addClass('name file-name')
  .html(item.title)
  .appendTo(details);
- 
+
  if (item.mediaExtra.error !== false) {
  $('<p/>')
  .addClass('error text-danger')
  .html(item.mediaExtra.error)
  .appendTo(details);
  }
- 
+
  $('<p/>')
  .addClass('size')
  .html(item.mediaExtra.size)
@@ -778,36 +773,36 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  .addClass('type')
  .html(item.mediaExtra.type)
  .appendTo(details);
- 
+
  }
  ;
- 
+
  function render() {
  addPreview();
  addDetails();
  return $item;
  }
  ;
- 
+
  return {
  render: render,
  imagePreviewUpdate: imagePreviewUpdate
  };
  })();
- 
- 
- 
- 
- 
+
+
+
+
+
  function getItem() {
  return $item;
- } 
- 
- 
+ }
+
+
  function getItemDataFromElement($el) {
- 
+
  var item = {};
- 
+
  item.id = $el.attr('data-id');
  item.name = $el.attr('aria-label');
  item.description = $el.attr('data-description');
@@ -817,24 +812,24 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  item.author = $el.attr('data-author');
  item.size = $el.attr('data-size');
  item.legal = $el.attr('data-legal');
- 
+
  item.relation = $el.attr('data-relation');
  item.type = $el.attr('data-type');
- 
+
  item.src = $el.find('img').attr('src');
  //console.log(item, $el);
  return item;
- }            
- 
- 
+ }
+
+
  //Item template
  function itemTemplate( ) {
- 
+
  var $item = $("<div>", {class: "item" });
- 
+
  return $item
- }       
- 
+ }
+
  //Item
  function itemSelect(item) {
  $modal.find('.item-' + item.id).each(function () {
@@ -848,8 +843,8 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  $(this).find('a.media-unselect').addClass('hide');
  $(this).attr('data-relation', 'new');
  });
- }           
- 
+ }
+
  function displaySelectedFile(theFile, src) {
  // Render thumbnail.
  //console.log(theFile);
@@ -868,17 +863,17 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  .attr('title', escape(theFile.name))
  .appendTo(li);
  }
- 
+
  var details = $('<div/>')
  .addClass('media-preview-details')
  .appendTo(li);
- 
+
  $('<p/>')
  .addClass('name file-name')
  .html(theFile.name)
- .appendTo(details);                
- 
- if (theFile.error !== false) {                
+ .appendTo(details);
+
+ if (theFile.error !== false) {
  $('<p/>')
  .addClass('error text-danger')
  .html(theFile.error)
@@ -893,16 +888,16 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  .addClass('type')
  .html(theFile.type)
  .appendTo(details);
- 
+
  }
- 
+
  //
  function itemDetails(item) {
  var $item = $("<div>", {class: "item-details"});
  $item.html('<img class="img-responsive" src="' + item.src + '">');
  $details_box.find('.item-details-title-box').removeClass('hide');
  $details_box.find('.item-details-preview-box').html($item).removeClass('hide');
- 
+
  $details = $details_box.find('.item-details-box');
  $details.find('.name').html(item.name);
  $details.find('.size').html(item.size);
@@ -911,18 +906,18 @@ KaikMedia.Gallery.model = KaikMedia.Gallery.model || {};
  $details.find('.author').html(item.author);
  $details.removeClass('hide');
  //console.log($item);
- 
+
  $details_box.find('.item-details-info-box').addClass('hide');
  }
- 
+
  //
  function itemEdit(form) {
  $details_box.find('.item-details-edit-box').html(form).removeClass('hide');
  removeOverlay();
- //bind saveItem form action       	
- }            
- 
- 
- 
+ //bind saveItem form action
+ }
+
+
+
  })(KaikMedia.Gallery.mediaItem, jQuery);
  */

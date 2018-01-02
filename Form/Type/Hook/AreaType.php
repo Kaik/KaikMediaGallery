@@ -44,6 +44,8 @@ class AreaType extends AbstractHookType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
+
+        
         ;
     }
 

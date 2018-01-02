@@ -2,7 +2,7 @@
 
 
 /* Previews  */
-#kmgallery_plugin_selected_icon_preview {
+/*#kmgallery_plugin_selected_icon_preview {
 	
 	
 }
@@ -15,10 +15,10 @@
 #kmgallery_plugin_selected_additional_preview {
 	height:200px;
 	overflow:auto;
-}
+}*/
 
 
-/* Manager columns - layout */
+/* Manager columns - layout 
 
 
 #kmgallery_manager .modal-body {
@@ -28,7 +28,7 @@
 }
 
 
-/* Manager columns - layout */
+ Manager columns - layout 
 
 
 #kmgallery_manager_selected {
@@ -56,7 +56,7 @@
 }
 
 
-/* features - boxes */
+ features - boxes 
 #kmgallery_manager_media_box {
 	padding-top:10px;	
 }
@@ -71,7 +71,7 @@
 
 #kmgallery_manager_library_search {
 	margin:10px;
-}
+}*/
 
 
 
@@ -79,7 +79,11 @@
 /* item */
 .item {
 	height:170px;
-	overflow:hidden;	
+	overflow:hidden;
+        border-radius: 5px;
+        background-image: url("../images/blank.png");
+        background-size: cover;
+        background-repeat: no-repeat;
 }
 
 
@@ -88,12 +92,17 @@
 	height:150px;
 	overflow:hidden;
 	/*border: 5px solid #eee; */
+        /*border-radius: 5px;*/
 }
 
-.item .item-image img{
+.item img {
     display: block;
-    max-width: 300%;
-    /* height: auto; */	
+    /*max-width: 300%;*/
+    /* height: auto; */
+    height: 100%;
+    width: 100%; 
+    object-fit: cover;    
+
 }
 .item-details-preview-box {
 	overflow: hidden;

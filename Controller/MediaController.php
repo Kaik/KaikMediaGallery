@@ -61,9 +61,8 @@ class MediaController extends AbstractController
     public function getAction(Request $request, $_format, $urltitle)
     {
         // Permission check
-        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
-            throw new AccessDeniedException();
-        }
+        // Permission check
+        $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_OVERVIEW);
 
         //json
         if ($_format == 'json') {
@@ -107,36 +106,51 @@ class MediaController extends AbstractController
     public function createAction(Request $request, $type, $_format)
     {
         // Permission check
-        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
-            throw new AccessDeniedException();
-        }
+        $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_READ);
 
         $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
         $mediaItem = $mediaManager->getMediaItem();
-        $formClass = $mediaManager->getForm();
+//        $formClass = $mediaManager->getName();
 
-        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
+//        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
 
         $errors = false;
         if ($request->getMethod() == "POST") {
-            $form->handleRequest($request);
+//            $form->handleRequest($request);
             //  if ($form->isValid())
             //  {
+
+            if ($mediaItem->isUploadable()) {
+                $file = $request->files->get('file');
+                    // If a file was uploaded
+                if(!is_null($file)){
+                   // generate a random name for the file but keep the extension
+                   $filename = uniqid().".".$file->getClientOriginalExtension();
+                   $path = $this->get('kernel')->getProjectDir()."/web/uploads";
+                   $file->move($path, $filename); // move the file to a path
+//                   $status = array('status' => "success","fileUploaded" => true);
+                   $mediaExtra = [];
+                   $mediaExtra['fileName'] = $filename;
+                   $mediaExtra['ext'] = $file->getClientOriginalExtension();
+                   $mediaItem->setMediaExtra($mediaExtra);
+                }
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($mediaItem);
             $em->flush();
             //  } else {
-            //     $errors = (string) $form->getErrors(true, false);
+//                 $errors = (string) $form->getErrors(true, false);
             //  }
         }
-
 
         //json
         if ($_format == 'json') {
             $data = [
                 'media' => $mediaItem,
+                'media_id' => $mediaItem->getId(),
                 'errors' => $errors,
-                '_format' => $_format
+                '_format' => $_format,
+//                'form' => $form->isSubmitted()
             ];
 
             $response = new JsonResponse($data);
@@ -161,26 +175,33 @@ class MediaController extends AbstractController
         // Permission check
         $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_ADMIN);
 
-        $media = new Media();
+        $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create('image');
+        $mediaItem = $mediaManager->getMediaItem();
+        $formClass = $mediaManager->getName();
 
-        $form = $this->createForm(MediaType::class, $media);
+        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
 
-        $form->handleRequest($request);
-        $em = $this->getDoctrine()->getManager();
-        if ($form->isValid()) {
-            $em->persist($media);
-
-            $uploadableManager = $this->get('stof_doctrine_extensions.uploadable.manager');
-
-            $file = $form->has('file') ? $form->get('file')->getData() : null;
-            $uploadableManager->markEntityToUpload($media, $file);
-
-            $em->flush();
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('status', $this->__('Media added!'));
-            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
-        }
+        dump( $mediaItem );
+//        $media = new Media();
+//
+//        $form = $this->createForm(MediaType::class, $media);
+//
+//        $form->handleRequest($request);
+//        $em = $this->getDoctrine()->getManager();
+//        if ($form->isValid()) {
+//            $em->persist($media);
+//
+//            $uploadableManager = $this->get('stof_doctrine_extensions.uploadable.manager');
+//
+//            $file = $form->has('file') ? $form->get('file')->getData() : null;
+//            $uploadableManager->markEntityToUpload($media, $file);
+//
+//            $em->flush();
+//            $request->getSession()
+//                    ->getFlashBag()
+//                    ->add('status', $this->__('Media added!'));
+//            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
+//        }
 
         return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', [
                     'form' => $form->createView(),
@@ -210,12 +231,12 @@ class MediaController extends AbstractController
             // create a new customer
             $media = new Media();
         } else {
-            $media = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getOneBy([
+            $media = $this->getDoctrine()->getManager()->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')->getOneBy([
                 'id' => $id
             ]);
         }
 
-        $form = $this->createForm('media', $media);
+        $form = $this->createForm(MediaType::class, $media);
 
         $form->handleRequest($request);
 
@@ -231,7 +252,7 @@ class MediaController extends AbstractController
                     ->getFlashBag()
                     ->add('status', "Media saved!");
 
-            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_mediastore'));
+            return $this->redirect($this->generateUrl('kaikmediagallerymodule_media_mediastore'));
         }
 
         return $this->render('KaikmediaGalleryModule:Admin:modify.media.html.twig', [
@@ -285,7 +306,7 @@ class MediaController extends AbstractController
         }
 
         // Get parameters from whatever input we need.
-        $mediarelations = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaRelationsEntity')->getAll($a);
+        $mediarelations = $this->getDoctrine()->getManager()->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')->getAll($a);
 
         return $this->render('KaikmediaGalleryModule:Admin:mediarelations.html.twig', [
                     'mediarelations' => $mediarelations,
@@ -298,7 +319,9 @@ class MediaController extends AbstractController
 
     /**
      * @Route("/mediastore/{page}", requirements={"page" = "\d*"}, defaults={"page" = 1})
-     * the main administration function
+     *
+     * @Theme("admin")
+     *
      *
      * @return RedirectResponse
      */
@@ -313,26 +336,26 @@ class MediaController extends AbstractController
         $a['limit'] = $request->query->get('limit', 15);
         $a['name'] = $request->query->get('name', false);
 
-        $form = $this->createFormBuilder($a)
-                ->add('name', 'text', ['required' => false])
-                ->add('filter', 'submit', ['label' => 'Filter'])
-                ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $a['limit'] = $data['limit'] ? $data['limit'] : $a['limit'];
-            $a['name'] = $data['name'] ? $data['name'] : $a['name'];
-        }
+//        $form = $this->createFormBuilder($a)
+//                ->add('name', 'text', ['required' => false])
+//                ->add('filter', 'submit', ['label' => 'Filter'])
+//                ->getForm();
+//
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $data = $form->getData();
+//            $a['limit'] = $data['limit'] ? $data['limit'] : $a['limit'];
+//            $a['name'] = $data['name'] ? $data['name'] : $a['name'];
+//        }
 
         // Get parameters from whatever input we need.
-        $media = $this->get('doctrine.entitymanager')->getRepository('Kaikmedia\GalleryModule\Entity\MediaEntity')->getAll($a);
+        $media = $this->getDoctrine()->getManager()->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')->getAll($a);
 
         return $this->render('KaikmediaGalleryModule:Admin:mediastore.html.twig', [
                     'media' => $media,
                     'settings' => $this->getVars(),
-                    'form' => $form->createView(),
+//                    'form' => $form->createView(),
                     'thisPage' => $a['page'],
                     'maxPages' => ceil($media->count() / $a['limit'])
         ]);

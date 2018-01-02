@@ -25,8 +25,7 @@ class RelationsRepository extends EntityRepository
      */
     public function build()
     {
-        $em = \ServiceUtil::getService('doctrine.entitymanager');
-        $qb = new RelationsQueryBuilder($em);
+        $qb = new RelationsQueryBuilder($this->_em);
         return $qb;
     }
 

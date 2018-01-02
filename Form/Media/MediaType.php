@@ -13,25 +13,24 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-
-use Kaikmedia\GalleryModule\Form\DataTransformer\JsonToArrayTransformer;
+//use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class MediaType extends AbstractType
 {
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
-    private $type;
-
-    public function __construct($type = 'item') {
-        $this->type = $type;
-    }
-
-    public function setTranslator(TranslatorInterface $translator) {
-        $this->translator = $translator;
-    }
+//    protected $translator;
+//    private $type;
+//
+//    public function __construct($type = 'item') {
+//        $this->type = $type;
+//    }
+//
+//    public function setTranslator(TranslatorInterface $translator) {
+//        $this->translator = $translator;
+//    }
 
     /**
      * {@inheritdoc}
@@ -48,18 +47,18 @@ class MediaType extends AbstractType
                 ->add('legal', TextareaType::class, [
                     'required' => false
                 ])
-                ->add('mediaExtra', TextareaType::class, [
-                    'required' => false
-                ])//->addModelTransformer(new JsonToArrayTransformer())
+//                ->add('mediaExtra', TextareaType::class, [
+//                    'required' => false
+//                ])//->addModelTransformer(new JsonToArrayTransformer())
                 ->add('publicdomain', CheckboxType::class, [
                     'required' => false
         ]);
 
-        $builder->add('file');
+//        $builder->add('file', FileType::class);
 
-        if ($options['isXmlHttpRequest'] == false) {
-            $builder->add('save', SubmitType::class);
-        }
+//        if ($options['isXmlHttpRequest'] == false) {
+//            $builder->add('save', SubmitType::class);
+//        }
     }
 
     /**
@@ -69,15 +68,16 @@ class MediaType extends AbstractType
     {
         $resolver->setDefaults([
             'isXmlHttpRequest' => false,
+            'csrf_protection' => false,
 //            'data_class' => 'Kaikmedia\\GalleryModule\\Entity\\Media\\' . ucfirst($this->type) . 'Entity'
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName() {
-        return 'media'; //media_' . strtolower($this->type);
-    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function getName() {
+//        return 'media'; //media_' . strtolower($this->type);
+//    }
 
 }

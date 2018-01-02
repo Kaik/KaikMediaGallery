@@ -42,7 +42,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
     private $urltitle = '';
 
     /**
-     * @ORM\Column(type="text", length=255)
+     * @ORM\Column(type="text", length=255, nullable=true)
      */
     private $description = '';
 
@@ -85,7 +85,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
 
     /**
      * The author uid
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="author", referencedColumnName="uid")
      */

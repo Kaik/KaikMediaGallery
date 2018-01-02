@@ -24,9 +24,7 @@ class MediaRepository extends EntityRepository
      */
     public function build()
     {
-//        $em = \ServiceUtil::getService('doctrine.entitymanager');
-//        $qb = new MediaQueryBuilder($em);
-        return $qb;
+        return new MediaQueryBuilder($this->_em);
     }
 
     /**

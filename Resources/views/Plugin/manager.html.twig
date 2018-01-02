@@ -1,39 +1,48 @@
 {# #}
 <div id="kmgallery_manager_container">
+
+{% for feature in config.features %}
+    <div id="{{ feature.name }}_{{ loop.index }}" class="feature col-sm-2">
+        <span class="feature-name">{{ feature.name }}</span>
+        <div class="item" >
+        <div class="progress hide" style="height: 4px; margin:0px; padding:0px;">
+          <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="error-message alert alert-danger hide" role="alert">{{ __('Media upload failed!. Please try again.') }}</div>
+        {% if feature.media is defined %}
+
+        {% else %}
+            <img class="hide" src="" />
+        {% endif %}
+
+        </div>
+        <div class="btn-group btn-group-sm btn-group-justified" role="group" aria-label="...">
+        {% if feature.media is defined %}
+
+        {% else %}
+            <a href="#"
+               class="upload-action btn"
+               data-handler="image"
+               data-containerid="{{ feature.name }}_{{ loop.index }}"
+               data-feature="{{ feature.name }}"
+               data-allowedMimeTypes="{{ feature.mimeTypes }}"
+               data-singleFileMaxSize="{{ feature.singleFileMaxSize }}"
+               > <i class="fa fa-plus" title="{{ __('Select media from your computer') }}"> </i>  </a>
+        {% endif %}
+
+        </div>
+    </div>
+{% endfor %}
+
+    
 </div>
 <!-- /#kmgallery_plugin_container -->
 
-{% include "KaikmediaGalleryModule:Manager:manager.html.twig" %} 
 
-
-{#{% set obj_settings = attribute(settings, obj_name) %}#}
-{#{% set obj_features = attribute(obj_settings, 'features') %}#}
-{#                var config = [];
-                config.$container = $('#kmgallery_plugin_container');
-                config.mediaTypes = {{ mediaTypes|json_encode|raw }};
-                config.features = {{ obj_features.toArray()|json_encode|raw }};
-                config.addmedia = {{ obj_features.first().settings.toArray()|json_encode|raw }};
-                config.obj = [];
-                config.obj.name = 'KaikmediaPagesModule';
-	    	config.obj.reference = 'new';
-	    	config.obj.settings = KaikMedia.Gallery.settings.get(config.obj.name);
-	    	//init manager#}
-
-
+{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/gallery.plugin.css')) }}
 {{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.settings.js')) }}
-{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.Manager.js')) }}
+{#{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.Manager.js')) }}#}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.Plugin.js')) }}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/file-dialog.min.js')) }}
 
-
-<script>
-    window.onload = function(){
-        console.log(this);
-        (function ($) {
-            $(function () {
-                $.when( KaikMedia.Gallery.settings.set({{ gallerySettings|json_encode|raw }}) ).then(KaikMedia.Gallery.Manager.init() );
-            });
-        })(jQuery); 
-    };
-</script>
-
-
-{#{{ dump() }}#}
+{#            <img class="img-responsive" src="/web/uploads/logo.jpg" />#}

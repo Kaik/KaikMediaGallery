@@ -109,7 +109,8 @@ class SettingsManager
 
     public function getHooks()
     {
-        return ['providers' => $this->getProviders(), 'subscribers' => $this->getSubscribers()];
+        //$this->getSubscribers()
+        return ['providers' => $this->getProviders(), 'subscribers' => []];
     }
 
     public function getProviders()

@@ -11,11 +11,12 @@
 
 namespace Kaikmedia\GalleryModule\Form\Type\Hook;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Kaikmedia\GalleryModule\Form\Type\Hook\UploadSettingsType;
+//use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
-//use Zikula\DizkusModule\Form\Type\Forum\ForumSelectType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
  * MediaProviderBindingType
@@ -43,13 +44,24 @@ class MediaProviderBindingType extends AbstractHookType
 //        ])
 //        ->add('forum', ForumSelectType::class, [])
 
+            ->add('features', CollectionType::class, [
+                'entry_type' => UploadSettingsType::class,
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'prototype'    => true,
+                'required'     => false,
+//                'attr'         => [
+//                    'class' => 'my-selector',
+//                ],
+//                'by_reference' => false,
+            ])
         ;
     }
 
-    public function getName()
-    {
-        return 'media_provider_binding_type';
-    }
+//    public function getName()
+//    {
+//        return 'media_provider_binding_type';
+//    }
 
     /**
      * {@inheritdoc}
@@ -68,6 +80,9 @@ class MediaProviderBindingType extends AbstractHookType
             'prototype_name' => '__name__',
             'type' => 'text',
             'options' => [],
+//            'attr' => [
+//                'class' => 'my-selector',
+//            ],
             'delete_empty' => false,
         ]);
         $resolver->setNormalizer('options', $optionsNormalizer);

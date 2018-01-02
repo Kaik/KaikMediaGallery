@@ -61,7 +61,7 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity
 
     public function getPath()
     {
-        return '/kmgallery/media';
+        return '/web/uploads';
     }
 
     /**
@@ -235,7 +235,7 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity
 
     public function getUploadRootDir()
     {
-        return '/kmgallery/media';
+        return '/web/uploads';
     }
 
     private function addMediaExtra()
