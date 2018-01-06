@@ -1,0 +1,47 @@
+		<span class="col-md-12">
+			<h4><small>{{ __('Original name') }}:</small>
+			<span class="name"> {% if original.name is defined %} {{ original.name }} {% endif %} </span> 			
+			</h4>
+		</span>			
+		<div class="col-md-12">
+			<span class="col-md-12"><small><strong>{{ __('size') }}:</strong> <span class="size">{% if original.size is defined %} {{ original.size }} {% endif %}</span></small></span>
+			<span class="col-md-12"><small><strong>{{ __('mime type') }}:</strong> <span class="mimetype">{% if original.size is defined %} {{ original.mimetype }} {% endif %}</span></small></span>
+			<span class="col-md-12"><small><strong>{{ __('extension') }}:</strong>  <span class="ext">{% if original.size is defined %} {{ original.ext }} {% endif %}</span></small></span>
+			<span class="col-md-12"><small><strong>{{ __('author') }}:</strong> <span class="author">{% if original.size is defined %} {{ original.author }} {% endif %}</span></small></span>	
+		</div>
+	
+		
+{#first load and ajax load if needed
+{% if relation is defined or original is defined %}
+	{% if original is defined %}
+	
+		
+		{% if relation is defined and relation == false %}
+		<div class="kmgallery_media_edit row">
+			<div class="col-md-12"><h4><i class="fa fa-pencil"> </i> {{ __('Modify original file') }}</h4></div>	   		
+			{% include "KaikmediaGalleryModule:Media:item.modify.html.twig" with {'settings': settings, 'original':original}  %}  		
+		</div>				
+		{% endif %}	
+		
+		
+	{% endif %}
+	
+		{% if relation is defined and relation != false %}
+		<div class="kmgallery_media_edit row">	
+			<div class="col-md-12"><h4><i class="fa fa-pencil"> </i> {{ __('Modify feature details') }}</h4></div>					
+				{% if relation.type == 'icon' %}
+					{% include "KaikmediaGalleryModule:Features:icon.feature.modify.html.twig" with {'settings': settings, 'original':original}  %}  						
+				{% elseif relation.type == 'featured' %}
+					{% include "KaikmediaGalleryModule:Features:featured.feature.modify.html.twig" with {'settings': settings, 'original':original}  %}  										
+				{% elseif relation.type == 'additional' %}				
+					{% include "KaikmediaGalleryModule:Features:additional.feature.modify.html.twig" with {'settings': settings, 'original':original}  %}  						
+				{% elseif relation.type == 'insert' %}				
+					{% include "KaikmediaGalleryModule:Features:insert.feature.modify.html.twig" with {'settings': settings, 'original':original}  %}  						
+				{% endif %}			
+		</div>			
+		{% endif %}
+
+{% else %}
+
+{% endif %}
+#}

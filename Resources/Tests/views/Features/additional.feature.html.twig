@@ -1,0 +1,29 @@
+<ul class="row list-unstyled">
+{% if additional is defined %}    
+	 {% for additional_item in additional %}                  			
+		{% if additional_item is not empty and additional_item.original is defined %}
+   		<li class="media-item feature-{{ additional_item.type }} col-md-12"
+		 role="checkbox"
+		 aria-checked="true"
+		 aria-label="{{ additional_item.original.name }}"		 		 		 
+		 data-id="{{ additional_item.original.id }}" 
+		 data-description="{{ additional_item.original.description }}" 
+		 data-public="{{ additional_item.original.publicdomain }}" 
+		 data-author="{{ additional_item.original.author.uname }}"
+		 data-ext="{{ additional_item.original.ext }}" 
+		 data-mimetype="{{ additional_item.original.mimeType }}" 
+		 data-size="{{ additional_item.original.size }}"		 
+		 data-legal="{{ additional_item.original.legal }}"		 
+		 data-relation="{{ additional_item.id }}"
+		 data-type="{{ additional_item.type }}" >     		
+		
+		{% include "KaikmediaGalleryModule:Media:item.html.twig" with {'settings': settings, 'original':additional_item.original, 'relation': additional_item, 'css': '' }  %}         
+   		</li>
+		{% endif %}
+	 {% endfor %}
+{% else %}
+    <li> <p class="alert alert-info text-center"> {{ __('No additional media selected') }} </li></p>
+{% endif %}
+</ul>
+
+

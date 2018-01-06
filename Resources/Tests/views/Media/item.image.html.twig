@@ -1,0 +1,8 @@
+<div class="item-image" >
+	{% if original.path  %}        
+	            <img class="img-responsive" src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ original.path ~ '/' ~ original.mediaExtra.path }}" />
+	        {% else %}
+	            <span class="fa fa-exclamation-triangle fa-2x"> </span>
+	            {{ __('File path is empty!') }}           
+	{% endif %}
+</div>         		

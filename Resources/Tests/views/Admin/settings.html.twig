@@ -1,0 +1,135 @@
+{% extends 'KaikmediaGalleryModule:Base:admin.html.twig' %}
+{% block header %}
+    {% set settings={} %}
+    {{ parent() }}
+{% endblock %} 
+{% block title %}
+    {% set title_icon="<i class='fa fa-wrench'></i>" %}
+    {% set title=__('Gallery settings and features') %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'KaikmediaGalleryModule:Form:radio.html.twig',
+    'KaikmediaGalleryModule:Form:hooks.widget.html.twig',
+    'KaikmediaGalleryModule:Form:jquery.collection.html.twig'
+] %}
+<div id="km_gallery_admin_settings">
+    {{ showflashes() }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{{ __('General settings') }}</a></li>
+        <li role="presentation"><a href="#hooks" aria-controls="hooks" role="tab" data-toggle="tab">{{ __('Hooks settings') }}</a></li>
+    </ul>
+    <div class="tab-content">
+        <!-- General -->
+        <div role="tabpanel" class="tab-pane active" id="general">
+            <div class="col-md-12">
+                <p class="col-md-12 help-block alert ">
+                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                </p>
+            </div>
+            <fieldset>
+                <legend>{{ __("General settings")}}</legend>
+                <div class="form-group">
+                    {{ form_label(form.gallery_enabled, __('Forums are accessible to visitors') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.gallery_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                        {{ form_errors(form.gallery_enabled) }}
+                        <p class="col-md-12 help-block alert alert-info pull-right">
+                            {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                        </p>
+                    </div>
+                </div>
+{#                <div class="form-group">
+                    {{ form_label(form.gallery_disabled_info, __('Message displayed if forums are disabled'), { 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.gallery_disabled_info, { 'attr': {'class': ''} }) }}
+                        {{ form_errors(form.gallery_disabled_info) }}
+                    </div>
+                </div>
+            </fieldset>#}
+        </div>
+        <!-- Hook -->
+        <div role="tabpanel" class="tab-pane" id="hooks">
+            <div class="col-md-12">
+                <p class="col-md-12 help-block alert ">
+                    {{ __("This is Dizkus hooks status it shows you current Dizkus hooks settings.")}}
+                </p>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    {{ form_widget(form.hooks, { 'attr': {'class': ''} }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-6 col-md-8">
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+            {{ form_widget(form.restore, {'attr': {'class': 'btn btn-danger'}}) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+{#{{ adminFooter() }}  #}
+
+
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+    {{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/jquery.collection.js')) }}
+
+    <script>
+        window.onload = function() {
+            (function($) {
+                    $(function(){
+{#                        $('[data-collection]').each(function() {
+                                console.log($(this).data('collection'));
+                                $('.' + $(this).data('collection')).collection();
+                                // Do somting with element
+                        });#}
+                        
+                        
+{#                        console.log('test');#}
+                        $('.my-selector').collection();
+                    });
+            })(jQuery);
+        };
+    </script>
+    
+{#    <script>
+    (function($) {
+            $(function(){
+                KaikMedia.Gallery.SettingsManager.init();  
+            });
+    })(jQuery);
+
+
+        <script>
+            window.onload = function() {
+                (function($) {
+                        $(function(){
+                            console.log('test');
+                            $('.{{collection_id}}').collection({
+                                min: 0,
+                                max: 5,
+                                up: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span> Move collection up</a>',
+                                down: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span> Move collection down</a>',
+                                add: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add collection</a>',
+                                remove: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Remove collection</a>'
+                            });
+                        });
+                })(jQuery);
+            };
+        </script>
+
+
+    </script>#}
+    
+{#    {{dump()}}#}
+{% endblock %}
+
+{#    {{ include('KaikmediaGalleryModule:Admin:settings.form.html.twig') }}#}

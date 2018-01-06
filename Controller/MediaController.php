@@ -110,37 +110,28 @@ class MediaController extends AbstractController
 
         $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
         $mediaItem = $mediaManager->getMediaItem();
-//        $formClass = $mediaManager->getName();
-
-//        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
 
         $errors = false;
         if ($request->getMethod() == "POST") {
-//            $form->handleRequest($request);
-            //  if ($form->isValid())
-            //  {
-
             if ($mediaItem->isUploadable()) {
                 $file = $request->files->get('file');
-                    // If a file was uploaded
+                // If a file was uploaded
                 if(!is_null($file)){
                    // generate a random name for the file but keep the extension
                    $filename = uniqid().".".$file->getClientOriginalExtension();
                    $path = $this->get('kernel')->getProjectDir()."/web/uploads";
-                   $file->move($path, $filename); // move the file to a path
-//                   $status = array('status' => "success","fileUploaded" => true);
+                   $file->move($path, $filename);
                    $mediaExtra = [];
                    $mediaExtra['fileName'] = $filename;
                    $mediaExtra['ext'] = $file->getClientOriginalExtension();
+                   $mediaItem->setTitle($file->getClientOriginalName());
                    $mediaItem->setMediaExtra($mediaExtra);
                 }
             }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($mediaItem);
             $em->flush();
-            //  } else {
-//                 $errors = (string) $form->getErrors(true, false);
-            //  }
         }
 
         //json
@@ -150,7 +141,6 @@ class MediaController extends AbstractController
                 'media_id' => $mediaItem->getId(),
                 'errors' => $errors,
                 '_format' => $_format,
-//                'form' => $form->isSubmitted()
             ];
 
             $response = new JsonResponse($data);
@@ -159,6 +149,190 @@ class MediaController extends AbstractController
         }
 
         return $this->render('KaikmediaGalleryModule:Media:create.html.twig', [
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/remove/{_format}",
+     *     defaults={"_format": "json"},
+     *     requirements={
+     *         "_format": "json"
+     *     },
+     *      options={"expose"=true}
+     * )
+     *
+     * Get media information.
+     *
+     * @param string $urltitle
+     *
+     * Parameters passed via GET:
+     * --------------------------------------------------
+     * string  urltitle mediaurl title.
+     * string _format response format.
+     *
+     * @return RedirectResponse|string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
+     */
+    public function removeAction(Request $request, $_format)
+    {
+        // Permission check
+        $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_READ);
+
+
+        $errors = false;
+        if ($request->getMethod() == "POST") {
+
+            $mediaRelation = $request->request->get('media_relation', null);
+            $mediaItem = $request->request->get('media_item', null);
+            $em = $this->getDoctrine()->getManager();
+
+            if (is_numeric($mediaRelation)) {
+                $mediaRelationObject = $em
+                    ->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')
+                        ->find($mediaRelation);
+                if ($mediaRelationObject) {
+                    $em->remove($mediaRelationObject);
+                    $em->flush();
+                }
+
+
+            }
+            if (is_numeric($mediaItem)) {
+                $mediaObject = $em->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')->find($mediaItem);
+                if ($mediaObject) {
+                    $mediaExtra = $mediaObject->getMediaExtra();
+                    if (array_key_exists('fileName', $mediaExtra)){
+                        $filePathToRemove = $this->get('kernel')->getProjectDir()."/web/uploads/". $mediaExtra['fileName'];
+                            if (file_exists($filePathToRemove)) {
+                                unlink($filePathToRemove);
+                            }
+                    }
+                    $em->remove($mediaObject);
+                    $em->flush();
+                }
+            }
+        }
+
+        //json
+        if ($_format == 'json') {
+            $data = [
+                'errors' => $errors,
+                '_format' => $_format,
+                'media_relation' => $mediaRelation,
+                'media_item' => $mediaItem
+            ];
+
+            $response = new JsonResponse($data);
+
+            return $response;
+        }
+
+        return $this->render('KaikmediaGalleryModule:Media:remove.html.twig', [
+        ]);
+    }
+
+    /**
+     * @Route(
+     *     "/replace/{type}/{_format}",
+     *     defaults={"_format": "json", "type": "unknow"},
+     *     requirements={
+     *         "_format": "json"
+     *     },
+     *      options={"expose"=true}
+     * )
+     *
+     * Get media information.
+     *
+     * @param string $urltitle
+     *
+     * Parameters passed via GET:
+     * --------------------------------------------------
+     * string  urltitle mediaurl title.
+     * string _format response format.
+     *
+     * @return RedirectResponse|string The rendered template output.
+     *
+     * @throws AccessDeniedException on failed permission check
+     */
+    public function replaceAction(Request $request, $type, $_format)
+    {
+        // Permission check
+        $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_READ);
+
+        $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
+        $mediaItem = $mediaManager->getMediaItem();
+
+        $errors = false;
+        if ($request->getMethod() == "POST") {
+            // remove old first
+            $removeMediaRelation = $request->request->get('media_relation', null);
+            $removeMediaItem = $request->request->get('media_item', null);
+            $em = $this->getDoctrine()->getManager();
+
+            if (is_numeric($removeMediaRelation)) {
+                $mediaRelationObject = $em
+                    ->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')
+                        ->find($removeMediaRelation);
+                if ($mediaRelationObject) {
+                    $em->remove($mediaRelationObject);
+                    $em->flush();
+                }
+
+
+            }
+            if (is_numeric($removeMediaItem)) {
+                $mediaObject = $em->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')->find($removeMediaItem);
+                if ($mediaObject) {
+                    $removeMediaExtra = $mediaObject->getMediaExtra();
+                    if (array_key_exists('fileName', $removeMediaExtra)){
+                        $filePathToRemove = $this->get('kernel')->getProjectDir()."/web/uploads/". $removeMediaExtra['fileName'];
+                            if (file_exists($filePathToRemove)) {
+                                unlink($filePathToRemove);
+                            }
+                    }
+                    $em->remove($mediaObject);
+                    $em->flush();
+                }
+            }
+            // add new
+            if ($mediaItem->isUploadable()) {
+                $file = $request->files->get('file');
+                // If a file was uploaded
+                if(!is_null($file)){
+                   // generate a random name for the file but keep the extension
+                   $filename = uniqid().".".$file->getClientOriginalExtension();
+                   $path = $this->get('kernel')->getProjectDir()."/web/uploads";
+                   $file->move($path, $filename);
+                   $mediaExtra = [];
+                   $mediaExtra['fileName'] = $filename;
+                   $mediaExtra['ext'] = $file->getClientOriginalExtension();
+                   $mediaItem->setTitle($file->getClientOriginalName());
+                   $mediaItem->setMediaExtra($mediaExtra);
+                }
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($mediaItem);
+            $em->flush();
+        }
+
+        //json
+        if ($_format == 'json') {
+            $data = [
+                'media' => $mediaItem,
+                'media_id' => $mediaItem->getId(),
+                'errors' => $errors,
+                '_format' => $_format,
+            ];
+
+            $response = new JsonResponse($data);
+
+            return $response;
+        }
+
+        return $this->render('KaikmediaGalleryModule:Media:replace.html.twig', [
         ]);
     }
 

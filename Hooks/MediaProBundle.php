@@ -13,6 +13,8 @@
 namespace Kaikmedia\GalleryModule\Hooks;
 
 use Doctrine\ORM\EntityManager;
+use Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity;
+use Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -166,14 +168,19 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
     public function view(DisplayHook $hook)
     {
         // first check if the user is allowed to do any comments for this module/objectid
-//        if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
-//            return;
-//        }
+        if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
+            return;
+        }
 
-        $media = $this->entityManager->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')->findAll();
-//        dump('test');
-//        $content = '<p> test</p>';
-        $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $media));
+        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+        $content = [];
+        if (array_key_exists('features', $config) && is_array($config['features'])) {
+            foreach ($config['features'] as $feature) {
+                $feature['media'] = $media = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
+                $content[] = $feature;
+            }
+        }
+        $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
     }
 
     /**
@@ -186,23 +193,23 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function edit(DisplayHook $hook)
     {
-//        // Permission check
-//        if (!$this->get('kaikmedia_gallery_module.access_manager')->hasPermission()) {
-//            throw new AccessDeniedException();
-//        }
+        // first check if the user is allowed to do any comments for this module/objectid
+        if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
+            return;
+        }
+
+        dump($this->request->request->get('kmgallery_features'));
+
+
         $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
-        dump($config);
-
-
-
-
-        $gallerySettings = ['mode' => 'info', 'obj_reference' => null];
-
-        $gallerySettings['settings'] = [];//$this->get('kaikmedia_gallery_module.settings_manager')->getSettingsArray();
-
+        if (array_key_exists('features', $config) && is_array($config['features'])) {
+            foreach ($config['features'] as $key => $feature) {
+                $config['features'][$key]['media'] = $media = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
+                
+            }
+        }
 
         $content =  $this->renderEngine->render('KaikmediaGalleryModule:Plugin:manager.html.twig', [
-                'gallerySettings' => $gallerySettings,
                 'config' => $config
         ]);
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
@@ -237,6 +244,124 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function processEdit(ProcessHook $hook)
     {
+        // post data new settings
+        $relations = $this->request->request->get('kmgallery_features');
+
+        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+        //1. iterate over features
+        if (array_key_exists('features', $config) && is_array($config['features'])) {
+            foreach ($config['features'] as $key => $feature) {
+                $config['features'][$key]['media'] = $media = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
+                // null or relation
+                $toStoreRelation = new HooksRelationsEntity();
+                $mediaItem = null;
+                if ($relations[$key]['media'] !== '') {
+                    // get media item if null continue maybe with error
+                    $mediaItem = $this->entityManager->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')->findOneBy(['id' => $relations[$key]['media']]);
+                }
+
+                // case 1 ralation is null and no new media data is recived - nothing to do
+                if ($config['features'][$key]['media'] === null && $relations[$key]['media'] === '') {
+//                    dump('nothing to do');
+                    continue;
+                }
+                // case 2 relation is null and new media data recived - create relation
+                if ($config['features'][$key]['media'] === null && $relations[$key]['media'] !== '') {
+//                    dump('create relation');
+                    if (!$mediaItem) {
+                        continue;
+                    }
+
+                    $toStoreRelation->setFeature($feature['name']);
+                    $toStoreRelation->setMedia($mediaItem);
+                    $toStoreRelation->setHookedModule($hook->getCaller());
+                    $toStoreRelation->setHookedAreaId($hook->getAreaId());
+                    $toStoreRelation->setHookedObjectId($hook->getId());
+                    $toStoreRelation->setRelationExtra($relations[$key]);
+
+                    $this->entityManager->persist($toStoreRelation);
+                    $this->entityManager->flush();
+                    //done
+                    continue;
+                }
+
+                // case 3 relation is not null and media is equal to relation media - update relation data (title etc)
+                if ($config['features'][$key]['media'] instanceof HooksRelationsEntity
+                && $relations[$key]['media'] !== ''
+                    && $config['features'][$key]['media']->getMedia() instanceof AbstractMediaEntity
+                    && $config['features'][$key]['media']->getMedia()->getId() == $relations[$key]['media']
+                ) {
+                    $config['features'][$key]['media']->setRelationExtra($relations[$key]);
+                    $this->entityManager->persist($config['features'][$key]['media']);
+                    $this->entityManager->flush();
+                    //done
+                    continue;
+                }
+
+                // case 4 relation is not null and media is not equal to relation media - remove old relation create new relation (title etc)
+                if ($config['features'][$key]['media'] instanceof HooksRelationsEntity
+                && $relations[$key]['media'] !== ''
+                    && $config['features'][$key]['media']->getMedia() instanceof AbstractMediaEntity
+                    && $config['features'][$key]['media']->getMedia()->getId() != $relations[$key]['media']
+                ) {
+                    // new media does not exists
+                    if (!$mediaItem) {
+                        continue;
+                    }
+                    $mediaToRemove = $config['features'][$key]['media']->getMedia();
+                    $mediaExtra = $mediaToRemove->getMediaExtra();
+                    if (array_key_exists('fileName', $mediaExtra)){
+                        $filePathToRemove = $this->kernel->getProjectDir()."/web/uploads/". $mediaExtra['fileName'];
+                            if (file_exists($filePathToRemove)) {
+                                dump($filePathToRemove);
+                                unlink($filePathToRemove);
+                            }
+                    }
+
+                    //remove old relation and media
+                    $this->entityManager->remove($config['features'][$key]['media']->getMedia());
+                    $this->entityManager->remove($config['features'][$key]['media']);
+                    $this->entityManager->flush();
+
+                    $toStoreRelation->setFeature($feature['name']);
+                    $toStoreRelation->setMedia($mediaItem);
+                    $toStoreRelation->setHookedModule($hook->getCaller());
+                    $toStoreRelation->setHookedAreaId($hook->getAreaId());
+                    $toStoreRelation->setHookedObjectId($hook->getId());
+                    $toStoreRelation->setRelationExtra($relations[$key]);
+
+                    $this->entityManager->persist($toStoreRelation);
+                    $this->entityManager->flush();
+                    //done
+                    continue;
+                }
+                // case 5 relation is not null and (media is empty)? - remove remove related media
+                if ($config['features'][$key]['media'] instanceof HooksRelationsEntity
+                && $relations[$key]['media'] == ''
+                && $config['features'][$key]['media']->getMedia() instanceof AbstractMediaEntity
+                ) {
+                    $mediaToRemove = $config['features'][$key]['media']->getMedia();
+                    $mediaExtra = $mediaToRemove->getMediaExtra();
+                    if (array_key_exists('fileName', $mediaExtra)){
+                        $filePathToRemove = $this->kernel->getProjectDir()."/web/uploads/". $mediaExtra['fileName'];
+                            if (file_exists($filePathToRemove)) {
+                                dump($filePathToRemove);
+                                unlink($filePathToRemove);
+                            }
+                    }
+
+                    //remove old relation and media
+                    $this->entityManager->remove($config['features'][$key]['media']->getMedia());
+                    $this->entityManager->remove($config['features'][$key]['media']);
+                    $this->entityManager->flush();
+
+                    //done
+                    continue;
+                }
+            // loop end
+            }
+        }
+
         return true;
     }
 
@@ -272,7 +397,7 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function processDelete(ProcessHook $hook)
     {
-        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+//        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
 
         return true;
     }
@@ -310,17 +435,24 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
 
         return $default;
     }
-}
-//        $gallerySettings['obj_name'] = $this->request->attributes->get('_zkModule');
 
-//          $addMediaForm = $this->createForm(
-//          new AddMediaType(), null , ['allowed_mime_types' => $this->get('kaikmedia_gallery_module.settings_manager')->getAllowedMimeTypesForObject($gallerySettings['obj_name']),
-//          'isXmlHttpRequest' => $request->isXmlHttpRequest()]
-//
-//          );
-        //$gallerySettings['mediaTypes'] = $this->get('kaikmedia_gallery_module.media_handlers_manager')->getSupportedMimeTypes();
-//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.settings.js");
-//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.mediaItem.js");
-//        \PageUtil::addVar('javascript', "@KaikmediaGalleryModule/Resources/public/js/Kaikmedia.Gallery.Manager.js");
-//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.manager.css");
-//        \PageUtil::addVar('stylesheet', "@KaikmediaGalleryModule/Resources/public/css/gallery.mediaItem.css");
+    /**
+     * Process hook for delete.
+     *
+     * @param ProcessHook $hook the hook
+     *
+     * @return bool
+     */
+    public function getFeatureMedia($feature = null, $module = null, $objId = null, $area = null)
+    {
+        if (!$module || !$objId || !$feature) {
+            return [];
+        } else {
+            $media = $this->entityManager
+                ->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')
+                    ->findOneBy(['feature' => $feature, 'hookedModule' => $module, 'hookedObjectId' => $objId]);
+        }
+
+        return $media;
+    }
+}

@@ -56,12 +56,12 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity
     {
         parent::__construct();
 
-        $this->setTitle('Title');
+//        $this->setTitle('Title');
     }
 
     public function getPath()
     {
-        return '/web/uploads';
+//        return '/web/uploads';
     }
 
     /**
@@ -173,15 +173,15 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity
      */
     public function setFile(UploadedFile $file = null)
     {
-        $this->file = $file;
-        // check if we have an old image path
-        if (isset($this->path)) {
-            // store the old name to delete after the update
-            $this->temp = $this->path;
-            $this->path = null;
-        } else {
-            $this->path = 'initial';
-        }
+//        $this->file = $file;
+//        // check if we have an old image path
+//        if (isset($this->path)) {
+//            // store the old name to delete after the update
+//            $this->temp = $this->path;
+//            $this->path = null;
+//        } else {
+//            $this->path = 'initial';
+//        }
     }
 
     /**
@@ -200,13 +200,13 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity
      */
     public function preUpload()
     {
-        //$this->setDescription('lala2');
-        if (null !== $this->getFile()) {
-            // do whatever you want to generate a unique name
-            $filename = sha1(uniqid(mt_rand(), true));
-            $this->path = $filename . '.' . $this->getFile()->guessExtension();
-            $this->addMediaExtra();
-        }
+//        //$this->setDescription('lala2');
+//        if (null !== $this->getFile()) {
+//            // do whatever you want to generate a unique name
+//            $filename = sha1(uniqid(mt_rand(), true));
+//            $this->path = $filename . '.' . $this->getFile()->guessExtension();
+//            $this->addMediaExtra();
+//        }
     }
 
     /**
@@ -215,38 +215,38 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity
      */
     public function upload()
     {
-        if (null === $this->getFile()) {
-            return;
-        }
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
-        $this->getFile()->move($this->getUploadRootDir(), $this->path);
-
-        // check if we have an old image
-        if (isset($this->temp)) {
-            // delete the old image
-            unlink($this->getUploadRootDir() . '/' . $this->temp);
-            // clear the temp image path
-            $this->temp = null;
-        }
+//        if (null === $this->getFile()) {
+//            return;
+//        }
+//        // if there is an error when moving the file, an exception will
+//        // be automatically thrown by move(). This will properly prevent
+//        // the entity from being persisted to the database on error
+//        $this->getFile()->move($this->getUploadRootDir(), $this->path);
+//
+//        // check if we have an old image
+//        if (isset($this->temp)) {
+//            // delete the old image
+//            unlink($this->getUploadRootDir() . '/' . $this->temp);
+//            // clear the temp image path
+//            $this->temp = null;
+//        }
         $this->file = null;
     }
 
     public function getUploadRootDir()
     {
-        return '/web/uploads';
+//        return '/web/uploads';
     }
 
     private function addMediaExtra()
     {
-        $mediaxxEx = $this->getMediaExtra();
-        $mediaEx = json_decode($mediaxxEx, true);
-
-        $mediaEx['path'] = array_key_exists('path', $mediaEx) ? $mediaEx['path'] : $this->path;
-        //$mediaEx['size'] = array_key_exists('size', $mediaEx) ? $mediaEx['size']  : $this->size ;
-        $this->setMediaExtra($mediaEx);
-        //return $this;
+//        $mediaxxEx = $this->getMediaExtra();
+//        $mediaEx = json_decode($mediaxxEx, true);
+//
+//        $mediaEx['path'] = array_key_exists('path', $mediaEx) ? $mediaEx['path'] : $this->path;
+//        //$mediaEx['size'] = array_key_exists('size', $mediaEx) ? $mediaEx['size']  : $this->size ;
+//        $this->setMediaExtra($mediaEx);
+//        //return $this;
     }
 
     /**
@@ -255,9 +255,9 @@ abstract class AbstractUploadableEntity extends AbstractMediaEntity
     public function removeUpload()
     {
         //$file = $this->getAbsolutePath();
-        if ($file) {
-            unlink($file);
-        }
+//        if ($file) {
+//            unlink($file);
+//        }
     }
 
     public function isUploadable()
