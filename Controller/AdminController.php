@@ -73,17 +73,18 @@ class AdminController extends AbstractController
         $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_ADMIN);
 
         $settingsManager = $this->get('kaikmedia_gallery_module.settings_manager');
+        $project_dir = $this->get('kernel')->getProjectDir();
+        $upload_dir = $this->getVar('upload_dir');
+        $full_upload_path = $project_dir.$upload_dir;
+        $is_writeable = is_writeable($full_upload_path);
 
         $form = $this->createForm(SettingsType::class, $settingsManager->getSettingsForForm(), ['settingsManager' => $settingsManager]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
-//                dump($form->getData());
                 if (!$settingsManager->setSettings($request->request->get($form->getName()))) {
-
                     $this->addFlash('error', $this->__('Error! Settings not set! Please try again'));
                 } else {
-//                    dump($request->request->get($form->getName()));
                     $this->addFlash('status', $this->__('Settings set.'));
                     if (!$settingsManager->saveSettings()) {
                         $this->addFlash('error', $this->__('Error! Settings not saved! Please try again'));
@@ -104,6 +105,8 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@KaikmediaGalleryModule/Admin/settings.html.twig', [
+            'project_dir' => $full_upload_path,
+            'is_writeable' => $is_writeable,
             'form' => $form->createView(),
         ]);
     }

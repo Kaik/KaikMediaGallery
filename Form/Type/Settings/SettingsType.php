@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 //use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-//use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,10 +32,13 @@ class SettingsType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
-//            ->add('forum_disabled_info', TextareaType::class, [
-//                'required' => false
-//            ])
-
+            ->add('gallery_disabled_info', TextareaType::class, [
+                'required' => false
+            ])
+            ->add('upload_dir', TextType::class, [
+    //            'disabled' => true,
+                'required' => true
+            ])
             // Hooks
             ->add('hooks', HooksType::class)
             ->add('restore', SubmitType::class, [])

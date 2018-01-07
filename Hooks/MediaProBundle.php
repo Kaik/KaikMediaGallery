@@ -176,10 +176,11 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
         $content = [];
         if (array_key_exists('features', $config) && is_array($config['features'])) {
             foreach ($config['features'] as $feature) {
-                $feature['media'] = $media = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
+                $feature['relation'] = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
                 $content[] = $feature;
             }
         }
+
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
     }
 
@@ -197,19 +198,53 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
         if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
             return;
         }
-
-        dump($this->request->request->get('kmgallery_features'));
-
-
+        // because on publication validation error things come back here
+        $postBackrelations = $this->request->request->get('kmgallery_features');
         $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
         if (array_key_exists('features', $config) && is_array($config['features'])) {
             foreach ($config['features'] as $key => $feature) {
-                $config['features'][$key]['media'] = $media = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
-                
+                $config['features'][$key]['relation'] = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
+                // case 0 postback does not exist no error - nothing to do
+                if (!$postBackrelations) {
+                    continue; //case o normal work
+                }
+
+                $keyExists = array_key_exists($key, $postBackrelations);
+                $postBackMediaExists = $postBackrelations[$key]['media'] !== '' ?: false;
+                $postBackRelationExists = ($postBackrelations[$key]['relation'] !== '' && $postBackrelations[$key]['relation'] !== "0") ?: false;
+                $relationExists = $config['features'][$key]['relation'] instanceof HooksRelationsEntity ?: false;
+
+                // case 0 postback media does not exist - nothing to do
+                if ($keyExists && !$postBackMediaExists && !$postBackRelationExists) {
+                    continue;
+                }
+
+                // case 2 postback media exists , relation does not - dummy relation with media item will save next time
+                if ($keyExists && $postBackMediaExists && !$postBackRelationExists) {
+                    //load media
+                    $mediaItem = $this->entityManager->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')->find($postBackrelations[$key]['media']);
+                    if (!$mediaItem) {
+                        continue;
+                    }
+                    // temp relation will be saved later
+                    $tempRelation = new HooksRelationsEntity();
+                    $tempRelation->setMedia($mediaItem);
+                    $tempRelation->setRelationExtra($postBackrelations[$key]['relationExtra']);
+                    $config['features'][$key]['relation'] = $tempRelation;
+
+                    continue;
+                }
+
+                // case 3 postback media exists, relation exist too only thing that might have changed is relation data
+                if ($relationExists && $keyExists && $postBackMediaExists && $postBackRelationExists) {
+                    // just update relation data in case user changed it
+                    $config['features'][$key]['relation']->setRelationExtra($postBackrelations[$key]['relationExtra']);
+                    continue;
+                }
             }
         }
 
-        $content =  $this->renderEngine->render('KaikmediaGalleryModule:Plugin:manager.html.twig', [
+        $content =  $this->renderEngine->render('KaikmediaGalleryModule:Hook:manager.html.twig', [
                 'config' => $config
         ]);
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.media', $content));
@@ -251,23 +286,26 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
         //1. iterate over features
         if (array_key_exists('features', $config) && is_array($config['features'])) {
             foreach ($config['features'] as $key => $feature) {
-                $config['features'][$key]['media'] = $media = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
+                $config['features'][$key]['relation'] = $this->getFeatureMedia($feature['name'], $hook->getCaller(), $hook->getId());
                 // null or relation
                 $toStoreRelation = new HooksRelationsEntity();
                 $mediaItem = null;
-                if ($relations[$key]['media'] !== '') {
+
+                $postRelationMediaExist = $relations[$key]['media'] !== '' ?: false;
+                $relationExists = $config['features'][$key]['relation'] instanceof HooksRelationsEntity ?: false;
+
+                if ($postRelationMediaExist) {
                     // get media item if null continue maybe with error
                     $mediaItem = $this->entityManager->getRepository('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity')->findOneBy(['id' => $relations[$key]['media']]);
                 }
 
                 // case 1 ralation is null and no new media data is recived - nothing to do
-                if ($config['features'][$key]['media'] === null && $relations[$key]['media'] === '') {
-//                    dump('nothing to do');
+                if (!$relationExists && !$postRelationMediaExist) {
                     continue;
                 }
+
                 // case 2 relation is null and new media data recived - create relation
-                if ($config['features'][$key]['media'] === null && $relations[$key]['media'] !== '') {
-//                    dump('create relation');
+                if (!$relationExists && $postRelationMediaExist) {
                     if (!$mediaItem) {
                         continue;
                     }
@@ -277,7 +315,7 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
                     $toStoreRelation->setHookedModule($hook->getCaller());
                     $toStoreRelation->setHookedAreaId($hook->getAreaId());
                     $toStoreRelation->setHookedObjectId($hook->getId());
-                    $toStoreRelation->setRelationExtra($relations[$key]);
+                    $toStoreRelation->setRelationExtra($relations[$key]['relationExtra']);
 
                     $this->entityManager->persist($toStoreRelation);
                     $this->entityManager->flush();
@@ -286,78 +324,18 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
                 }
 
                 // case 3 relation is not null and media is equal to relation media - update relation data (title etc)
-                if ($config['features'][$key]['media'] instanceof HooksRelationsEntity
-                && $relations[$key]['media'] !== ''
-                    && $config['features'][$key]['media']->getMedia() instanceof AbstractMediaEntity
-                    && $config['features'][$key]['media']->getMedia()->getId() == $relations[$key]['media']
+                if ($relationExists
+                    && $postRelationMediaExist
+                    && $config['features'][$key]['relation']->getMedia() instanceof AbstractMediaEntity
+                    && $config['features'][$key]['relation']->getMedia()->getId() == $relations[$key]['media']
                 ) {
-                    $config['features'][$key]['media']->setRelationExtra($relations[$key]);
-                    $this->entityManager->persist($config['features'][$key]['media']);
+                    $config['features'][$key]['relation']->setRelationExtra($relations[$key]['relationExtra']);
+                    $this->entityManager->persist($config['features'][$key]['relation']);
                     $this->entityManager->flush();
                     //done
                     continue;
                 }
 
-                // case 4 relation is not null and media is not equal to relation media - remove old relation create new relation (title etc)
-                if ($config['features'][$key]['media'] instanceof HooksRelationsEntity
-                && $relations[$key]['media'] !== ''
-                    && $config['features'][$key]['media']->getMedia() instanceof AbstractMediaEntity
-                    && $config['features'][$key]['media']->getMedia()->getId() != $relations[$key]['media']
-                ) {
-                    // new media does not exists
-                    if (!$mediaItem) {
-                        continue;
-                    }
-                    $mediaToRemove = $config['features'][$key]['media']->getMedia();
-                    $mediaExtra = $mediaToRemove->getMediaExtra();
-                    if (array_key_exists('fileName', $mediaExtra)){
-                        $filePathToRemove = $this->kernel->getProjectDir()."/web/uploads/". $mediaExtra['fileName'];
-                            if (file_exists($filePathToRemove)) {
-                                dump($filePathToRemove);
-                                unlink($filePathToRemove);
-                            }
-                    }
-
-                    //remove old relation and media
-                    $this->entityManager->remove($config['features'][$key]['media']->getMedia());
-                    $this->entityManager->remove($config['features'][$key]['media']);
-                    $this->entityManager->flush();
-
-                    $toStoreRelation->setFeature($feature['name']);
-                    $toStoreRelation->setMedia($mediaItem);
-                    $toStoreRelation->setHookedModule($hook->getCaller());
-                    $toStoreRelation->setHookedAreaId($hook->getAreaId());
-                    $toStoreRelation->setHookedObjectId($hook->getId());
-                    $toStoreRelation->setRelationExtra($relations[$key]);
-
-                    $this->entityManager->persist($toStoreRelation);
-                    $this->entityManager->flush();
-                    //done
-                    continue;
-                }
-                // case 5 relation is not null and (media is empty)? - remove remove related media
-                if ($config['features'][$key]['media'] instanceof HooksRelationsEntity
-                && $relations[$key]['media'] == ''
-                && $config['features'][$key]['media']->getMedia() instanceof AbstractMediaEntity
-                ) {
-                    $mediaToRemove = $config['features'][$key]['media']->getMedia();
-                    $mediaExtra = $mediaToRemove->getMediaExtra();
-                    if (array_key_exists('fileName', $mediaExtra)){
-                        $filePathToRemove = $this->kernel->getProjectDir()."/web/uploads/". $mediaExtra['fileName'];
-                            if (file_exists($filePathToRemove)) {
-                                dump($filePathToRemove);
-                                unlink($filePathToRemove);
-                            }
-                    }
-
-                    //remove old relation and media
-                    $this->entityManager->remove($config['features'][$key]['media']->getMedia());
-                    $this->entityManager->remove($config['features'][$key]['media']);
-                    $this->entityManager->flush();
-
-                    //done
-                    continue;
-                }
             // loop end
             }
         }

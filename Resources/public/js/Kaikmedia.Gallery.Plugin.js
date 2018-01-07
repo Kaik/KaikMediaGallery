@@ -46,7 +46,11 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 	    settings.$container = $('#' + settings.containerId);
 	    settings.feature = $this.data('feature');
 	    settings.handler = $this.data('handler');
+	    settings.prefix = $this.data('prefix');
+	    settings.dir = $this.data('dir');
 	    settings.uploadLimit = $this.data('singlefilemaxsize');
+	    settings.accept = $this.data('allowedMimeTypes');
+//	    console.log(settings);
 	}
 	;
 
@@ -62,7 +66,8 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 //			    console.log(f);
 			    var form = new FormData();
 			    form.append('file', f);
-			    form.append('title', f.name);
+			    form.append('prefix', settings.prefix);
+			    form.append('dir', settings.dir);
 			    showProgress();
 			    doAjax(Routing.generate('kaikmediagallerymodule_media_create', {"type": 'image', "_format": 'json'}), form)
 				.done(function(data) {
@@ -85,7 +90,6 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 	;
 
 	function handleRemove() {
-	    
 	    var form = new FormData();
 	    form.append('media_relation', settings.$container.find('.relation-data-relation').val());
 	    form.append('media_item', settings.$container.find('.relation-data-media').val());
@@ -94,8 +98,8 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 		.done(function(data) {
 		    settings.$container.find('.relation-data-media').val('');
 		    settings.$container.find('.relation-data-relation').val('');
-		    settings.$container.find('.relation-data-title').addClass('hide').val('');
-		    settings.$container.find('.relation-data-copyright').addClass('hide').val('');
+		    hideRelationData();
+		    clearRelationData();
 		    settings.$container.find('img').attr("src", "").addClass('hide');
 		    settings.$container.find('.remove-action').addClass('hide'); //$this...
 		    settings.$container.find('.re-upload-action').addClass('hide');
@@ -120,7 +124,8 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 			.done(function(f) {
 			    var form = new FormData();
 			    form.append('file', f);
-			    form.append('title', f.name);
+			    form.append('prefix', settings.prefix);
+			    form.append('dir', settings.dir);
 			    form.append('media_relation', settings.$container.find('.relation-data-relation').val());
 			    form.append('media_item', settings.$container.find('.relation-data-media').val());
 			    showProgress();
@@ -209,10 +214,19 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 
 	// View
 	function showRelationData() {
-	    settings.$container.find('.relation-data-title').removeClass('hide');
-	    settings.$container.find('.relation-data-copyright').removeClass('hide');	    
+	    settings.$container.find("input[name*='relationExtra']").removeClass('hide');	    
 	}
-	;	
+	;
+	
+	function hideRelationData() {
+	    settings.$container.find("input[name*='relationExtra']").addClass('hide');    
+	}
+	;
+	
+	function clearRelationData() {
+	    settings.$container.find("input[name*='relationExtra']").val('');	    
+	}
+	;
 	
 	function displayPreview(src) {
 	    settings.$container.find('img').attr("src", src).removeClass('hide');

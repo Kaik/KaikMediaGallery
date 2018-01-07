@@ -24,8 +24,7 @@
 			"class" : "Kaikmedia\\GalleryModule\\KaikmediaGalleryModule",
 			"displayname" : "KMGallery",
 			"url" : "kmgallery",
-			"capabilities" : {                       
-				"user" : { "route" : "kaikmediagallerymodule_user_index"},
+			"capabilities" : {
 				"admin" : {"route" : "kaikmediagallerymodule_admin_info"}
 			},
 			"securityschema" : {

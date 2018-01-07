@@ -125,14 +125,15 @@ class LinkContainer implements LinkContainerInterface
     private function getUser()
     {
         $links = [];
-        if ($this->permissionApi->hasPermission('KaikmediaGalleryModule::', '::', ACCESS_OVERVIEW)) {
-            $links[] = [
-                'url' => $this->router->generate('kaikmediagallerymodule_user_index'),
-                'text' => $this->translator->__('Gallery'),
-                'title' => $this->translator->__('Manage your media'),
-                'icon' => 'image'
-            ];
-        }
+        //no user settings at the moment
+//        if ($this->permissionApi->hasPermission('KaikmediaGalleryModule::', '::', ACCESS_OVERVIEW)) {
+//            $links[] = [
+//                'url' => $this->router->generate('kaikmediagallerymodule_user_index'),
+//                'text' => $this->translator->__('Gallery'),
+//                'title' => $this->translator->__('Manage your media'),
+//                'icon' => 'image'
+//            ];
+//        }
 
         return $links;
     }

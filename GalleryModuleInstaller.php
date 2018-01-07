@@ -54,6 +54,7 @@ class GalleryModuleInstaller extends AbstractExtensionInstaller
         $modvars = [
             'itemsperpage' => 25,
             'enablecategorization' => true,
+            'upload_dir' => '/web/uploads',
         ];
         $this->setVars($modvars);
         // initialisation successful

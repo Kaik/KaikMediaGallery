@@ -117,21 +117,46 @@ class MediaController extends AbstractController
                 $file = $request->files->get('file');
                 // If a file was uploaded
                 if(!is_null($file)){
-                   // generate a random name for the file but keep the extension
-                   $filename = uniqid().".".$file->getClientOriginalExtension();
-                   $path = $this->get('kernel')->getProjectDir()."/web/uploads";
-                   $file->move($path, $filename);
-                   $mediaExtra = [];
-                   $mediaExtra['fileName'] = $filename;
-                   $mediaExtra['ext'] = $file->getClientOriginalExtension();
-                   $mediaItem->setTitle($file->getClientOriginalName());
-                   $mediaItem->setMediaExtra($mediaExtra);
+                    $project_dir = $this->get('kernel')->getProjectDir();
+                    $upload_dir = $this->getVar('upload_dir');
+                    $main_upload_path = $project_dir.$upload_dir;
+                    $main_is_writeable = is_writeable($main_upload_path);
+                    if ($main_is_writeable) {
+
+                        $file_prefix = $request->request->get('prefix');
+                        $file_subdir = $request->request->get('dir');
+
+                        // generate a random name for the file but keep the extension
+                        $filename = $file_prefix.uniqid().".".$file->getClientOriginalExtension();
+
+                        $subdir = '';
+                        if (is_writable($main_upload_path.'/'.$file_subdir)) {
+                            $path = $main_upload_path.'/'.$file_subdir;
+                            $subdir = $file_subdir;
+                        } elseif (mkdir($main_upload_path.'/'.$file_subdir, 0775, true)) {
+                            $path = $main_upload_path.'/'.$file_subdir;
+                            $subdir = $file_subdir;
+                        } else {
+                            $path = $main_upload_path;
+                        }
+
+                        $file->move($path, $filename);
+
+                        $mediaExtra = [];
+                        $mediaExtra['fileName'] = $filename;
+                        $mediaExtra['prefix'] = $file_prefix;
+                        $mediaExtra['subdir'] = $subdir;
+                        $mediaExtra['ext'] = $file->getClientOriginalExtension();
+                        $mediaItem->setTitle($file->getClientOriginalName());
+                        $mediaItem->setMediaExtra($mediaExtra);
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($mediaItem);
+                        $em->flush();
+                    }
                 }
             }
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($mediaItem);
-            $em->flush();
+
         }
 
         //json
@@ -179,7 +204,6 @@ class MediaController extends AbstractController
     {
         // Permission check
         $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_READ);
-
 
         $errors = false;
         if ($request->getMethod() == "POST") {
@@ -466,18 +490,18 @@ class MediaController extends AbstractController
         $a['limit'] = $request->query->get('limit', 15);
         $a['name'] = $request->query->get('name', false);
 
-        $form = $this->createFormBuilder($a)
-                ->add('name', 'text', ['required' => false])
-                ->add('filter', 'submit', ['label' => 'Filter'])
-                ->getForm();
+//        $form = $this->createFormBuilder($a)
+//                ->add('name', 'text', ['required' => false])
+//                ->add('filter', 'submit', ['label' => 'Filter'])
+//                ->getForm();
 
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $a['limit'] = $data['limit'] ? $data['limit'] : $a['limit'];
-            $a['name'] = $data['name'] ? $data['name'] : $a['name'];
-        }
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $data = $form->getData();
+//            $a['limit'] = $data['limit'] ? $data['limit'] : $a['limit'];
+//            $a['name'] = $data['name'] ? $data['name'] : $a['name'];
+//        }
 
         // Get parameters from whatever input we need.
         $mediarelations = $this->getDoctrine()->getManager()->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')->getAll($a);
@@ -485,7 +509,7 @@ class MediaController extends AbstractController
         return $this->render('KaikmediaGalleryModule:Admin:mediarelations.html.twig', [
                     'mediarelations' => $mediarelations,
                     'settings' => $this->getVars(),
-                    'form' => $form->createView(),
+//                    'form' => $form->createView(),
                     'thisPage' => $a['page'],
                     'maxPages' => ceil($mediarelations->count() / $a['limit'])
         ]);

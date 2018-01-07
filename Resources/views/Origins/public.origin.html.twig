@@ -1,5 +1,0 @@
-   {%for publicItem in public %}
-     {% include "KaikmediaGalleryModule:Media:item.html.twig" with {'settings': settings, 'relation': '', 'original':publicItem, 'css': 'col-md-2'}  %}
-    {% else %}
-        <p class="alert alert-warning text-center"> {{ __('No files found') }} </p>
-    {% endfor %}                    

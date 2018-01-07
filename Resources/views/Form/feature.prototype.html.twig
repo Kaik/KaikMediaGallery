@@ -1,0 +1,39 @@
+{# empty Twig template #}
+<div class="row" style="margin-left: -10px; margin-right:-10px;margin-bottom:0px;padding-top:7px;padding-bottom:7px;border-bottom:1px solid #d8d8d8;background-color: #f1f1f1;">
+    <div class="col-md-1" >
+        {{ form_widget(feature.name, { 'attr': {'class': '', 'placeholder': __('Feature name') } }) }}
+    </div>
+    <div class="col-md-2" >
+        {{ form_widget(feature.title, { 'attr': {'class': '', 'placeholder': __('Display title') } }) }}
+    </div>
+    <div class="col-md-2">
+        {{ form_widget(feature.mimeTypes, { 'attr': {'class': '', 'placeholder': __('mimeTypes')} }) }}
+    </div>
+    <div class="col-md-1" >
+        {{ form_widget(feature.prefix, { 'attr': {'class': '', 'placeholder': __('File prefix') } }) }}
+    </div>
+    <div class="col-md-1">
+        {{ form_widget(feature.dir, { 'attr': {'class': '', 'placeholder': __('Sub directory')} }) }}
+    </div>
+    <div class="col-md-1">
+        {{ form_widget(feature.singleFileMaxSize, { 'attr': {'class': ''} }) }}
+    </div>
+    <div class="col-md-1">
+        {{ form_widget(feature.extra_title, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+    </div>
+    <div class="col-md-1">
+        {{ form_widget(feature.extra_legal, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+    </div>
+    <div class="col-md-2 pull-right">
+        <a href="#" class="collection-remove btn">
+            <i class="fa fa-minus-circle" aria-hidden="true"></i>
+        </a>
+        <a href="#" class="collection-up collection-action btn">
+            <i class="fa fa-chevron-circle-up" aria-hidden="true"></i>
+        </a>
+        <a href="#" class="collection-down collection-action btn">
+            <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+{#    {{ dump(feature) }}#}

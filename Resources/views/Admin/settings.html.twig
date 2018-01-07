@@ -12,8 +12,7 @@
 {% form_theme form with ['bootstrap_3_layout.html.twig',
     'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
     'KaikmediaGalleryModule:Form:radio.html.twig',
-    'KaikmediaGalleryModule:Form:hooks.widget.html.twig',
-    'KaikmediaGalleryModule:Form:jquery.collection.html.twig'
+    'KaikmediaGalleryModule:Form:hooks.widget.html.twig'
 ] %}
 <div id="km_gallery_admin_settings">
     {{ showflashes() }}
@@ -28,29 +27,44 @@
         <div role="tabpanel" class="tab-pane active" id="general">
             <div class="col-md-12">
                 <p class="col-md-12 help-block alert ">
-                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                    {{ __("If the 'Gallery is accessible to visitors' setting is deactivated then only administrators will have access to the gallery. You can temporarily deactivate this setting to take the gallery off-line when you need to perform maintenance.")}}
                 </p>
             </div>
             <fieldset>
                 <legend>{{ __("General settings")}}</legend>
                 <div class="form-group">
-                    {{ form_label(form.gallery_enabled, __('Forums are accessible to visitors') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    {{ form_label(form.gallery_enabled, __('Gallery is accesible to visitors') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
                     <div class="col-md-8">
                         {{ form_widget(form.gallery_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
                         {{ form_errors(form.gallery_enabled) }}
                         <p class="col-md-12 help-block alert alert-info pull-right">
-                            {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
                         </p>
                     </div>
                 </div>
-{#                <div class="form-group">
-                    {{ form_label(form.gallery_disabled_info, __('Message displayed if forums are disabled'), { 'label_attr': {'class': 'col-md-4'} }) }}
+                <div class="form-group">
+                    {{ form_label(form.gallery_disabled_info, __('Message displayed if gallery is disabled'), { 'label_attr': {'class': 'col-md-4'} }) }}
                     <div class="col-md-8">
                         {{ form_widget(form.gallery_disabled_info, { 'attr': {'class': ''} }) }}
                         {{ form_errors(form.gallery_disabled_info) }}
                     </div>
                 </div>
-            </fieldset>#}
+                <div class="form-group">
+                    {{ form_label(form.upload_dir, __('Top Upload directory') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.upload_dir, {'attr': {'class': '' }}) }}
+                        {{ form_errors(form.upload_dir) }}
+                        <p class="col-md-12 help-block alert {% if is_writeable %}alert-success{% else %}alert-danger{% endif %} pull-right">
+                        {% if is_writeable %}
+                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                        {% else %}
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                        {% endif %}
+                        {{ __('Directory:') }} {{ project_dir }}
+                        {% if is_writeable %} {{ __('is writeable') }} {% else %} {{ __('is not writeable or does not exist') }}{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </fieldset>
         </div>
         <!-- Hook -->
         <div role="tabpanel" class="tab-pane" id="hooks">
@@ -94,7 +108,23 @@
                         
                         
 {#                        console.log('test');#}
-                        $('.my-selector').collection();
+                        $('.features-selector').collection({
+                            min: 1,
+                //            init_with_n_elements: 1,
+                            allow_up: true,
+                            allow_down: true,
+                            add_at_the_end: true,
+                            custom_add_location: true
+{#                            after_remove: function (collection, element) {
+                                // already added child remove disable
+                                var value = element.children().first().children().first().val();
+                                if (value === '') {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            }#}
+                        });
                     });
             })(jQuery);
         };

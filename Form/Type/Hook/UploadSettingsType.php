@@ -13,6 +13,7 @@ namespace Kaikmedia\GalleryModule\Form\Type\Hook;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,19 +24,37 @@ class UploadSettingsType extends AbstractType
         $builder
             ->add('name', TextType::class, [
     //            'disabled' => true,
+                'required' => true
+            ])
+            ->add('title', TextType::class, [
+    //            'disabled' => true,
+                'required' => true
+            ])
+            ->add('prefix', TextType::class, [
+    //            'disabled' => true,
+                'required' => false
+            ])
+            ->add('dir', TextType::class, [
+    //            'disabled' => true,
                 'required' => false
             ])
             ->add('mimeTypes', TextType::class, [
     //            'disabled' => true,
-                'required' => false
+                'required' => true
             ])
             ->add('singleFileMaxSize', TextType::class, [
     //            'disabled' => true,
                 'required' => false
             ])
-            ->add('maxCount', TextType::class, [
-    //            'disabled' => true,
-                'required' => false
+        ->add('extra_title', ChoiceType::class, ['choices' => ['Off' => '0', 'On' => '1'],
+                'multiple' => false,
+                'expanded' => true,
+                'required' => true
+            ])
+        ->add('extra_legal', ChoiceType::class, ['choices' => ['Off' => '0', 'On' => '1'],
+                'multiple' => false,
+                'expanded' => true,
+                'required' => true
             ])
         ;
     }
