@@ -303,212 +303,212 @@
     
 })(jQuery);
 
-manager: {
-	
-	obj: false,
-	feature: 'info',
-	feature_settings: false,
-	origin: 'user',
-	origin_settings: false,			
-	$menu: false,
-	$modal: false,
-	$details_box: false,
-	$origins: false,
-	$selectable: [],
-	$selected: [],
-	$current: [],			
-	
-	init: function(config) {			
-		
-		this.obj = config.obj;
-		this.$modal = config.$container.find('#kmgallery_manager');
-		this.$menu = config.$container.find('#kmgallery_manager_features');
-		this.feature = this.$menu.find('li.active a').data('feature');
-		this.$origins = config.$container.find('#kmgallery_manager_origins');
-		this.$details_box = this.$modal.find('#kmgallery_manager_details');
-		this.loadSelectable();
-		this.loadSelected();
-		this.setOrigins();
-		this.switchFeature(this.feature);
-		this.bindEvents();
-		//console.log(KaikMedia);
-	},
-	
-	open: function(){ this.$modal.modal('show'); },			
-	close: function(){this.$modal.modal('show'); },	
-	
-	bindEvents: function(){
-		//var $origins_box = this.$modal.find('#kmgallery_manager_origins');				
-		//var $origins = $origins_box.find('a');
-		$this = this;
-						
-    	/* bind mode switch */
-		this.$menu.find('a').each(function(){
-		     $(this).on('click', function(e) {
-		    	 $this.switchFeature($(this).attr('data-feature'));   		    	  
-		    }); 				
-		});
-		
-    	/* bind origin switch */
-		this.$origins.find('a').each(function(){
-		     $(this).on('click', function(e) {
-		    	 $this.switchOrigin($(this).attr('data-origin'));   		    	  
-		    }); 				
-		});				
-		
-    	/* media preview */
-		this.$modal.find('div.item-details').each(function(){
-		     $(this).on('click', function(e) {
-		    	 $this.details($(this));   		    	  
-		    }); 				
-		});	
-		
-    	/* media select */
-		this.$modal.find('div.item-select').each(function(){
-		     $(this).on('click', function(e) {				    	 
-		    	 $this.select($(this));   				    	 
-		    }); 				
-		});	
-		
-    	/* bind hover action   */    	
-	    this.$modal.find('a.media-unselect').each(function() {				    	
-		    $(this).hover(
-			    function () {
-			        $(this).children('.media-icon').removeClass('fa-check-circle').addClass("fa-minus");		        
-			     },
-				function () {
-				    $(this).children('.media-icon').removeClass('fa-minus').addClass("fa-check-circle");		        
-				 }		    
-		    );
-		    
-		     $(this).on('click', function(e) {				    	 
-		    	 $this.unselect($(this));   				    	 
-		    });				    				    
-	    });				
-		
-		//console.log($origins);
-	},		    				
-	setOrigins: function(){				
-    	/* set origins according to settings */
-    	if(this.obj.settings.user.enabled){
-    		//console.log('user enabled');
-    		this.$origins.find('.origins').removeClass('active');
-    		this.switchOrigin('user');
-    		$('#kmgallery_manager_origins_user_pill').parent('.origins').addClass('active');
-    		$('#kmgallery_manager_media_box').addClass('active'); 
-    		
-    	}else if(this.obj.settings.public.enabled){
-    		//console.log('public enabled');
-    		this.$origins.find('.origins').removeClass('active');
-    		this.switchOrigin('public');
-    		$('#kmgallery_manager_origins_user_pill').parent('.origins').addClass('active');    		
-    		$('#kmgallery_manager_media_box').addClass('active');  
-    		
-    	}else if(this.obj.settings.upload.enabled){
-    		this.$origins.find('.origins').removeClass('active');
-    		this.switchOrigin('upload');		    		
-    		$('#kmgallery_plugin_upload_pill').parent('.origins').addClass('active');    		
-    		$('#kmgallery_plugin_upload_box').addClass('active');      			
-    	}
-		//console.log('');
-	},
-	loadSelectable: function(){
-		var $selectable_box = this.$modal.find('#kmgallery_manager_media_box ul');				
-		this.$selectable = $selectable_box.find('li');
-		//console.log(this.$selectable);
-	},
-	
-	loadSelected: function(){
-		var $selected_box = this.$modal.find('#kmgallery_manager_selected');				
-		this.$selected = $selected_box.find('li');
-		//console.log(this.$selected);
-	},				
-	select: function(el){
-		this.$modal.find('.current').removeClass('current');
-		el.find('.item-image').addClass('current');
-		if (this.feature == 'info')  {
-			return;
-		}					
-		$elem = el.parent('li.media-item');			
-		var maxitems = 0; // unlimited
-		if(this.feature_settings.hasOwnProperty('maxitems')){
-			maxitems = parseInt(this.feature_settings['maxitems']);
-		};		
-		
-		if (maxitems == this.$current.length){
-			console.log('only ' + maxitems + ' allowed');
-			this.$origins.find('a.media-unselect').addClass('hide');
-			//replace miniature
-			
-			
-		
-		};
-		
-		$elem.find('a.media-unselect').removeClass('hide');
-		
-		
-		//console.log(this.$current);
-	},
-	unselect: function(el){
-		//var $selectable_box = this.$modal.find('#kmgallery_manager_media_box ul');				
-		//this.$selectable = $selectable_box.find('li');
-		console.log(el);
-	},
-	details: function(el){
-		var $elem = el.parent('li.media-item');				
-		//this.$selectable = $selectable_box.find('li');
-		var $box = this.$details_box;
-		//console.log($elem);				
-		
-    	var pars = {
-    			mode: this.feature,
-    			original: $elem.attr('data-id'),
-    			relation: $elem.attr('data-relation')		
-    	};
-    	
-		$box.find('h4').append(" <i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
-        $.ajax({
-            type: "GET",
-            url: Routing.generate('kaikmediagallerymodule_pluginajax_mediainfo'),
-            data: pars
-        }).success(function(result) {	
-            var template = result.template;
-            $box.html(template);
-        }).error(function(result) {
-            alert(result.status + ': ' + result.statusText);
-        }).always(function() {
-            $('#temp-spinner').remove();
-            
-        });       
-
-	},			
-	switchOrigin: function(origin){				
-		this.origin = origin;
-		this.$selectable.addClass('hide');
-		//this.$selectable.find('.origin-public').addClass('hide');	
-		this.$selectable.filter('.origin-' + this.origin).removeClass('hide');				
-		//console.log(this.$selectable);
-		//console.log('origin switched ' + this.origin);
-	},
-	switchFeature: function(feature){				
-		this.feature = feature;
-    	 //console.log(this);
-		this.$origins.find('.media-unselect').addClass('hide');				
-		if(this.obj.settings.hasOwnProperty(feature)){
-			this.feature_settings = this.obj.settings[feature];
-		};
-		
-		this.$current = this.$selected.filter('.feature-' + this.feature);
-
-		var $origins = this.$origins;
-		this.$current.each(function(){					
-			$origins.find('a.item-unselect-' + $(this).data('id')).removeClass('hide');	
-		});				
-		
-		console.log(this.$current);
-	},						
-	setSaveBtn: function(data){
-		//var $select_box = this.$modal.find('#kmgallery_plugin_left_col');				
-		//this.selected = $select_box.find('.item');
-	},			
-},
+//manager: {
+//	
+//	obj: false,
+//	feature: 'info',
+//	feature_settings: false,
+//	origin: 'user',
+//	origin_settings: false,			
+//	$menu: false,
+//	$modal: false,
+//	$details_box: false,
+//	$origins: false,
+//	$selectable: [],
+//	$selected: [],
+//	$current: [],			
+//	
+//	init: function(config) {			
+//		
+//		this.obj = config.obj;
+//		this.$modal = config.$container.find('#kmgallery_manager');
+//		this.$menu = config.$container.find('#kmgallery_manager_features');
+//		this.feature = this.$menu.find('li.active a').data('feature');
+//		this.$origins = config.$container.find('#kmgallery_manager_origins');
+//		this.$details_box = this.$modal.find('#kmgallery_manager_details');
+//		this.loadSelectable();
+//		this.loadSelected();
+//		this.setOrigins();
+//		this.switchFeature(this.feature);
+//		this.bindEvents();
+//		//console.log(KaikMedia);
+//	},
+//	
+//	open: function(){ this.$modal.modal('show'); },			
+//	close: function(){this.$modal.modal('show'); },	
+//	
+//	bindEvents: function(){
+//		//var $origins_box = this.$modal.find('#kmgallery_manager_origins');				
+//		//var $origins = $origins_box.find('a');
+//		$this = this;
+//						
+//    	/* bind mode switch */
+//		this.$menu.find('a').each(function(){
+//		     $(this).on('click', function(e) {
+//		    	 $this.switchFeature($(this).attr('data-feature'));   		    	  
+//		    }); 				
+//		});
+//		
+//    	/* bind origin switch */
+//		this.$origins.find('a').each(function(){
+//		     $(this).on('click', function(e) {
+//		    	 $this.switchOrigin($(this).attr('data-origin'));   		    	  
+//		    }); 				
+//		});				
+//		
+//    	/* media preview */
+//		this.$modal.find('div.item-details').each(function(){
+//		     $(this).on('click', function(e) {
+//		    	 $this.details($(this));   		    	  
+//		    }); 				
+//		});	
+//		
+//    	/* media select */
+//		this.$modal.find('div.item-select').each(function(){
+//		     $(this).on('click', function(e) {				    	 
+//		    	 $this.select($(this));   				    	 
+//		    }); 				
+//		});	
+//		
+//    	/* bind hover action   */    	
+//	    this.$modal.find('a.media-unselect').each(function() {				    	
+//		    $(this).hover(
+//			    function () {
+//			        $(this).children('.media-icon').removeClass('fa-check-circle').addClass("fa-minus");		        
+//			     },
+//				function () {
+//				    $(this).children('.media-icon').removeClass('fa-minus').addClass("fa-check-circle");		        
+//				 }		    
+//		    );
+//		    
+//		     $(this).on('click', function(e) {				    	 
+//		    	 $this.unselect($(this));   				    	 
+//		    });				    				    
+//	    });				
+//		
+//		//console.log($origins);
+//	},		    				
+//	setOrigins: function(){				
+//    	/* set origins according to settings */
+//    	if(this.obj.settings.user.enabled){
+//    		//console.log('user enabled');
+//    		this.$origins.find('.origins').removeClass('active');
+//    		this.switchOrigin('user');
+//    		$('#kmgallery_manager_origins_user_pill').parent('.origins').addClass('active');
+//    		$('#kmgallery_manager_media_box').addClass('active'); 
+//    		
+//    	}else if(this.obj.settings.public.enabled){
+//    		//console.log('public enabled');
+//    		this.$origins.find('.origins').removeClass('active');
+//    		this.switchOrigin('public');
+//    		$('#kmgallery_manager_origins_user_pill').parent('.origins').addClass('active');    		
+//    		$('#kmgallery_manager_media_box').addClass('active');  
+//    		
+//    	}else if(this.obj.settings.upload.enabled){
+//    		this.$origins.find('.origins').removeClass('active');
+//    		this.switchOrigin('upload');		    		
+//    		$('#kmgallery_plugin_upload_pill').parent('.origins').addClass('active');    		
+//    		$('#kmgallery_plugin_upload_box').addClass('active');      			
+//    	}
+//		//console.log('');
+//	},
+//	loadSelectable: function(){
+//		var $selectable_box = this.$modal.find('#kmgallery_manager_media_box ul');				
+//		this.$selectable = $selectable_box.find('li');
+//		//console.log(this.$selectable);
+//	},
+//	
+//	loadSelected: function(){
+//		var $selected_box = this.$modal.find('#kmgallery_manager_selected');				
+//		this.$selected = $selected_box.find('li');
+//		//console.log(this.$selected);
+//	},				
+//	select: function(el){
+//		this.$modal.find('.current').removeClass('current');
+//		el.find('.item-image').addClass('current');
+//		if (this.feature == 'info')  {
+//			return;
+//		}					
+//		$elem = el.parent('li.media-item');			
+//		var maxitems = 0; // unlimited
+//		if(this.feature_settings.hasOwnProperty('maxitems')){
+//			maxitems = parseInt(this.feature_settings['maxitems']);
+//		};		
+//		
+//		if (maxitems == this.$current.length){
+//			console.log('only ' + maxitems + ' allowed');
+//			this.$origins.find('a.media-unselect').addClass('hide');
+//			//replace miniature
+//			
+//			
+//		
+//		};
+//		
+//		$elem.find('a.media-unselect').removeClass('hide');
+//		
+//		
+//		//console.log(this.$current);
+//	},
+//	unselect: function(el){
+//		//var $selectable_box = this.$modal.find('#kmgallery_manager_media_box ul');				
+//		//this.$selectable = $selectable_box.find('li');
+//		console.log(el);
+//	},
+//	details: function(el){
+//		var $elem = el.parent('li.media-item');				
+//		//this.$selectable = $selectable_box.find('li');
+//		var $box = this.$details_box;
+//		//console.log($elem);				
+//		
+//    	var pars = {
+//    			mode: this.feature,
+//    			original: $elem.attr('data-id'),
+//    			relation: $elem.attr('data-relation')		
+//    	};
+//    	
+//		$box.find('h4').append(" <i id='temp-spinner' class='fa fa-circle-o-notch fa-spin'></i>");	
+//        $.ajax({
+//            type: "GET",
+//            url: Routing.generate('kaikmediagallerymodule_pluginajax_mediainfo'),
+//            data: pars
+//        }).success(function(result) {	
+//            var template = result.template;
+//            $box.html(template);
+//        }).error(function(result) {
+//            alert(result.status + ': ' + result.statusText);
+//        }).always(function() {
+//            $('#temp-spinner').remove();
+//            
+//        });       
+//
+//	},			
+//	switchOrigin: function(origin){				
+//		this.origin = origin;
+//		this.$selectable.addClass('hide');
+//		//this.$selectable.find('.origin-public').addClass('hide');	
+//		this.$selectable.filter('.origin-' + this.origin).removeClass('hide');				
+//		//console.log(this.$selectable);
+//		//console.log('origin switched ' + this.origin);
+//	},
+//	switchFeature: function(feature){				
+//		this.feature = feature;
+//    	 //console.log(this);
+//		this.$origins.find('.media-unselect').addClass('hide');				
+//		if(this.obj.settings.hasOwnProperty(feature)){
+//			this.feature_settings = this.obj.settings[feature];
+//		};
+//		
+//		this.$current = this.$selected.filter('.feature-' + this.feature);
+//
+//		var $origins = this.$origins;
+//		this.$current.each(function(){					
+//			$origins.find('a.item-unselect-' + $(this).data('id')).removeClass('hide');	
+//		});				
+//		
+//		console.log(this.$current);
+//	},						
+//	setSaveBtn: function(data){
+//		//var $select_box = this.$modal.find('#kmgallery_plugin_left_col');				
+//		//this.selected = $select_box.find('.item');
+//	},			
+//},
