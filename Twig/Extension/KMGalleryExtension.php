@@ -18,18 +18,20 @@ namespace Kaikmedia\GalleryModule\Twig\Extension;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Kaikmedia\GalleryModule\Twig\Extension\SimpleFunction\GalleryManagerFunction;
 
-class KMGalleryExtension extends \Twig_Extension {
-
+class KMGalleryExtension extends \Twig_Extension
+{
     private $handler;
 
     /**
      * constructor.
      */
-    public function __construct(FragmentHandler $handler) {
+    public function __construct(FragmentHandler $handler)
+    {
         $this->handler = $handler;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'kaikmedia_gallery_module';
     }
 
@@ -38,7 +40,8 @@ class KMGalleryExtension extends \Twig_Extension {
      *
      * @return array An array of functions
      */
-    public function getFunctions() {
+    public function getFunctions()
+    {
         return [
             new \Twig_SimpleFunction('galleryManager', [new GalleryManagerFunction($this->handler), 'display'], ['is_safe' => ['html']])
         ];

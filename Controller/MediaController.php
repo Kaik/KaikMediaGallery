@@ -122,7 +122,6 @@ class MediaController extends AbstractController
                     $main_upload_path = $project_dir.$upload_dir;
                     $main_is_writeable = is_writeable($main_upload_path);
                     if ($main_is_writeable) {
-
                         $file_prefix = $request->request->get('prefix');
                         $file_subdir = $request->request->get('dir');
 
@@ -155,8 +154,6 @@ class MediaController extends AbstractController
                     }
                 }
             }
-
-
         }
 
         //json
@@ -167,7 +164,6 @@ class MediaController extends AbstractController
                 'errors' => $errors,
                 '_format' => $_format,
             ];
-
             $response = new JsonResponse($data);
 
             return $response;
