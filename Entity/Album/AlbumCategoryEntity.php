@@ -12,7 +12,7 @@
 namespace Kaikmedia\GalleryModule\Entity\Album;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zikula\Core\Doctrine\Entity\AbstractEntityCategory;
+use Zikula\CategoriesModule\Entity\AbstractCategoryAssignment;
 
 /**
  * Pages entity class.
@@ -23,7 +23,7 @@ use Zikula\Core\Doctrine\Entity\AbstractEntityCategory;
  * @ORM\Table(name="kmgallery_albums_category",
  *            uniqueConstraints={@ORM\UniqueConstraint(name="cat_unq",columns={"registryId", "categoryId", "entityId"})})
  */
-class AlbumCategoryEntity extends AbstractEntityCategory
+class AlbumCategoryEntity extends AbstractCategoryAssignment
 {
     /**
      * @ORM\ManyToOne(targetEntity="Kaikmedia\GalleryModule\Entity\Album\AlbumEntity", inversedBy="category")
