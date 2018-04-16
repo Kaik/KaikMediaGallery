@@ -1,8 +1,9 @@
 {# #}
 <div id="kmgallery_manager_container" class="clearfix">
 {#{% set runtimeConfig = {"scale": {"dim": [200, 200] }} %}#}
+
 {% for feature in config.features %}
-    <div id="{{ feature.name }}_{{ loop.index0 }}" class="feature col-xs-12 col-sm-4 col-md-3 col-lg-2">
+    <div id="{{ feature.name }}_{{ loop.index0 }}" class="feature col-xs-12 col-sm-4" style="min-width:260px;">
         <span class="feature-name">{{ feature.title }}</span>
         <div class="item">
                 <div class="progress hide" style="height: 4px; margin:0px; padding:0px;">
@@ -45,7 +46,7 @@
                    data-feature="{{ feature.name }}"
                    data-allowedMimeTypes="{{ feature.mimeTypes }}"
                    data-singleFileMaxSize="{{ feature.singleFileMaxSize }}"
-                   > <i class="fa fa-trash" title="{{ __('Remove') }}"> {{ __('Remove') }} </i>
+                   > <i class="fa fa-trash" title="{{ __('Remove') }}"></i> {{ __('Remove') }}
                 </a>
         </div>
         <div class="relation-data">

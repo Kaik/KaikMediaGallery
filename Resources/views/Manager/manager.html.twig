@@ -57,9 +57,27 @@
                                     {% if origin.enabled and origin.type == 'origin' %}
                                         <li role="presentation" class="origins {% if origin.name == 'addmedia' %} pull-right{% endif %} ">
                                             {% if origin.name == 'addmedia' %}
-                                                <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_{{ origin.name }}_box" aria-controls="kmgallery_manager_{{ origin.name }}_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
+                                                <a id="kmgallery_manager_origins_{{ origin.name}}_pill"
+                                                   data-origin="{{ origin.name }}"
+                                                   href="#kmgallery_manager_{{ origin.name }}_box"
+                                                   aria-controls="kmgallery_manager_{{ origin.name }}_box"
+                                                   role="tab"
+                                                   data-toggle="tab"
+                                                >
+                                                    <i class="{{ origin.icon }}"> </i>
+                                                    {{ origin.getDisplayName() }}
+                                                </a>
                                             {% else %}
-                                                <a id="kmgallery_manager_origins_{{ origin.name}}_pill" data-origin="{{ origin.name }}" href="#kmgallery_manager_media_box" aria-controls="kmgallery_manager_media_box" role="tab" data-toggle="tab"><i class="{{ origin.icon }}"> </i> {{ origin.getDisplayName() }}</a>
+                                                <a id="kmgallery_manager_origins_{{ origin.name}}_pill"
+                                                   data-origin="{{ origin.name }}"
+                                                   href="#kmgallery_manager_media_box"
+                                                   aria-controls="kmgallery_manager_media_box"
+                                                   role="tab"
+                                                   data-toggle="tab"
+                                                   >
+                                                   <i class="{{ origin.icon }}"> </i>
+                                                   {{ origin.getDisplayName() }}
+                                                </a>
                                             {% endif %}
                                         </li>
                                     {% endif %}
@@ -72,7 +90,7 @@
 
                                 <div id="kmgallery_manager_library_search" class="col-md-12">  
                                     <div class="btn-group col-md-3 pull-right" role="group" aria-label="...">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-th "> </i></button>
+                                        <button type="button" class="btn btn-default"><i class="fa fa-th "> </i> </button>
                                         <button type="button" class="btn btn-default"><i class="fa fa-th-list "> </i> </button>
                                         <button type="button" class="btn btn-default"><i class="fa fa-refresh "> </i> </button>
                                     </div>                                                                      
