@@ -22,39 +22,51 @@ class UploadSettingsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
+        ->add('name', TextType::class, [
     //            'disabled' => true,
                 'required' => true
             ])
-            ->add('title', TextType::class, [
+        ->add('title', TextType::class, [
     //            'disabled' => true,
                 'required' => true
             ])
-            ->add('prefix', TextType::class, [
+        ->add('prefix', TextType::class, [
     //            'disabled' => true,
                 'required' => false
             ])
-            ->add('dir', TextType::class, [
+        ->add('dir', TextType::class, [
     //            'disabled' => true,
                 'required' => false
             ])
-            ->add('mimeTypes', TextType::class, [
+        ->add('mimeTypes', TextType::class, [
     //            'disabled' => true,
                 'required' => true
             ])
-            ->add('singleFileMaxSize', TextType::class, [
+        ->add('singleFileMaxSize', TextType::class, [
     //            'disabled' => true,
                 'required' => false
+            ])
+        ->add('plugin_item_css', TextType::class, [
+    //            'disabled' => true,
+                'required' => true
+            ])
+        ->add('multiple', ChoiceType::class, ['choices' => ['Off' => '0', 'On' => '1'],
+                'multiple'  => false,
+                'expanded'  => true,
+                'required'  => true,
+                'data'      => '0'
             ])
         ->add('extra_title', ChoiceType::class, ['choices' => ['Off' => '0', 'On' => '1'],
-                'multiple' => false,
-                'expanded' => true,
-                'required' => true
+                'multiple'  => false,
+                'expanded'  => true,
+                'required'  => true,
+                'data'      => '0'
             ])
         ->add('extra_legal', ChoiceType::class, ['choices' => ['Off' => '0', 'On' => '1'],
-                'multiple' => false,
-                'expanded' => true,
-                'required' => true
+                'multiple'  => false,
+                'expanded'  => true,
+                'required'  => true,
+                'data'      => '0'
             ])
         ;
     }

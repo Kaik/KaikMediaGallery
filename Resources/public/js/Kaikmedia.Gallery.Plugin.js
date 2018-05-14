@@ -214,17 +214,17 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
 
 	// View
 	function showRelationData() {
-	    settings.$container.find("input[name*='relationExtra']").removeClass('hide');	    
+	    settings.$container.find("input[name*='relationExtra'][type='text']").removeClass('hide');	    
 	}
 	;
 	
 	function hideRelationData() {
-	    settings.$container.find("input[name*='relationExtra']").addClass('hide');    
+	    settings.$container.find("input[name*='relationExtra'][type='text']").addClass('hide');    
 	}
 	;
 	
 	function clearRelationData() {
-	    settings.$container.find("input[name*='relationExtra']").val('');	    
+	    settings.$container.find("input[name*='relationExtra'][type='text']").val('');	    
 	}
 	;
 	

@@ -3,10 +3,10 @@
     <div class="col-md-1" >
         {{ form_widget(feature.name, { 'attr': {'class': '', 'placeholder': __('Feature name') } }) }}
     </div>
-    <div class="col-md-2" >
+    <div class="col-md-1" >
         {{ form_widget(feature.title, { 'attr': {'class': '', 'placeholder': __('Display title') } }) }}
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
         {{ form_widget(feature.mimeTypes, { 'attr': {'class': '', 'placeholder': __('mimeTypes')} }) }}
     </div>
     <div class="col-md-1" >
@@ -17,6 +17,12 @@
     </div>
     <div class="col-md-1">
         {{ form_widget(feature.singleFileMaxSize, { 'attr': {'class': ''} }) }}
+    </div>
+    <div class="col-md-1">
+        {{ form_widget(feature.plugin_item_css, { 'attr': {'class': ''} }) }}
+    </div>
+    <div class="col-md-1">
+        {{ form_widget(feature.multiple, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
     </div>
     <div class="col-md-1">
         {{ form_widget(feature.extra_title, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
