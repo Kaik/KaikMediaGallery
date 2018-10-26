@@ -160,7 +160,7 @@ class AdditionalImagesProBundle extends AbstractProBundle implements HookProvide
 //        if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
 //            return;
 //        }
-        dump('test');
+//        dump('test');
         $content = [];
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.additional_images', $content));
     }

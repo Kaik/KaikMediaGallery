@@ -16,7 +16,7 @@ class JsonToArrayTransformer implements DataTransformerInterface {
      */
     public function transform($array) {
 
-        dump($array);
+//        dump($array);
         if (!is_array($array)) {
             return '';
         }
@@ -31,7 +31,7 @@ class JsonToArrayTransformer implements DataTransformerInterface {
      */
     public function reverseTransform($string) {
 
-          dump($string);
+//          dump($string);
 //        $modelData = json_decode($string, true);
 //        if ($modelData == null) {
 //            return [];

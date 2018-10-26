@@ -160,7 +160,7 @@ class GalleryProBundle extends AbstractProBundle implements HookProviderInterfac
 //        if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
 //            return;
 //        }
-        dump('test');
+//        dump('test');
         $content = '<p> test</p>';
         $hook->setResponse(new DisplayHookResponse('provider.gallery.ui_hooks.gallery', $content));
     }

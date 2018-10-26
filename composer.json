@@ -25,7 +25,7 @@
 			"displayname" : "KMGallery",
 			"url" : "kmgallery",
 			"capabilities" : {
-				"admin" : {"route" : "kaikmediagallerymodule_admin_info"}
+				"admin" : {"route" : "kaikmediagallerymodule_admin_index"}
 			},
 			"securityschema" : {
 				"KaikmediaGalleryModule::" : "::"

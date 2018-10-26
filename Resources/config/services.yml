@@ -1,4 +1,5 @@
 services:
+    _defaults: { public: true }
   # Link container
     kaikmedia_gallery_module.link_container:
         class: Kaikmedia\GalleryModule\Container\LinkContainer

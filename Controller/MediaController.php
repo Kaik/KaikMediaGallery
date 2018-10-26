@@ -375,7 +375,7 @@ class MediaController extends AbstractController
 
         $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
 
-        dump( $mediaItem );
+//        dump( $mediaItem );
 //        $media = new Media();
 //
 //        $form = $this->createForm(MediaType::class, $media);

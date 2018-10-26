@@ -43,7 +43,7 @@ class AddmediaFeature extends AbstractFeature {
         $enabled = ($global_settings->getEnabled() == 1) ? $this->getEnabled() : 0;
         $this->setEnabled($enabled);
         $thisGlobalSettings = $global_settings->getSettings();
-        dump($thisGlobalSettings);
+//        dump($thisGlobalSettings);
         if ($thisGlobalSettings instanceof ArrayCollection) {
             foreach ($this->settings as $setting) {
                 if ($setting instanceof UploadSettings) {
@@ -57,33 +57,33 @@ class AddmediaFeature extends AbstractFeature {
             return $this;
         }
     }
-    
+
     public function mergeUploadSetting($setting, $thisGlobalSettings) {
-       
+
         $globalUploadSetting = $thisGlobalSettings->filter(
                             function($entry) use ($setting) {
                         return ($entry->getName() == $setting->getName()) ? true : false;
                     }
                     )->first();
-        
+
             if (is_object($globalUploadSetting)) {
                 $setting->setUploadMaxFiles(($setting->getUploadMaxFiles() != '0' && $setting->getUploadMaxFiles() < $globalUploadSetting->getUploadMaxFiles() ? $setting->getUploadMaxFiles() : $globalUploadSetting->getUploadMaxFiles()));
-                $setting->setUploadMaxSingleSize(($setting->getUploadMaxSingleSize() != '0' && $setting->getUploadMaxSingleSize() < $globalUploadSetting->getUploadMaxSingleSize() ? $setting->getUploadMaxSingleSize() : $globalUploadSetting->getUploadMaxSingleSize()));                
-            }        
+                $setting->setUploadMaxSingleSize(($setting->getUploadMaxSingleSize() != '0' && $setting->getUploadMaxSingleSize() < $globalUploadSetting->getUploadMaxSingleSize() ? $setting->getUploadMaxSingleSize() : $globalUploadSetting->getUploadMaxSingleSize()));
+            }
     }
-    
+
     public function mergeMimeTypeSetting($setting, $thisGlobalSettings) {
-        
+
                 $globalMimeTypesSetting = $thisGlobalSettings->filter(
                             function($entry) use ($setting) {
                         return ($entry->getName() == $setting->getName() && $entry->getMimeType() == $setting->getMimeType() ) ? true : false;
                     }
                     )->first();
             if (is_object($globalMimeTypesSetting )) {
-                $setting->setEnabled(($globalMimeTypesSetting->getEnabled() == 1 ? $setting->getEnabled() : $globalMimeTypesSetting->getEnabled()));              
-            }         
+                $setting->setEnabled(($globalMimeTypesSetting->getEnabled() == 1 ? $setting->getEnabled() : $globalMimeTypesSetting->getEnabled()));
+            }
     }
-    
+
     public function setDefaultSettings() {
 
         $uploadSettings = new UploadSettings();
@@ -97,5 +97,5 @@ class AddmediaFeature extends AbstractFeature {
             $this->settings->add($mimeTypeSettings);
         }
     }
-    
+
 }

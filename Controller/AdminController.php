@@ -36,26 +36,15 @@ class AdminController extends AbstractController
     public function indexAction()
     {
         // Permission check
-        $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_ADMIN);
+        if (!$this->hasPermission('KaikmediaContactModule::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
 
-        return new RedirectResponse($this->get('router')->generate('kaikmediagallerymodule_admin_info', [], RouterInterface::ABSOLUTE_URL));
-    }
 
-    /**
-     * @Route("/info")
-     *
-     * @Theme("admin")
-     *
-     * the main administration function
-     *
-     * @return RedirectResponse
-     */
-    public function infoAction()
-    {
-        // Permission check
-        $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_ADMIN);
+
 
         return $this->render('@KaikmediaGalleryModule/Admin/info.html.twig', [
+//            'form' => $form->createView(),
         ]);
     }
 
