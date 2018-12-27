@@ -12,7 +12,11 @@
 {% form_theme form with ['bootstrap_3_layout.html.twig',
     'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
     'KaikmediaGalleryModule:Form:radio.html.twig',
-    'KaikmediaGalleryModule:Form:hooks.widget.html.twig'
+    'KaikmediaGalleryModule:Form:hooks.widget.html.twig',
+    'KaikmediaGalleryModule:Form:providers.widget.html.twig',
+    'KaikmediaGalleryModule:Form:features.widget.html.twig',
+    'KaikmediaGalleryModule:Form:upload.widget.html.twig',
+    'KaikmediaGalleryModule:Form:display.widget.html.twig'
 ] %}
 <div id="km_gallery_admin_settings">
     {{ showflashes() }}
@@ -88,78 +92,4 @@
     </div>
     {{ form_end(form) }}
 </div>
-{#{{ adminFooter() }}  #}
-
-
 {% endblock %}
-{% block footer %}
-    {{ parent() }}
-    {{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/jquery.collection.js')) }}
-
-    <script>
-        window.onload = function() {
-            (function($) {
-                    $(function(){
-{#                        $('[data-collection]').each(function() {
-                                console.log($(this).data('collection'));
-                                $('.' + $(this).data('collection')).collection();
-                                // Do somting with element
-                        });#}
-                        
-                        
-{#                        console.log('test');#}
-                        $('.features-selector').collection({
-                            min: 1,
-                //            init_with_n_elements: 1,
-                            allow_up: true,
-                            allow_down: true,
-                            add_at_the_end: true,
-                            custom_add_location: true
-{#                            after_remove: function (collection, element) {
-                                // already added child remove disable
-                                var value = element.children().first().children().first().val();
-                                if (value === '') {
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            }#}
-                        });
-                    });
-            })(jQuery);
-        };
-    </script>
-    
-{#    <script>
-    (function($) {
-            $(function(){
-                KaikMedia.Gallery.SettingsManager.init();  
-            });
-    })(jQuery);
-
-
-        <script>
-            window.onload = function() {
-                (function($) {
-                        $(function(){
-                            console.log('test');
-                            $('.{{collection_id}}').collection({
-                                min: 0,
-                                max: 5,
-                                up: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span> Move collection up</a>',
-                                down: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span> Move collection down</a>',
-                                add: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add collection</a>',
-                                remove: '<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Remove collection</a>'
-                            });
-                        });
-                })(jQuery);
-            };
-        </script>
-
-
-    </script>#}
-    
-{#    {{dump()}}#}
-{% endblock %}
-
-{#    {{ include('KaikmediaGalleryModule:Admin:settings.form.html.twig') }}#}

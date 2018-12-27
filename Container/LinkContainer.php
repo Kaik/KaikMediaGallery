@@ -83,35 +83,41 @@ class LinkContainer implements LinkContainerInterface
         $links = [];
         if ($this->permissionApi->hasPermission('KaikmediaGalleryModule::', '::', ACCESS_ADMIN)) {
             $links[] = [
-                'url' => $this->router->generate('kaikmediagallerymodule_admin_info'),
+                'url' => $this->router->generate('kaikmediagallerymodule_admin_index'),
                 'text' => $this->translator->__('Info'),
                 'title' => $this->translator->__('Here you can view gallery informations and statistics'),
-                'icon' => 'dashboard'];
+                'icon' => 'dashboard'
+                ];
             $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_admin_preferences'),
                 'text' => $this->translator->__('General settings'),
                 'title' => $this->translator->__('Adjust module settings'),
-                'icon' => 'magic'];
+                'icon' => 'magic'
+                ];
             $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_albums_albums'),
                 'text' => $this->translator->__('Albums'),
                 'title' => $this->translator->__('Here you can view gallery album tree'),
-                'icon' => 'wrench'];
+                'icon' => 'wrench'
+                ];
             $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_media_mediarelations'),
                 'text' => $this->translator->__('Media relations'),
                 'title' => $this->translator->__('Media object map manager'),
-                'icon' => 'dashboard'];
+                'icon' => 'dashboard'
+                ];
             $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_media_mediastore'),
                 'text' => $this->translator->__('Media'),
                 'title' => $this->translator->__('Media store manager'),
-                'icon' => 'magic'];
+                'icon' => 'magic'
+                ];
             $links[] = [
                 'url' => $this->router->generate('kaikmediagallerymodule_media_addnew'),
                 'text' => $this->translator->__('Add media'),
                 'title' => $this->translator->__('Add media'),
-                'icon' => 'wrench'];
+                'icon' => 'wrench'
+                ];
         }
 
         return $links;

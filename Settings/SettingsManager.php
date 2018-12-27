@@ -72,6 +72,14 @@ class SettingsManager
 
     public function setSettings($settings)
     {
+        if (array_key_exists('save', $settings)) {
+            unset($settings['save']);
+        }
+
+        if (array_key_exists('_token', $settings)) {
+            unset($settings['_token']);
+        }
+
         $this->settings = $settings;
 
         return true;
@@ -80,6 +88,17 @@ class SettingsManager
     public function getSettings()
     {
         return $this->settings;
+    }
+
+    public function getAll()
+    {
+        return $this->getSettings();
+    }
+
+    public function get($key, $default = null)
+    {
+//        return $this->variableApi->get($this->name, $key, $default);
+        return array_key_exists($key, $this->settings) ? $this->settings[$key] : $default;
     }
 
     public function getSettingsArray()
@@ -159,7 +178,7 @@ class SettingsManager
             $providersCollection->set(str_replace('.', '-', $area_name), $provider);
         }
 
-        foreach ($providersCollection as $key => $provider) {
+         foreach ($providersCollection as $key => $provider) {
             if (null != $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
                 $providerSettings = $settings[str_replace('.', '-', $key)];
                 $provider->setSettings($providerSettings);
@@ -175,7 +194,8 @@ class SettingsManager
                                     ? $moduleSettings['areas'][$areaKey]
                                     : [];
                                 // @todo solve enabled status ( enabled setting only for actually enabled hook)
-                                $area->setEnabled(array_key_exists('enabled', $areaSettings) ? $areaSettings['enabled'] : $areaSettings->getEnabled());
+                                $areaEnabled = is_array($areaSettings) ? : $areaSettings->getEnabled();
+                                $area->setEnabled(array_key_exists('enabled', $areaSettings) ? $areaSettings['enabled'] : $areaEnabled);
                                 $area->setSettings($areaSettings);
                             }
                         }
