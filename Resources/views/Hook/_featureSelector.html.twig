@@ -1,6 +1,5 @@
 {# empty Twig template #}
 <div id="{{ feature_name }}_{{ index }}" class="{{ feature_css }} feature km-gallery">
-    <span class="feature-name">{{ feature_title }}</span>
     <div class="item">
             <div class="progress hide" style="height: 4px; margin:0px; padding:0px;">
               <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -12,6 +11,7 @@
                 <img class="hide" src="" />
             {% endif %}
     </div>
+        <div class="feature-name text-center">{{ feature_title }}</div>
     <div class="actions btn-group btn-group-sm btn-group-justified" role="group">
             <a href="#"
                class="re-upload-action btn {% if feature_media %}{% else %} hide {% endif %}"
