@@ -4,7 +4,7 @@
             <div class="progress hide" style="height: 4px; margin:0px; padding:0px;">
               <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-            <div class="error-message alert alert-danger hide" role="alert">{{ __('Media upload failed!. Please try again.') }}</div>
+            <div class="error-message alert alert-danger hide" role="alert">{{ __('Media upload failed!. Please try again.', 'kaikmediagallerymodule') }}</div>
             {% if feature_media %}
                 <img src="{{ feature_media }}" />
             {% else %}
@@ -22,7 +22,7 @@
                data-singleFileMaxSize="{{ feature.singleFileMaxSize }}"
                data-prefix="{{ feature.prefix|default('') }}"
                data-dir="{{ feature.dir|default('') }}"
-               > <i class="fa fa-plus" title="{{ __('Select different media') }}"> </i> {{ __('Change') }} </a>
+               > <i class="fa fa-plus" title="{{ __('Select different media', 'kaikmediagallerymodule') }}"> </i> {{ __('Change', 'kaikmediagallerymodule') }} </a>
 
             <a href="#"
                class="upload-action btn {% if feature_media %} hide {% else %}{% endif %}"
@@ -33,7 +33,7 @@
                data-singleFileMaxSize="{{ feature.singleFileMaxSize }}"
                data-prefix="{{ feature.prefix|default('') }}"
                data-dir="{{ feature.dir|default('') }}"
-               > <i class="fa fa-plus" title="{{ __('Select media from your computer') }}"> </i> {{ __('Select') }} </a>
+               > <i class="fa fa-plus" title="{{ __('Select media from your computer', 'kaikmediagallerymodule') }}"> </i> {{ __('Select', 'kaikmediagallerymodule') }} </a>
 
             <a href="#"
                class="remove-action btn {% if feature_media %}{% else %} hide {% endif %}"
@@ -42,32 +42,32 @@
                data-feature="{{ feature.name }}"
                data-allowedMimeTypes="{{ feature.mimeTypes }}"
                data-singleFileMaxSize="{{ feature.singleFileMaxSize }}"
-               > <i class="fa fa-trash" title="{{ __('Remove') }}"></i> {{ __('Remove') }}
+               > <i class="fa fa-trash" title="{{ __('Remove', 'kaikmediagallerymodule') }}"></i> {{ __('Remove', 'kaikmediagallerymodule') }}
             </a>
     </div>
     <div class="relation-data">
        <input class="relation-data-media form-control input-sm hide"
               type="text"
               name="kmgallery_features[{{ index }}][media]"
-              placeholder="{{ __('Media Id') }}"
+              placeholder="{{ __('Media Id', 'kaikmediagallerymodule') }}"
               value="{{ feature_media_id }}"
               />
        <input class="relation-data-relation form-control input-sm hide"
               type="text"
               name="kmgallery_features[{{ index }}][relation]"
-              placeholder="{{ __('Media Relation Id') }}"
+              placeholder="{{ __('Media Relation Id', 'kaikmediagallerymodule') }}"
               value="{{ feature_relation_id }}"
               />
        <input class="relation-data-title form-control input-sm {% if feature_media %}{% else %} hide {% endif %}"
               {% if feature.extra_title != '1' %} type="hidden" {% else %} type="text" {% endif %}
               name="kmgallery_features[{{ index }}][relationExtra][title]"
-              placeholder="{{ __('Title') }}"
+              placeholder="{{ __('Title', 'kaikmediagallerymodule') }}"
               value="{{ feature_extra_title }}"
               />
        <input class="relation-data-copyright form-control input-sm {% if feature_media %}{% else %} hide {% endif %}"
               {% if feature.extra_legal != '1' %} type="hidden" {% else %} type="text" {% endif %}
               name="kmgallery_features[{{ index }}][relationExtra][legal]"
-              placeholder="{{ __('Copyright') }}"
+              placeholder="{{ __('Copyright', 'kaikmediagallerymodule') }}"
               value="{{ feature_extra_legal }}"
               />
     </div>
