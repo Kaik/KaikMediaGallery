@@ -313,7 +313,7 @@ class MediaProBundle extends AbstractProBundle implements HookProviderInterface
                     $toStoreRelation->setFeature($feature['name']);
                     $toStoreRelation->setMedia($mediaItem);
                     $toStoreRelation->setHookedModule($hook->getCaller());
-                    $toStoreRelation->setHookedAreaId($hook->getAreaId());
+//                    $toStoreRelation->setHookedAreaId($hook->getAreaId());
                     $toStoreRelation->setHookedObjectId($hook->getId());
                     $toStoreRelation->setRelationExtra($relations[$key]['relationExtra']);
 
