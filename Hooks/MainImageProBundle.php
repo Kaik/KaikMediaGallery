@@ -161,6 +161,7 @@ class MainImageProBundle extends AbstractProBundle implements HookProviderInterf
 
         $feature = array_key_exists('feature', $config['display']) ? $config['display']['feature'] : false;
         $mode = array_key_exists('mode', $config['display']) ? $config['display']['mode'] : 0;
+        $first = array_key_exists('first', $config['display']) ? $config['display']['first'] : false;
         $width = array_key_exists('width', $config['display']) ? $config['display']['width'] : false;
         $height = array_key_exists('feature', $config['display']) ? $config['display']['height'] : false;
 
@@ -325,9 +326,37 @@ class MainImageProBundle extends AbstractProBundle implements HookProviderInterf
         if (!$module || !$objId || !$feature) {
             return [];
         } else {
+            $filter = ['hookedModule' => $module, 'hookedObjectId' => $objId];
+
+            if ($feature) {
+                $filter['feature'] = $feature;
+            }
+
             $media = $this->entityManager
                 ->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')
-                    ->findOneBy(['feature' => $feature, 'hookedModule' => $module, 'hookedObjectId' => $objId]);
+                    ->findOneBy($filter);
+        }
+
+        return $media;
+    }
+
+    /**
+     * Process hook for delete.
+     *
+     * @param ProcessHook $hook the hook
+     *
+     * @return bool
+     */
+    public function getMedia($module = null, $objId = null, $area = null)
+    {
+        if (!$module || !$objId) {
+            return [];
+        } else {
+            $filter = ['hookedModule' => $module, 'hookedObjectId' => $objId];
+
+            $media = $this->entityManager
+                ->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')
+                    ->findOneBy($filter);
         }
 
         return $media;
