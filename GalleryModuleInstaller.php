@@ -55,6 +55,9 @@ class GalleryModuleInstaller extends AbstractExtensionInstaller
             'itemsperpage' => 25,
             'enablecategorization' => true,
             'upload_dir' => '/web/uploads',
+            'hooks' => ['providers' => [],
+                        'subscribers'=> []
+                ]
         ];
         $this->setVars($modvars);
         // initialisation successful
