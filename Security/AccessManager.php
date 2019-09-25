@@ -39,11 +39,6 @@ class AccessManager
      */
     private $permissionApi;
 
-    /**
-     * @var CurrentUser
-    */
-    private $user;
-
     public function __construct(
         RequestStack $requestStack,
         TranslatorInterface $translator,
@@ -54,7 +49,7 @@ class AccessManager
         $this->request = $requestStack->getMasterRequest();
         $this->translator = $translator;
         $this->permissionApi = $permissionApi;
-        $this->user = $this->request->getSession()->get('uid') > 1 ? $this->request->getSession()->get('uid') : 1;
+//        $this->user = $this->request->getSession()->get('uid') > 1 ? $this->request->getSession()->get('uid') : 1;
     }
 
     /*
@@ -65,30 +60,36 @@ class AccessManager
      * Returns false if use has permissions.
      * On exit, $uid has the user's UID if logged in.
      */
-    public function hasPermission($level = ACCESS_READ, $throw = true , $component = '', $instance = '')
+    public function hasPermission($level = ACCESS_READ, $throw = true, $component = null, $instance = null, $user = null, $throwMessage = null, $module = null)
     {
-        // If not logged in, redirect to login screen
-        if ($this->user <= 1 && $throw) {
-            throw new AccessDeniedException();
-        } else {
-            $allowed = false;
-        }
+        $module = null === $module ? $this->name : $module;
+        $comp = null === $component ? '::' : $component;
+        $inst = null === $instance ? '::' : $instance;
 
         // @todo module enabled/disabled check
 
         // Zikula perms check
-        if (!$this->hasPermissionRaw($component, $instance, $level) && $throw) {
-            throw new AccessDeniedException();
-        } else {
-            $allowed = false;
-        }
+        $zkPerms = $this->hasPermissionRaw($module, $comp, $inst, $level, $user);
 
-        // Return user uid to signify everything is OK.
-        return $allowed;
+        // if needed additional conditions here
+        $allowed = $zkPerms;
+
+//        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
+//            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+//                        'forum_disabled_info' => $this->getVar('forum_disabled_info'),
+//            ]);
+//        }
+
+        // Return status or throw exception
+        if (!$allowed && $throw) {
+            throw new AccessDeniedException($throwMessage);
+        } else {
+            return $allowed;
+        }
     }
 
-    public function hasPermissionRaw($component, $instance, $level)
+    private function hasPermissionRaw($module, $component, $instance, $level, $user)
     {
-        return $this->permissionApi->hasPermission($this->name.'::', $component.'::'.$instance, $level);
+        return $this->permissionApi->hasPermission($module.$component, $instance, $level, $user);
     }
 }

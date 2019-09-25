@@ -14,30 +14,24 @@ class JsonToArrayTransformer implements DataTransformerInterface {
     /**
      * @return string
      */
-    public function transform($array) {
-
-//        dump($array);
-        if (!is_array($array)) {
-            return '';
-        }
-        //return json
-        return json_encode($array);
-//        return '';
+    public function transform($array) 
+    {
+        return $array;
     }
 
     /**
      * @return User|null
      * @throws TransformationFailedException if object (user) is not found.
      */
-    public function reverseTransform($string) {
-
+    public function reverseTransform($string) 
+    {
 //          dump($string);
-//        $modelData = json_decode($string, true);
-//        if ($modelData == null) {
-//            return [];
-//        }
-//        // return array
-//        return $modelData;
-        return [];
+        $modelData = json_decode($string, true);
+        if ($modelData == null) {
+            return [];
+        }
+        // return array
+        return $modelData;
+//        return $string;
     }
 }

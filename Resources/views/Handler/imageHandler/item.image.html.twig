@@ -1,0 +1,69 @@
+{% set settings = options.settings is defined ? options.settings : null %}
+{% set mediaExtra = options.mediaExtra is defined ? options.mediaExtra : null %}
+{% set relationExtra = options.relationExtra is defined ? options.relationExtra : null %}
+
+<img 
+     src="{{ resourcePath }}" 
+     class="img-responsive" 
+     {% if settings.show_title is defined and settings.show_title %}title="{{ mediaExtra.title is defined ? mediaExtra.title : '' }}"{% endif %}
+     />
+
+
+{#
+<!--[if IE 9]><video style="display: none"><![endif]-->
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [360, 205] }}) }}" 
+              media="(max-width: 360px)" 
+             srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [360, 205] }}) }}
+            ">
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" 
+              media="(max-width: 768px)" srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}
+">
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" media="(max-width: 1024px)" srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}">
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}">
+<!--[if IE 9]></video><![endif]-->
+<img src="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" class=" lazyloaded" alt="">
+#}
+
+
+{#{{ dump() }}#}
+{#{% set %}
+{#<img class="img-responsive" src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ original.path ~ '/' ~ original.mediaExtra.path }}" />#}
+{#{% set image=|imagine_filter('dynamic', {"thumbnail": {"size": [600, 350] }})])) %}#}
+{#<div class="item-image" >
+	{% if original.path  %}        
+	        {% else %}
+	            <span class="fa fa-exclamation-triangle fa-2x"> </span>
+	            {{ __('File path is empty!') }}           
+	{% endif %}
+</div>      #}  
+
+
+{# {% if article_image_src %}
+<!--[if IE 9]><video style="display: none"><![endif]-->
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [360, 205] }}) }}" media="(max-width: 360px)" srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [360, 205] }}) }}">
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" media="(max-width: 768px)" srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}">
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" media="(max-width: 1024px)" srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}">
+<source data-srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" srcset="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}">
+<!--[if IE 9]></video><![endif]-->
+<img src="{{ article_image_src|imagine_filter('dynamic', {"thumbnail": {"size": [720, 405] }}) }}" class=" lazyloaded" alt="">
+{% endif %}#}
+
+{# article 1
+Logic bit
+#}
+{# Gallery to move
+#}
+{#{% set gallery='' %}
+{% set hooks=notifyDisplayHooks('news.ui_hooks.news.display_view', article.id, NULL, TRUE)  %}
+{% set gallery=(attribute(hooks, 'provider.gallery.ui_hooks.media') is defined ? attribute(hooks, 'provider.gallery.ui_hooks.media').__toString() : {}) %}
+{% set image='' %}
+{% for feature in gallery %}
+        {% if feature.relation.media is defined
+           and feature.relation.media.mediaExtra.fileName is defined
+           and feature.relation.media.mediaExtra.fileName is not empty
+           and feature.name == 'featured'
+        %}
+        {% set image=('/uploads/' ~ (feature.relation.media.mediaExtra.subdir is defined ? feature.relation.media.mediaExtra.subdir ~ '/' : '')
+                                  ~ feature.relation.media.mediaExtra.fileName) %}
+    {% endif %}
+{% endfor %}#}

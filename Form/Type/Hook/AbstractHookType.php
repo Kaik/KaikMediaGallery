@@ -20,4 +20,13 @@ use Symfony\Component\Form\AbstractType;
  */
 abstract class AbstractHookType extends AbstractType
 {
+    
+//        "display_view" => "view"
+//    "form_edit" => "edit"
+//    "validate_edit" => "validateEdit"
+//    "process_edit" => "processEdit"
+//    "form_delete" => "delete"
+//    "validate_delete" => "validateDelete"
+//    "process_delete" => "processDelete"
+    
 }

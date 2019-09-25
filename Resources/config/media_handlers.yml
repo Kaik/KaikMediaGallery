@@ -1,0 +1,25 @@
+services:
+    
+    kaikmedia_gallery_module.internal.media_hadlers_collector:
+        class: Kaikmedia\GalleryModule\Collector\MediaHandlersCollector
+
+    kaikmedia_gallery_module.image_handler:
+        class: Kaikmedia\GalleryModule\Media\Handlers\ImageHandler
+        arguments:
+            - "@translator.default"
+            - "@templating"
+            - "@liip_imagine.data.manager"
+#            - "@liip_imagine.filter_service"
+            - "@liip_imagine.controller"
+            - "@liip_imagine.cache.manager"
+            - "@liip_imagine.filter.configuration"
+            - "@kaikmedia_gallery_module.settings_manager"
+        tags:
+            - { name: kaikmedia.gallery.media_hadler, handlerName: "image" }
+            
+    kaikmedia_gallery_module.youtube_handler:
+        class: Kaikmedia\GalleryModule\Media\Handlers\YoutubeHandler
+        arguments:
+          - "@translator.default"
+        tags:
+            - { name: kaikmedia.gallery.media_hadler, handlerName: "youtube" }

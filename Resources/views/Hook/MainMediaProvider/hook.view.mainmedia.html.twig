@@ -1,0 +1,9 @@
+{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/hook.provider.mainmedia.css')) }}
+{% set container_id = 'conatiner' ~ random() %}
+<div id="{{ container_id }}" class="km_galllery_plugin_container gallery-container {{ areaName|replace({'.': '_'}) }} {{ settings.feature }} ">
+    <div class="selected-media">
+        {% for selected in selectedItems.items %}
+            {{ include('@KaikmediaGalleryModule/Hook/MainMediaProvider/hook.view.mainmedia.display.html.twig') }}
+        {% endfor %}
+    </div>
+</div>

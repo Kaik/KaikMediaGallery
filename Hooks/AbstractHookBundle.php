@@ -25,6 +25,8 @@ abstract class AbstractHookBundle implements \ArrayAccess
     private $modules;
 
     private $settings = [];
+    
+    private $area;
 
     public function __construct()
     {
@@ -41,6 +43,15 @@ abstract class AbstractHookBundle implements \ArrayAccess
         return $this->baseName;
     }
 
+    public function setAreaName($area) {
+        $this->area = $area;
+        
+        return $this;
+    }
+    public function getAreaName() {
+        return $this->area;
+    }
+    
     public function setSettings($hooked)
     {
         $this->settings = $hooked;

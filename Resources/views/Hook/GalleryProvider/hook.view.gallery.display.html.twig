@@ -1,0 +1,13 @@
+{#{% set idPrefix=areaName|replace({'.': '_'}) ~ '_' ~ hookedModule ~ '_' ~ hookedAreaId|replace({'.': '_'}) ~ '_' ~ selected.feature ~ '_' ~ hookedObjectId  %}
+{% set lastMediaHandler=selected.getLastMediaHandler()|default('image') %}
+
+{% set presets = {'mediaExtra':selected.mediaExtra, 'relationExtra': selected.relationExtra, 'settings': settings } %}
+<div id="{{ idPrefix }}_mdtm" class="mdtm">
+    <div class="error hide"></div>
+        <div class="preview">
+            {% if handlers[lastMediaHandler] is defined %}
+                {{ handlers[lastMediaHandler].getPreviewForDisplay(selected.media, presets)|raw }}
+            {% endif %}
+        </div>
+</div>
+#}

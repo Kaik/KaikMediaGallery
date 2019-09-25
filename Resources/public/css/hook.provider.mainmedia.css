@@ -1,0 +1,21 @@
+
+.mdtm .details {
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    margin: 10px;
+    margin-bottom: -116px;
+    background: #0000008c;
+    color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+}
+.mdtm .details .title {
+    font-size: 1.1em;
+}
+.mdtm .details .description {
+    font-size: 1.1em;
+}
+.mdtm .details .legal {
+    font-size: 1.1em;
+}

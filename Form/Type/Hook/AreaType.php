@@ -32,6 +32,7 @@ class AreaType extends AbstractHookType
         $listener = new AddAreaProviderSettingsFormListener(
             $options['type'],
             $options['options'],
+            $options['matchedEvents'],
             $options['allow_add'],
             $options['allow_delete'],
             $options['delete_empty']
@@ -56,6 +57,7 @@ class AreaType extends AbstractHookType
     {
         $optionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'entry';
+            $value['matchedEvents'] = [];
 
             return $value;
         };
@@ -67,6 +69,7 @@ class AreaType extends AbstractHookType
             'type' => 'text',
             'options' => [],
             'delete_empty' => false,
+            'matchedEvents' => [],
             'data_class' => 'Kaikmedia\GalleryModule\Hooks\BindingObject'
         ]);
         $resolver->setNormalizer('options', $optionsNormalizer);

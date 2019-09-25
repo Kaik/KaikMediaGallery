@@ -1,0 +1,17 @@
+{# 
+
+#}
+{% macro form_text_field(block_class, input_class, input_id, input_name, input_placeholder, input_value, label_text ) %}
+    <div class="{{ block_class }}">
+        <input class="{{ input_class }}" 
+               id="{{ input_id }}" 
+               type="text" 
+               name="{{ input_name }}" 
+               placeholder="{{ input_placeholder }}"
+               value="{{ input_value }}"
+               >
+        <label for="{{ input_id }}">
+            {{ label_text }}
+        </label>
+    </div>
+{% endmacro %}

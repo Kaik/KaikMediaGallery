@@ -1,0 +1,57 @@
+<div class="row" style="margin-left: -10px; margin-right:-10px;margin-bottom:0px;padding-top:7px;padding-bottom:7px;border-bottom:1px solid #d8d8d8;background-color: #f1f1f1;">
+    <div class="col-xs-12 col-md-4">
+        <h4 class="box-title">{{ __('Collection info') }}</h4>
+        <div class="col-xs-12">
+            <div class="form-group has-float-label">
+                {{ form_widget(form.feature, { 'attr': {'class': '', 'placeholder': __('Collection name') } }) }}
+                {{ form_label(form.feature) }}
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                {{ form_label(form.mode) }}
+                {{ form_widget(form.mode, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-4">
+        <h4 class="box-title">{{ __('Display settings') }}</h4>
+        <div class="col-xs-12">
+            <div class="form-group has-float-label">
+                {{ form_widget(form.width) }}
+                {{ form_label(form.width) }}
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group has-float-label">
+                {{ form_widget(form.height) }}
+                {{ form_label(form.height) }}
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group has-float-label">
+                {{ form_widget(form.css_class) }}
+                {{ form_label(form.css_class) }}
+            </div>
+        </div>  
+    </div>
+    <div class="col-xs-12 col-md-4">
+        <h4 class="box-title">{{ __('Extra settings') }}</h4>
+        <div class="form-group">
+            {{ form_label(form.autoplay) }}
+            {{ form_widget(form.autoplay, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.show_title) }}
+            {{ form_widget(form.show_title, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.show_legal) }}
+            {{ form_widget(form.show_legal, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.show_description) }}
+            {{ form_widget(form.show_description, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+{#{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/gallery.list.css')) }}#}
+<div class="kmgallery-style-tiles">
+    {% if items|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="heading">
+{#                    <h5><span class="fa fa-picture-o"></span> {{ __('Gallery and media')}}</h4>#}
+                </div>
+                <div class="list-group">
+                    {% for mediaRelation in items %}
+                        {% set idPrefix=areaName|replace({'.': '_'}) ~ '_' ~ hookedModule ~ '_' ~ hookedAreaId|replace({'.': '_'}) ~ '_' ~ mediaRelation.feature ~ '_' ~ hookedObjectId  %}
+                        {% set lastMediaHandler=mediaRelation.getLastMediaHandler()|default('image') %}
+                          <div class="list-group-item clearfix">
+                            <div class="col-xs-5 col-md-3">
+                                {% set presets = {'mediaExtra':mediaRelation.mediaExtra, 'relationExtra': mediaRelation.relationExtra, 'settings': settings } %}
+                                {% if handlers[lastMediaHandler] is defined %}
+                                    {{ handlers[lastMediaHandler].getPreviewForDisplay(mediaRelation.media, presets)|raw }}
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-7 col-md-9">
+                                <h4 class="list-group-item-heading">{{ mediaRelation.mediaExtra.title }}</h4>
+                                <p class="list-group-item-text">{{ mediaRelation.mediaExtra.description|default('') }}</p>
+                            </div>
+                          </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>          
+    {% endif %}
+</div>

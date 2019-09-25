@@ -11,8 +11,25 @@
 
 namespace Kaikmedia\GalleryModule;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Zikula\Core\AbstractModule;
+use Kaikmedia\GalleryModule\DependencyInjection\Compiler\TwigCompilerPass;
+use Kaikmedia\GalleryModule\DependencyInjection\Compiler\MediaHandlersCollectorPass;
 
 class KaikmediaGalleryModule extends AbstractModule
 {
+    const NAME = 'KaikmediaGalleryModule';
+
+    /**
+     * {@inheritdoc}
+     *
+     * Adds compiler passes to the container.
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new TwigCompilerPass());
+        $container->addCompilerPass(new MediaHandlersCollectorPass());
+    }
 }

@@ -1,0 +1,27 @@
+{% import "@KaikmediaGalleryModule/Form/form.field.text.macro.html.twig" as form_helper %}
+<div class="media-relation-mediaextra">
+        {{ form_helper.form_text_field('media-relation-mediaextra-title form-group has-float-label' ~ (settings.extra_title is defined and settings.extra_title ? '' : ' hide'), 
+            'form-control', 
+            idPrefix ~ '_mediaextra_title', 
+            formNamePrefix ~ '[mediaExtra][title]', 
+            __('Title'), 
+            selected.mediaExtra.title|default(''), 
+            __('Title')
+        ) }}
+        {{ form_helper.form_text_field('media-relation-mediaextra-description form-group has-float-label' ~ (settings.extra_description is defined and settings.extra_description ? ' ' : ' hide'),  
+            'form-control ', 
+            idPrefix ~ '_mediaextra_description', 
+            formNamePrefix ~ '[mediaExtra][description]', 
+            __('Description'), 
+            selected.mediaExtra.description|default(''), 
+            __('Description')
+        ) }}
+        {{ form_helper.form_text_field('media-relation-mediaextra-legal form-group has-float-label' ~ (settings.extra_legal is defined and settings.extra_legal ? ' ' : ' hide'),   
+            settings.extra_legal is defined and settings.extra_legal ? 'form-control ' : 'form-control hide',  
+            idPrefix ~ '_mediaextra_legal', 
+            formNamePrefix ~ '[mediaExtra][legal]', 
+            __('Legal'), 
+            selected.mediaExtra.legal|default(''), 
+            __('Legal')
+        ) }}
+</div>

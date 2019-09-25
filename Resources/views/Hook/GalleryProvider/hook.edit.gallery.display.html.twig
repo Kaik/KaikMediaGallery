@@ -1,0 +1,171 @@
+{% set idPrefix=areaName|replace({'.': '_'}) ~ '_' ~ hookedModule ~ '_' ~ hookedAreaId|replace({'.': '_'}) ~ '_' ~ hookedObjectId ~ '_' ~ selected.feature ~ '_' ~ selected.id %}
+{% set formNamePrefix=areaName|replace({'.': '_'}) ~ '[' ~ hookedModule ~ '][' ~ hookedAreaId ~ '][' ~ hookedObjectId ~ '][' ~ selected.feature ~ '][' ~ selected.id ~ ']' %}
+{% set lastMediaHandler=selected.getLastMediaHandler()|default(null) %}
+
+<div id="{{ idPrefix }}_mdtm" class="mdtm">
+    <div class="error hide"></div>
+    <div class="preview">
+        {% if handlers[lastMediaHandler] is defined %}
+            {{ handlers[lastMediaHandler].getPreviewForEdit(selected.media, selected.relationExtra)|raw }}
+        {% endif %}
+    </div>
+    
+    <div class="action remove dropdown">
+        <button id="{{ idPrefix }}_remove_action"
+                title="{{ __('Remove this item?') }}"
+                class="btn btn-sm btn-link"
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <i class="fa fa-trash fa-fw text-danger"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="{{ idPrefix }}_remove_action">
+             <p class="dropdown-header">{{ __('Remove this item?') }}</p>
+             <div class="dropdown-item">
+                <button type="button" class="btn btn-default">{{ __('Remove media') }}</button>
+             </div>
+        </div>
+    </div>
+             
+    <div class="action info dropdown {{ settings.enable_info is defined and settings.enable_info ? '' : 'hide' }}">
+        <button id="{{ idPrefix }}_info_action"
+                title="{{ __('Media information') }}"
+                class="btn btn-sm btn-link"
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <i class="fa fa-info fa-fw"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ idPrefix }}_info_action">
+             <p class="dropdown-header">{{ __('Media information') }}</p>
+             {{ include('@KaikmediaGalleryModule/Relations/view.details.media.relation.html.twig') }}
+        </div>
+    </div>
+        
+    <div class="action edit dropup {{ settings.enable_editor is defined and settings.enable_editor ? '' : 'hide' }}">
+        <button id="{{ idPrefix }}_edit_action"
+                title="{{ __('Media editor') }}"
+                class="btn btn-sm btn-link"
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <i class="fa fa-paint-brush fa-fw"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ idPrefix }}_edit_action">
+             <p class="dropdown-header">{{ __('Media editor') }}</p>
+            {#    this should be provided by handler         #}
+            <div class="dropdown-item {{ settings.editor_rotate is defined and settings.editor_rotate ? '' : 'hide' }}">
+                <a class="btn btn-sm btn-link" data-content="rotate-media" data-toggle="tab" role="tab"><i class="fa fa-rotate fa-fw"></i></a>
+            </div>
+            <div class="dropdown-item {{ settings.editor_positioning is defined and settings.editor_positioning ? '' : 'hide' }}">
+                <div class="form-group has-float-label">
+                    <select class="form-control" 
+                            id="{{ idPrefix }}_display_select" 
+                            name="{{ formNamePrefix }}[relationExtra][display]">
+                        <option value="top" {{ selected.relationExtra.display == 'top' ? 'selected': '' }}>{{ __('Top') }}</option>
+                        <option value="center" {{ selected.relationExtra.display == 'center' ? 'selected': '' }}>{{ __('Center') }}</option>
+                        <option value="bottom" {{ selected.relationExtra.display == 'top' ? 'bottom': '' }}>{{ __('Bottom') }}</option>
+                    </select>
+                    <label for="{{ idPrefix }}_display_select">
+                    {{ __('Media position') }}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+                    
+    <div class="action relation dropup {{ settings.enable_extra is defined and settings.enable_extra ? '' : 'hide' }}">
+        <button id="{{ idPrefix }}_relation_action"
+                title="{{ __('Media details') }}"
+                class="btn btn-sm btn-link"
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <i class="fa fa-sticky-note-o fa-fw"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right  pre-scrollable" aria-labelledby="{{ idPrefix }}_relation_action">
+             <p class="dropdown-header">{{ __('Media details') }}</p>
+             
+             {{ include('@KaikmediaGalleryModule/Relations/edit.mediaExtra.media.relation.html.twig') }}
+             
+             {{ include('@KaikmediaGalleryModule/Relations/edit.relationExtra.media.relation.html.twig') }}
+             {{ include('@KaikmediaGalleryModule/Relations/edit.collectionExtra.media.relation.html.twig') }}
+             
+             {{ include('@KaikmediaGalleryModule/Relations/edit.basics.media.relation.html.twig') }}
+             {{ include('@KaikmediaGalleryModule/Relations/edit.hooks.media.relation.html.twig') }}
+         </div>
+    </div>
+{#         
+    <div class="styles text-center {{ settings.enable_styles is defined and settings.enable_styles ? '' : 'hide'  }}">
+        <div class="btn-group" data-toggle="buttons">
+            {% for style in styles %}
+                {% if style.name in settings.styles_allowed%}
+                    <label class="btn btn-default btn-xs {{ selected.relationExtra.style is defined and selected.relationExtra.style == style.name  ? 'active' : ''  }}">
+                        <input 
+                            type="radio" 
+                            name="{{ formNamePrefix }}[relationExtra][style]" 
+                            id="{{ idPrefix }}_style_select" 
+                            autocomplete="off"
+                            value="{{ style.name }}"
+                            {{ selected.relationExtra.style is defined and selected.relationExtra.style == style.name ? 'checked' : ''  }}
+                            > 
+                        <i class="{{ style.icon }} fa-1x"> </i>
+                        {{ style.title }}
+                    </label>
+                {% endif %}  
+            {% endfor %}  
+        </div>
+    </div>
+    #}    
+    <div class="action styles dropup {{ settings.enable_styles is defined and settings.enable_styles ? '' : 'hide'  }}">
+        {#   default     #}
+        {% set defaultStyle = {'name': settings.styles_default, 'icon': 'fa fa-square'} %}
+        {% set selectedStyle = false %}
+        {% for style in styles %}
+            {% if style.name == settings.styles_default %}
+                {% set defaultStyle = {'name': style.name, 'icon': style.icon} %}
+            {% endif %}
+            {% if style.name in settings.styles_allowed %}
+                {% if selected.relationExtra.style is defined and selected.relationExtra.style == style.name%}
+                    {% set selectedStyle = {'name': style.name, 'icon': style.icon} %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}  
+        {% set selectedStyle = selectedStyle is not sameas(false) ? selectedStyle : defaultStyle %}
+            
+        <button id="{{ idPrefix }}_styles_action"
+                title="{{ __('Change display style') }}"
+                class="btn btn-sm btn-link"
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <i class="{{ selectedStyle.icon }} fa-1x"> </i> {{ selectedStyle.name|capitalize }}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="{{ idPrefix }}_styles_action">
+             <p class="dropdown-header">{{ __('Change display style') }}</p>
+            <div class="btn-group" data-toggle="buttons">
+                {% for style in styles %}
+                    {% if style.name in settings.styles_allowed %}
+                        <label class="dropdown-item btn btn-default btn-xs {{ selectedStyle.name == style.name  ? 'active' : ''  }}">
+                            <input 
+                                type="radio" 
+                                name="{{ formNamePrefix }}[relationExtra][style]" 
+                                id="{{ idPrefix }}_style_select" 
+                                autocomplete="off"
+                                value="{{ style.name }}"
+                                {{ selectedStyle.name == style.name ? 'checked' : ''  }}
+                                > 
+                            <i class="{{ style.icon }} fa-1x"> </i>
+                            {{ style.title }}
+                        </label>
+                    {% endif %}  
+                {% endfor %}  
+            </div>
+        </div>
+    </div> 
+</div>

@@ -1,0 +1,46 @@
+{% block kmgallery_provider_gallery_settings_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block kmgallery_provider_gallery_binding_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block kmgallery_provider_gallery_settings_display_widget %}
+    {% spaceless %}
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h4 class="box-title">{{ __('Display') }}</h4>
+            </div>
+            <div class="box-body">
+                {{ include('@KaikmediaGalleryModule/Form/Providers/GalleryProvider/display.prototype.html.twig', { 'form': form }) }}
+            </div>
+            <div class="box-footer">
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block kmgallery_provider_gallery_settings_edit_widget %}
+    {% spaceless %}
+{#        {% set collection_id = 'collection' ~ random() %}#}
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h4 class="box-title">{{ __('Edit') }}</h4>
+            </div>
+            <div class="box-body">
+                {{ include('@KaikmediaGalleryModule/Form/Providers/GalleryProvider/edit.prototype.html.twig', { 'form': form }) }}
+            </div>
+            <div class="box-footer">
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock %}

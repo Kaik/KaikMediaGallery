@@ -11,6 +11,9 @@
 
 namespace Kaikmedia\GalleryModule\Hooks;
 
+use Zikula\Bundle\HookBundle\HookProviderInterface;
+use Zikula\Bundle\HookBundle\HookSubscriberInterface;
+
 /**
  * BindingObject
  *
@@ -68,6 +71,38 @@ class BindingObject implements \ArrayAccess
         return $this;
     }
 
+    public function getSubscriberClass()
+    {
+        return (new \ReflectionClass($this->subscriber))->getName();
+    }
+    
+    public function getSubscriberArea()
+    {
+        return $this->subscriberArea;
+    }   
+      
+    public function getMatchedEvents()
+    {
+        if (!$this->getSubscriber() instanceof HookSubscriberInterface) {
+            
+            return [];
+        }
+        
+        if (!$this->getProvider() instanceof HookProviderInterface) {
+            
+            return [];
+        }        
+
+        return array_intersect_key($this->getProvider()->getProviderTypes(), $this->getSubscriber()->getEvents());
+    }    
+    
+    public function setSubscriberArea($areaName)
+    {
+        $this->subscriberArea = $areaName;
+        
+        return $this;
+    }
+    
     public function getForm()
     {
         return $this->form;

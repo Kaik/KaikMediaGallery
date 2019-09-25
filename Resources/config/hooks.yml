@@ -1,0 +1,35 @@
+services:
+
+    kaikmedia_gallery_module.hook_provider.gallery_ui_hooks_provider:
+        class: Kaikmedia\GalleryModule\Hooks\GalleryProBundle
+        arguments:
+            - "@kernel"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@doctrine.orm.default_entity_manager"
+            - "@kaikmedia_gallery_module.settings_manager"
+            - "@kaikmedia_gallery_module.access_manager"
+            - "@kaikmedia_gallery_module.internal.media_hadlers_collector"
+            - "@kaikmedia_gallery_module.hooked_media_collection_manager"
+            - "@kaikmedia_gallery_module.media_manager"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.gallery" }
+
+    kaikmedia_gallery_module.hook_provider.main_image_ui_hooks_provider:
+        class: Kaikmedia\GalleryModule\Hooks\MainImageProBundle
+        arguments:
+            - "@kernel"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@doctrine.orm.default_entity_manager"
+            - "@kaikmedia_gallery_module.settings_manager"
+            - "@kaikmedia_gallery_module.access_manager"
+            - "@kaikmedia_gallery_module.internal.media_hadlers_collector"
+            - "@kaikmedia_gallery_module.hooked_media_collection_manager"
+            - "@kaikmedia_gallery_module.media_manager"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.main_image" }            

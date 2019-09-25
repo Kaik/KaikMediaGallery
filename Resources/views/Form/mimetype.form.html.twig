@@ -1,0 +1,16 @@
+<div class="row">
+    {{ form_widget(form.handler) }}   
+    <div class="col-xs-4 col-md-4">
+        <i class="{{ form.vars.value.icon }} fa-fw"> </i>
+        {{ form.vars.value.name }}       
+        {#        {{ form.vars.value.enabled }}       #}
+        {{ form_widget(form.name) }}
+    </div>   
+    <div class="col-xs-3">
+        {{ form.vars.value.mimeType }}       
+        {{ form_widget(form.mimeType) }} 
+    </div>   
+    <div class="col-xs-5">
+        {{ form_widget(form.enabled, {'attr': {'class': 'btn btn-primary radio-inline btn-xs' }}) }}
+    </div>
+</div>

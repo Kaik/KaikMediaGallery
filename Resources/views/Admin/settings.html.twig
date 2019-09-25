@@ -11,13 +11,17 @@
 {% block content %}
 {% form_theme form with ['bootstrap_3_layout.html.twig',
     'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+
     'KaikmediaGalleryModule:Form:radio.html.twig',
     'KaikmediaGalleryModule:Form:hooks.widget.html.twig',
     'KaikmediaGalleryModule:Form:providers.widget.html.twig',
-    'KaikmediaGalleryModule:Form:features.widget.html.twig',
-    'KaikmediaGalleryModule:Form:upload.widget.html.twig',
-    'KaikmediaGalleryModule:Form:display.widget.html.twig'
+    'KaikmediaGalleryModule:Form:subscribers.widget.html.twig',
+    'KaikmediaGalleryModule:Form/Providers/MainMediaProvider:mainmedia.widget.html.twig',
+    'KaikmediaGalleryModule:Form/Providers/GalleryProvider:gallery.widget.html.twig'
+
 ] %}
+
+{#    'KaikmediaGalleryModule:Form/Providers/MediaProvider:media.widget.html.twig',#}
 <div id="km_gallery_admin_settings">
     {{ showflashes() }}
     {{ form_start(form) }}

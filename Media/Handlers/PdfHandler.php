@@ -1,11 +1,13 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright  KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
-
 namespace Kaikmedia\GalleryModule\Media\Handlers;
 
 /**

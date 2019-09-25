@@ -100,6 +100,11 @@ abstract class AbstractMediaEntity extends AbstractDocumentEntity
 
         return $this;
     }
+    
+    public function getLastHandler()
+    {
+        return array_key_exists('handler_name', $this->mediaExtra) ? $this->mediaExtra['handler_name'] : null ;
+    }
 
     /**
      *
@@ -124,5 +129,9 @@ abstract class AbstractMediaEntity extends AbstractDocumentEntity
     public function isUploadable()
     {
         return false;
+    }
+    
+    public function __toString() {
+        return 'xxxx';
     }
 }

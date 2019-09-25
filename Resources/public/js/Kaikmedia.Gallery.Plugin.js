@@ -8,278 +8,365 @@ KaikMedia.Gallery = KaikMedia.Gallery || {};
     KaikMedia.Gallery.plugin = (function () {
         // Init
         var data = {
-	    
         };
         var settings = {
             limit: 100,
             ajax_timeout: 10000,
 	    accept: 'image/*'
         }
-        ;
+        
+        var selected = [];
+        
+        var actions = [];
+        
 	 // Init
         function init()
         {
-            console.log('Gallery init');
-	    
-	    $('.upload-action').click(function (e) {
+            console.log('Gallery plugin 1.0');
+            
+	    $('.add-action').click(function (e) {
 		e.preventDefault();
-		readSettings($(this));
-		handleUpload();
-	    });
-	    
-	    $('.re-upload-action').click(function (e) {
-		e.preventDefault();
-		readSettings($(this));
-		handleChange();
-	    });
-	    
-	    $('.remove-action').click(function (e) {
-		e.preventDefault();
-		readSettings($(this));
-		handleRemove();
-	    });
+                readSettings($(this));
+                console.log(settings);
+                clearDialog();
+		handleAdd();
+//                if (settings.collection.multiple) {
+//                } else {
+//                  clearSelected();
+//                }                
+	    });            
         }
         ;
 
+	function setPresets(presets) {
+	    settings.presets = presets;
+	}
+	;
+        
 	function readSettings($this) {
-	    settings.containerId = $this.data('containerid');
-	    settings.$container = $('#' + settings.containerId);
-	    settings.feature = $this.data('feature');
-	    settings.handler = $this.data('handler');
-	    settings.prefix = $this.data('prefix');
-	    settings.dir = $this.data('dir');
-	    settings.uploadLimit = $this.data('singlefilemaxsize');
-	    settings.accept = $this.data('allowedMimeTypes');
-//	    console.log(settings);
+	    settings.container = $this.data('container');
+	    settings.$container = $('#' + settings.container);
+            
+	    settings.$collection = settings.$container.find('.collection-data');
+            settings.$handler = $this;
+	    settings.$selected = settings.$container.find('.selected-media');
+	    settings.$dialog = settings.$container.find('.dialog');
+            
+            settings.handler = settings.$handler.data();
+	    readCollectionSettings();
+	}
+	;
+        
+	function readCollectionSettings() {
+            settings.collection = settings.$collection.data();
+            settings.collection.hookedobjectid = (settings.collection.hookedobjectid == '' ? newID() : settings.collection.hookedobjectid);
+	}
+	;
+	function generateIdPrefixWithRelationIdAndMediaItemId(relationId, mediaItemId) 
+        {
+            let prefixId = generateIdPrefixWithRelationId(relationId)
+                    + '_'+ mediaItemId + ''
+            ;
+
+	    return prefixId;
+	}
+	;
+	function generateFormNamePrefixWithRelationIdAndMediaItemId(relationId, mediaItemId) 
+        {
+            let prefixForm = generateFormNamePrefixWithRelationId(relationId)
+                    + '['+ mediaItemId +']'
+            ;
+            
+	    return prefixForm;
+	}
+	;
+        
+	function generateIdPrefixWithRelationId(relationId) 
+        {
+            let prefixId = ''
+                    + settings.collection.providerarea 
+                    + '_'+ settings.collection.hookedmodule
+                    + '_'+ settings.collection.hookedareaid
+                    + '_'+ settings.collection.hookedobjectid
+                    + '_'+ settings.collection.name + ''
+                    + '_'+ relationId + '' // relation id hmm 
+            ;
+
+	    return prefixId;
+	}
+	;
+        
+	function generateFormNamePrefixWithRelationId(relationId) 
+        {
+            let prefixForm = ''
+                    + settings.collection.providerarea 
+                    + '['+ settings.collection.hookedmodule +']'
+                    + '['+ settings.collection.hookedareaid +']'
+                    + '['+ settings.collection.hookedobjectid +']'
+                    + '['+ settings.collection.name +']'
+                    + '['+ relationId +']'
+            ;
+            
+	    return prefixForm;
 	}
 	;
 
-	function handleUpload() {
-	    hideError();
-	    hideProgress();
-	    fileDialog({accept: settings.accept})
-		.then(file => {
-		    checkFile(file[0])
-			.fail(displayError)
-			.done(previewFile)
-			.done(function(f) {
-//			    console.log(f);
-			    var form = new FormData();
-			    form.append('file', f);
-			    form.append('prefix', settings.prefix);
-			    form.append('dir', settings.dir);
-			    showProgress();
-			    doAjax(Routing.generate('kaikmediagallerymodule_media_create', {"type": 'image', "_format": 'json'}), form)
-				.done(function(data) {
-				    showRelationData();
-				    settings.$container.find('.relation-data-media').val(data.media_id);
-				    settings.$container.find('.remove-action').removeClass('hide');
-				    settings.$container.find('.re-upload-action').removeClass('hide');
-				    settings.$container.find('.upload-action').addClass('hide');
-				    setProgressType('progress-bar-success');
-				    removeProgress();
-				})
-				.fail(displayError) 
-				.progress(updateProgress)
-			    ;
-			    
-			});
-			
-	    });
-	}
-	;
-
-	function handleRemove() {
-	    var form = new FormData();
-	    form.append('media_relation', settings.$container.find('.relation-data-relation').val());
-	    form.append('media_item', settings.$container.find('.relation-data-media').val());
-	    showProgress();
-	    doAjax(Routing.generate('kaikmediagallerymodule_media_remove', {"_format": 'json'}), form)
-		.done(function(data) {
-		    settings.$container.find('.relation-data-media').val('');
-		    settings.$container.find('.relation-data-relation').val('');
-		    hideRelationData();
-		    clearRelationData();
-		    settings.$container.find('img').attr("src", "").addClass('hide');
-		    settings.$container.find('.remove-action').addClass('hide'); //$this...
-		    settings.$container.find('.re-upload-action').addClass('hide');
-		    settings.$container.find('.upload-action').removeClass('hide');
-		    removeProgress();
-		})
-		.fail(displayError) 
-		.progress(updateProgress)
-	    ;
-	}
-	;
-
-	function handleChange() {
-	    console.log('change');
-	    hideError();
-	    hideProgress();
-	    fileDialog({accept: settings.accept})
-		.then(file => {
-		    checkFile(file[0])
-			.fail(displayError)
-			.done(previewFile)
-			.done(function(f) {
-			    var form = new FormData();
-			    form.append('file', f);
-			    form.append('prefix', settings.prefix);
-			    form.append('dir', settings.dir);
-			    form.append('media_relation', settings.$container.find('.relation-data-relation').val());
-			    form.append('media_item', settings.$container.find('.relation-data-media').val());
-			    showProgress();
-			    doAjax(Routing.generate('kaikmediagallerymodule_media_replace', {"type": 'image', "_format": 'json'}), form)
-				.done(function(data) {
-				    showRelationData();
-				    settings.$container.find('.relation-data-media').val(data.media_id);
-				    settings.$container.find('.remove-action').removeClass('hide');
-				    settings.$container.find('.re-upload-action').removeClass('hide');
-				    settings.$container.find('.upload-action').addClass('hide');
-				    setProgressType('progress-bar-success');
-				    removeProgress();
-				})
-				.fail(displayError) 
-				.progress(updateProgress)
-			    ;
-			    
-			});
-	    });
-	}
-	;
-
-	function previewFile(f) {
-	    // Only process image files.
-	    if (!f.type.match('image.*')) {
-		return;
-	    }
-
-	    var reader = new FileReader();
-
-	    // Closure to capture the file information.
-	    reader.onload = (function (theFile) {
-		return function (e) {
-		    displayPreview(e.target.result);
-		};
-	    })(f);
-
-	    // Read in the image file as a data URL.
-	    reader.readAsDataURL(f);
-	}
-	;
-	
-	function checkFile(f) {
-	    var deferred = $.Deferred();
-	    if (f.size > settings.uploadLimit * 1000000) {
-		deferred.reject(Translator.__('Image size is bigger than ' + settings.uploadLimit + 'MB'));
-	    } else {
-		deferred.resolve(f);
-	    }
-
-	    return deferred.promise();
-	}
-	;
-
-	//ajax util
-	function doAjax(url, data) {
-	    var deferred = $.Deferred();
-	    $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-		success: deferred.resolve,  // resolve it 
-		error: deferred.reject,  // reject it
-                xhr: function () {
-                    var xhr = new window.XMLHttpRequest();
-                    xhr.upload.addEventListener("progress", function (e) {
-                        if (e.lengthComputable) {
-			    deferred.notify(parseInt(e.loaded / e.total * 100));
-                        }
-                    }, false);
-
-                    xhr.addEventListener("progress", function (e) {
-                        if (e.lengthComputable) {
-			deferred.notify(parseInt(e.loaded / e.total * 100));
-                        }
-                    }, false);
-                    return xhr;
+        function newID() 
+        {
+          // Math.random should be unique because of its seeding algorithm.
+          // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+          // after the decimal.
+          return 'new_' + Math.random().toString(36).substr(2, 9);
+        };
+        
+        function handleAdd() 
+        {
+            //call handler
+            for (var handler in KaikMedia.Gallery.handler) {
+                if (handler === settings.handler.type) {      
+                    KaikMedia.Gallery
+                        .handler[handler]
+                        .setSettings(Object.assign({},settings.handler, settings.collection,{ dialog: settings.$dialog[0] }));
+                        // now we need to
+                        // load data to view
+                        // process global progress
+                        // 
+                    KaikMedia.Gallery
+                        .handler[handler]
+                        .add()
+                        .progress( progress => {
+//                            console.log(progress);
+                        })
+                        .done( mediaItemPromises => {
+                            handlePromises(mediaItemPromises)
+                                .progress(percent => {
+                                    console.log(percent);
+                                })
+                                .done( mediaItem => {
+//                                    console.log(mediaItem);
+                                })
+                                .fail(handleErrors) // bad things happened
+                                ;
+                        })
+                        .fail(handleErrors) // bad things happened
+                    ;
                 }
-            });
-	    
-	    return deferred.promise();
-	}
-
-	// View
-	function showRelationData() {
-	    settings.$container.find("input[name*='relationExtra'][type='text']").removeClass('hide');	    
-	}
-	;
-	
-	function hideRelationData() {
-	    settings.$container.find("input[name*='relationExtra'][type='text']").addClass('hide');    
-	}
-	;
-	
-	function clearRelationData() {
-	    settings.$container.find("input[name*='relationExtra'][type='text']").val('');	    
-	}
-	;
-	
-	function displayPreview(src) {
-	    settings.$container.find('img').attr("src", src).removeClass('hide');
-	}
-	;
-	
-	function displayError(error) {
-	    settings.$container.find('img').addClass('hide');
-	    settings.$container.find('.error-message').html(error).removeClass('hide');
-	}
-	;
-	
-	function hideError() {
-	    settings.$container.find('.error-message').addClass('hide');
-	}
-	;
-	
-	function showProgress() {
-	    settings.$container.find('.progress').removeClass('hide');
-	}
-	;
-	
-        function setProgressType(type) {
-                var type = typeof (type) !== 'undefined' && type !== null ? type : '';
-                var $progres_bar = settings.$container.find('.progress-bar');
-                $progres_bar.removeClass().addClass('hide').addClass('progress-bar').addClass(type).removeClass('hide');
             }
+        }
         ;
-	
-	function updateProgress(x) {
-	    var width = typeof (x) !== 'undefined' && x !== null ? x : 0;
-	    var $progres_bar = settings.$container.find('.progress-bar');
-	    $progres_bar.css('width', width + '%')
-		    .attr('aria-valuenow', width);
+
+        function handlePromises(mediaItemPromises) {
+            var deferred = $.Deferred();
+    
+//                if (settings.collection.multiple) {
+//                } else {
+//                  clearSelected();
+//                }  
+    
+                for (const p of mediaItemPromises) {
+                    p.progress(status => { 
+//                        console.log(status);
+                    }).done(mediaItem => {
+                        loadItem(mediaItem);
+                        pushToSelected(mediaItem);
+                        mediaItemSave(mediaItem)
+                            .progress(percent => {
+                                deferred.notify(percent);
+                            })
+                            .done(mediaItemData => {
+                                handleSave(mediaItem, mediaItemData);
+                                deferred.resolve(mediaItem);
+                            })
+                            .fail(handleErrors) // bad things happened
+                            ;
+                    });
+                }   
+                
+	    return deferred.promise();
+        }
+        ;
+        
+        function mediaItemSave(mediaItem) {
+            var deferred = $.Deferred();
+            if (settings.collection.autosave) {
+                if (mediaItem.isError() == false) {
+                    mediaItem
+                    .save()
+                    .progress(percent => {
+                            deferred.notify(percent);
+                    })
+                    .done(mediaItemData => {
+                        deferred.resolve(mediaItemData);
+                    });
+                }                                        
+            } else {
+                deferred.resolve();
+            }
+            
+            return deferred.promise();
+        }
+        ;
+        
+        function loadItem(mediaItem) {
+            if (settings.collection.multiple) {
+                settings.$selected.append(mediaItem.view.render);
+            } else {
+                settings.$selected.html(mediaItem.view.render);
+            }
+        }
+        ;
+        
+        function handleSave(mediaItem, mediaItemData) {
+            var newId = newID();
+            mediaItem.setIdPrefix(generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id));
+            
+            mediaItem.setFormNamePrefix(generateFormNamePrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id));
+            
+            mediaItem.setMediaItemData(mediaItemData);
+            
+            
+            
+//          remove button
+            var remove = {'name' : 'remove',
+                         'boxCssClass' : 'action remove dropdown',
+                         'buttonId' : generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_remove_action',
+                         'buttonCssClass' : 'btn btn-sm btn-link',
+                         'icon': 'fa fa-trash fa-fw text-danger',
+                         'dropdownBoxId': generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_remove_action_content',
+                         'dropdownBoxClass': 'dropdown-menu',
+                         'dropdownBoxHtml': document.createElement('div'),
+                         'dropdownBoxTitleCssClass': 'dropdown-header',
+                         'dropdownBoxTitle': Translator.__('Remove this item?')
+                     };
+            mediaItem.view.addAction(remove);
+
+
+
+
+//          image info
+            var info = {'name' : 'info',
+                         'boxCssClass' : 'action info dropdown' + (settings.presets.enable_info == '1' ? ' ' : ' hide') + ' ',
+                         'buttonId' : generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_info_action',
+                         'buttonCssClass' : 'btn btn-sm btn-link',
+                         'icon': 'fa fa-info fa-fw',
+                         'dropdownBoxId': generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_info_action_content',
+                         'dropdownBoxClass': 'dropdown-menu dropdown-menu-right',
+                         //get intem info data 
+                         'dropdownBoxHtml': mediaItem.view.getMediaItemDetails(),
+                         'dropdownBoxTitleCssClass': 'dropdown-header',
+                         'dropdownBoxTitle': Translator.__('Media info')
+                     };
+            mediaItem.view.addAction(info);
+
+//          handler image edit stuff
+            var edit = {'name' : 'edit',
+                         'boxCssClass' : 'action edit dropup' + (settings.presets.enable_editor == '1' ? ' ' : ' hide') + ' ',
+                         'buttonId' : generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_edit_action',
+                         'buttonCssClass' : 'btn btn-sm btn-link',
+                         'icon': 'fa fa-paint-brush fa-fw',
+                         'dropdownBoxId': generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_edit_action_content',
+                         'dropdownBoxClass': 'dropdown-menu dropdown-menu-right',
+                         //get edit content from hmm?
+                         'dropdownBoxHtml': KaikMedia.Gallery.handler[settings.handler.type].getActions(),
+                         'dropdownBoxTitleCssClass': 'dropdown-header',
+                         'dropdownBoxTitle': Translator.__('Edit media')
+                     };
+            mediaItem.view.addAction(edit);
+
+            setRelations(newId, mediaItem, mediaItemData);
+            
+            return mediaItem;
+        }
+        ;
+
+        function setRelations(newId, mediaItem, mediaItemData) {
+            var deferred = $.Deferred();
+            var mediaRelationItem = new KaikMedia.Gallery.model.mediaRelationItem();
+            
+            mediaRelationItem.setIdPrefix(generateIdPrefixWithRelationId(newId));
+            mediaRelationItem.setFormNamePrefix(generateFormNamePrefixWithRelationId(newId));
+
+            var mediaRelationData = {};
+            mediaRelationData.id = newId;
+            mediaRelationData.media = mediaItemData.id;
+            mediaRelationData.feature = settings.collection.name;
+            
+            // add presets here
+            mediaRelationData.mediaExtra = mediaItemData.mediaExtra;
+            mediaRelationData.mediaExtra['title'] = mediaItemData.tile;
+            mediaRelationData.relationExtra = '';
+            mediaRelationData.featureExtra = settings.collection;
+            console.log(mediaItemData);
+            
+            // hooks
+            mediaRelationData.hookedModule = settings.collection.hookedmodule;
+            mediaRelationData.hookedAreaId = settings.collection.hookedareaid;
+            mediaRelationData.hookedObjectId = settings.collection.hookedobjectid;
+            mediaRelationData.hookedUrlObject = settings.collection.hookedurlobject;
+            
+            // feature
+//            mediaRelationData.collection = settings.collection;
+            
+            // mediaItemData
+            mediaRelationItem.setMediaRelationItemData(mediaRelationData);
+            
+            // render
+//            mediaItem.view.insertActionHtml('relation', mediaRelationItem.view.render);
+            var formsBox = document.createElement('div');
+            formsBox.append(mediaItem.view.getMediaItemForm()[0]);
+            formsBox.append(mediaRelationItem.view.getMediaRelationItemForm());
+            
+            var relation = {'name' : 'relation',
+                         'boxCssClass' : 'action relation dropup' + (settings.presets.enable_extra == '1' ? ' ' : ' hide') + ' ',
+                         'buttonId' : generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_relation_action',
+                         'buttonCssClass' : 'btn btn-sm btn-link',
+                         'icon': 'fa fa-sticky-note-o fa-fw',
+                         'dropdownBoxId': generateIdPrefixWithRelationIdAndMediaItemId(newId, mediaItemData.id)+'_relation_action_content',
+                         'dropdownBoxClass': 'dropdown-menu dropdown-menu-right pre-scrollable',
+                         'dropdownBoxTitleCssClass': 'dropdown-header',
+                         'dropdownBoxTitle': Translator.__('Display options'),
+                         'dropdownBoxHtml': formsBox
+                     };
+            mediaItem.view.addAction(relation);
+
+            // deferred.resolve();
+            return deferred.promise();
+        }
+        ;
+        
+        function pushToSelected(mediaItem) {
+            selected.push(mediaItem);
+        }
+        ;
+        
+	function handleErrors(errors) {
+            console.log(errors);
+	}
+	; 
+        
+	function displayDialog($html) {
+	    settings.$dialog.html($html);
+	}
+	; 
+        
+	function clearDialog() {
+	    settings.$dialog.html('')	    
+	}
+	;        
+
+	function clearSelected() {
+	    settings.$selected.html('');
+            selected = [];
 	}
 	;
-	
-	function removeProgress() {
-	    settings.$container.find('.progress').fadeOut(300, function () {
-		$(this).addClass('hide');
-	    });
-	}
-	;
-	
-	function hideProgress() {
-	    settings.$container.find('.progress').addClass('hide');
-	}
-	;
-	
+
         //return this and init when ready
         return {
-            init: init
-        };
+            init: init,
+            setPresets: setPresets,
+            displayDialog: displayDialog,
+            clearDialog: clearDialog
+        };  
     })();
     $(function () {
         KaikMedia.Gallery.plugin.init();

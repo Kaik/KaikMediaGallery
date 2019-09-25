@@ -83,7 +83,8 @@
     {% spaceless %}
         {% set binding_id = 'area' ~ random() %}
         <div class="list-group-item {% if value.enabled %}list-group-item-success{% else %}list-group-item-default{% endif %} clearfix">
-            <span class="text-info small">{{ __('Area:') }} <strong>{{ value.subscriber }}</strong></span>
+            <span class="text-info small">{{ __('Title:') }} <strong> {{ value.subscriber.title }} </strong></span> 
+            <span class="text-info small">{{ __('Area:') }} <strong> {{ value.getSubscriberArea() }} </strong></span>
             <div class="pull-right text-right">
                 {% if form.children.enabled is defined %}
                     {{ form_widget(form.children.enabled, {'attr': {'class': 'btn btn-primary radio-inline btn-xs' }}) }}
@@ -93,21 +94,105 @@
             <a class="btn btn-xs pull-right" role="button" data-toggle="collapse" href="#{{ binding_id }}" aria-expanded="false" aria-controls="{{ binding_id }}">
                 <i class="fa fa-cog"> </i>
             </a>
-            <div id="{{ binding_id }}" class="col-md-12 collapse clearfix">
+            <div id="{{ binding_id }}" class="col-xs-12 collapse clearfix">
                 <h5>{{ __('Settings for this area') }}</h5>
-                {% for child in form %}
-                    {{ form_widget(child) }}
-                {% endfor %}
+                    {{ form_widget(form.settings) }}
             </div>
         </div>
-            
     {% endspaceless %}
 {% endblock %}
 
-{% block _settings_hooks_providers_entry_modules_entry_areas_entry_entry_widget %}
+{% block mime_type_settings_widget %}
+    {% spaceless %}
+        {{ include('@KaikmediaGalleryModule/Form/mimetype.form.html.twig', { 'form': form }) }}
+    {% endspaceless %}
+{% endblock %}
+
+{% block mime_type_select_widget %}
     {% spaceless %}
         {% for child in form %}
             {{ form_widget(child) }}
         {% endfor %}
     {% endspaceless %}
 {% endblock %}
+
+{% block kmgallery_translatable_type_widget %}
+    {% spaceless %}
+    {% set unique = 'translatable' ~ random() %}
+    <div class="input-group">
+        <div class="tab-content">
+            {% for child in form %}
+                <div id="{{ unique }}_{{ child.vars.unique_block_prefix }}_input" class="tab-pane {{ loop.first ? 'active' : '' }}">
+                    <div class="">
+                        {{ form_widget(child) }}
+                        {{ form_label(child) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="input-group-btn">
+            <button type="button" 
+                    class="btn btn-default dropdown-toggle" 
+                    data-toggle="dropdown" 
+                    aria-haspopup="true" 
+                    aria-expanded="false">
+                    {{ __('Languages') }} 
+                    <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <ul class="nav nav-pils" role="tablist">
+                {% for child in form %}
+                    <li >
+                        <a class="{{ loop.first ? 'active' : '' }}" 
+                           data-toggle="tab" 
+                           href="#{{ unique }}_{{ child.vars.unique_block_prefix }}_input">
+                            {{ child.vars.label|capitalize }}
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endspaceless %}
+{% endblock %}
+
+{#{% block _settings_hooks_providers_entry_modules_entry_areas_entry_entry_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+            xxxxx
+        {% endfor %}
+        {{ dump(form) }}
+    {% endspaceless %}
+{% endblock %}#}
+{#    {{ dump(form) }}#}
+
+{#        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}#}
+{#          
+        <ul class="nav nav-pills">
+            {% for title, locale in form.vars.locales %}
+              <li class="{{ loop.first ? 'active' : '' }}">
+                  <a data-toggle="tab" href="#locales_{{ locale }}">{{ locale|capitalize }}</a>
+              </li>
+              {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+            {% for title, locale in form.vars.locales %}
+                <div id="locales_{{ locale }}" class="tab-pane fade in {{ loop.first ? 'active' : '' }}">
+                    <h4>{{ title|capitalize }}</h4>
+                </div>
+            {% endfor %}
+        </div>#}
+{#                {% for locale, data in form.vars.value %}#}
+{#                            {% endfor %}#}
+{#                            <input id="{{ unique }}_locales_{{ locale }}_input" 
+                                   type="text" 
+                                   name="{{ form.vars.full_name }}[{{ locale }}]" 
+                                   class="form-control" 
+                                   value="{{ data.value }}">
+                            <label for="{{ unique }}_locales_{{ locale }}_input">{{ form.vars.name|capitalize }} {{ data.name }}</label>#}
+

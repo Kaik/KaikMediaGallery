@@ -1,0 +1,19 @@
+{% import "@KaikmediaGalleryModule/Form/form.field.text.macro.html.twig" as form_helper %}
+<div class="media-relation hide">
+    {{ form_helper.form_text_field('media-relation-id form-group has-float-label',  
+                                    'form-control', 
+                                    idPrefix ~ '_id', 
+                                    formNamePrefix ~ '[id]', 
+                                    __('Relation Id'), 
+                                    selected.id|default(''), 
+                                    __('Relation Id')
+                                ) }}
+    {{ form_helper.form_text_field('media-relation-media form-group has-float-label',  
+                                    'form-control', 
+                                    idPrefix ~ '_media', 
+                                    formNamePrefix ~ '[media]', 
+                                    __('Media Id'), 
+                                    selected.media.id|default(''), 
+                                    __('Media Id')
+                                ) }}
+</div>

@@ -90,7 +90,7 @@ class AdminController extends AbstractController
                 }
             }
 
-            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_preferences'));
+//            return $this->redirect($this->generateUrl('kaikmediagallerymodule_admin_preferences'));
         }
 
         return $this->render('@KaikmediaGalleryModule/Admin/settings.html.twig', [

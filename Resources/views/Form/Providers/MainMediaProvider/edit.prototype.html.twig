@@ -1,0 +1,91 @@
+<div class="row" style="margin-left: -10px; margin-right:-10px;margin-bottom:0px;padding-top:7px;padding-bottom:7px;border-bottom:1px solid #d8d8d8;background-color: #f1f1f1;">
+    <div class="col-xs-12 col-md-6">
+        <h4 class="box-title">{{ __('Collection info') }}</h4>
+        <div class="col-xs-12" >
+            <div class="form-group has-float-label" >
+                {{ form_widget(form.name, { 'attr': {'class': '', 'placeholder': __('Collection name') } }) }}
+                {{ form_label(form.name) }}
+            </div>
+        </div>
+        <div class="col-xs-12" >
+            <div class="form-group has-float-label" >
+                {{ form_widget(form.title, { 'attr': {'class': '', 'placeholder': __('Display title') } }) }}
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6 pull-right">
+        <h4 class="box-title">{{ __('Editor settings') }}</h4>
+        <div class="form-group">
+            {{ form_label(form.enable_editor) }}
+            {{ form_widget(form.enable_editor, { 'attr': {'class': 'btn btn-primary radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.editor_positioning) }}
+            {{ form_widget(form.editor_positioning, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.editor_rotate) }}
+            {{ form_widget(form.editor_rotate, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.enable_info) }}
+            {{ form_widget(form.enable_info, { 'attr': {'class': 'btn btn-primary radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.enable_extra) }}
+            {{ form_widget(form.enable_extra, { 'attr': {'class': 'btn btn-primary radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.extra_title) }}
+            {{ form_widget(form.extra_title, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.extra_description) }}
+            {{ form_widget(form.extra_description, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.extra_legal) }}
+            {{ form_widget(form.extra_legal, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+        <h4 class="box-title">{{ __('Edit preview settings') }}</h4>
+        <div class="form-group col-xs-12 has-float-label">
+            {{ form_widget(form.plugin_item_css) }}
+            {{ form_label(form.plugin_item_css) }}
+        </div>
+        <div class="form-group col-xs-12 has-float-label">
+            {{ form_widget(form.preview_css_class) }}
+            {{ form_label(form.preview_css_class) }}
+        </div>
+    </div>        
+    <div class="col-xs-12 col-md-6">
+        <h4 class="box-title">{{ __('Collection upload settings') }}</h4>
+        <div class="col-xs-12">
+            {{ form_widget(form.multiple, { 'attr': {'class': 'btn btn-default radio-inline btn-xs'} }) }}
+            {{ form_label(form.multiple) }}
+        </div>
+        <div class="form-group col-xs-12 has-float-label">
+            {{ form_widget(form.maxitems) }}
+            {{ form_label(form.maxitems) }}
+        </div>
+        <div class="form-group col-xs-12 has-float-label" >
+            {{ form_widget(form.prefix, { 'attr': {'class': '', 'placeholder': __('File prefix') } }) }}
+            {{ form_label(form.prefix) }}
+        </div>
+        <div class="form-group col-xs-12 has-float-label">
+            {{ form_widget(form.dir, { 'attr': {'class': '', 'placeholder': __('Sub directory')} }) }}
+            {{ form_label(form.dir) }}
+        </div>
+        <div class="form-group col-xs-12 has-float-label">
+            {{ form_widget(form.maxsize) }}
+            {{ form_label(form.maxsize) }}
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+        <h4 class="box-title">{{ __('Collection allowed media mime types') }}</h4>
+        <div class="col-xs-12">
+            {{ form_widget(form.mimeTypes, { 'attr': {'class': '', 'placeholder': __('mimeTypes')} }) }}
+        </div>
+    </div>
+</div>

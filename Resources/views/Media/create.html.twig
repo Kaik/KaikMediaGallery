@@ -1,0 +1,7 @@
+{# add media form default #}
+{#{{ dump() }}#}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_row(form) }}
+    {{ form_end(form) }} 

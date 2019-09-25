@@ -83,9 +83,9 @@ class MediaController extends AbstractController
     /**
      * @Route(
      *     "/create/{type}/{_format}",
-     *     defaults={"_format": "json", "type": "unknow"},
+     *     defaults={"_format": "html", "type": "image"},
      *     requirements={
-     *         "_format": "json"
+     *         "_format": "html|json"
      *     },
      *      options={"expose"=true}
      * )
@@ -107,62 +107,45 @@ class MediaController extends AbstractController
     {
         // Permission check
         $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_READ);
+        
+        $errors = [];
 
         $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
+        
         $mediaItem = $mediaManager->getMediaItem();
 
-        $errors = false;
-        if ($request->getMethod() == "POST") {
+        $formClass = $mediaManager->getName();
+
+        $form = $this->createForm($formClass, $mediaItem, ['isXmlHttpRequest' => $request->isXmlHttpRequest()]);
+        
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            
             if ($mediaItem->isUploadable()) {
-                $file = $request->files->get('file');
-                // If a file was uploaded
-                if(!is_null($file)){
-                    $project_dir = $this->get('kernel')->getProjectDir();
-                    $upload_dir = $this->getVar('upload_dir');
-                    $main_upload_path = $project_dir.$upload_dir;
-                    $main_is_writeable = is_writeable($main_upload_path);
-                    if ($main_is_writeable) {
-                        $file_prefix = $request->request->get('prefix');
-                        $file_subdir = $request->request->get('dir');
-
-                        // generate a random name for the file but keep the extension
-                        $filename = $file_prefix.uniqid().".".$file->getClientOriginalExtension();
-
-                        $subdir = '';
-                        if (is_writable($main_upload_path.'/'.$file_subdir)) {
-                            $path = $main_upload_path.'/'.$file_subdir;
-                            $subdir = $file_subdir;
-                        } elseif (mkdir($main_upload_path.'/'.$file_subdir, 0775, true)) {
-                            $path = $main_upload_path.'/'.$file_subdir;
-                            $subdir = $file_subdir;
-                        } else {
-                            $path = $main_upload_path;
-                        }
-
-                        $file->move($path, $filename);
-
-                        $mediaExtra = [];
-                        $mediaExtra['fileName'] = $filename;
-                        $mediaExtra['prefix'] = $file_prefix;
-                        $mediaExtra['subdir'] = $subdir;
-                        $mediaExtra['ext'] = $file->getClientOriginalExtension();
-                        $mediaItem->setTitle($file->getClientOriginalName());
-                        $mediaItem->setMediaExtra($mediaExtra);
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($mediaItem);
-                        $em->flush();
-                    }
-                }
+                $mediaItem->setUploadRootDir($this->get('kernel')->getProjectDir().$this->getVar('upload_dir'));
+                $uploadableManager = $this->get('stof_doctrine_extensions.uploadable.manager');
+                $file = $form->has('file') ? $form->get('file')->getData() : null;
+                $uploadableManager->markEntityToUpload($mediaItem, $file);
             }
+            
+            $em->persist($mediaItem);
+            $em->flush();
         }
-
+        
         //json
         if ($_format == 'json') {
+            foreach ($form->getErrors(true, true) as $formError) {
+               $errors[] = $formError->getMessage();
+            }
             $data = [
-                'media' => $mediaItem,
-                'media_id' => $mediaItem->getId(),
-                'errors' => $errors,
-                '_format' => $_format,
+                'id'            => $mediaItem->getId(),
+                'title'         => $mediaItem->getTitle(),
+                'mediaExtra'    => $mediaItem->getMediaExtra(),
+                'errors'        => $errors,
+                'type'          => $type,
+                '_format'       => $_format,
             ];
             $response = new JsonResponse($data);
 
@@ -170,9 +153,33 @@ class MediaController extends AbstractController
         }
 
         return $this->render('KaikmediaGalleryModule:Media:create.html.twig', [
+            'form' => $form->createView(),
+            'media_id'      => $mediaItem->getId(),
+            'media_extra'   => $mediaItem->getMediaExtra(),
         ]);
     }
 
+    
+        
+//        if ($request->getMethod() == "POST") {
+//            
+//            if ($mediaItem->isUploadable()) {
+//                $mediaItem->setFile($request->files->get('file'));
+//                $mediaItem->setUploadRootDir($this->get('kernel')->getProjectDir().$this->getVar('upload_dir'));
+//                $mediaItem->setPrefix($request->request->get('prefix'));
+//                $mediaItem->setDir($request->request->get('dir'));
+//            }
+
+        
+//        $em = $this->getDoctrine()->getManager();
+        
+        // Decode de JSON input
+//        $mediaItemData = json_decode($request->getContent(), true);
+//        $form->submit($mediaItemData);
+
+        // Post the data to the form
+    
+    
     /**
      * @Route(
      *     "/remove/{_format}",

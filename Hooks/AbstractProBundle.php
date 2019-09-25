@@ -25,6 +25,13 @@ abstract class AbstractProBundle extends AbstractHookBundle
         parent::__construct();
     }
 
+    public function getProviderSettingsForArea()
+    {
+        return [
+//            'enabled' => 0, 
+        ];
+    }
+    
     public function getSettingsForm()
     {
         return 'Kaikmedia\\GalleryModule\\Form\\Type\\Hook\\ProviderSettingsType';

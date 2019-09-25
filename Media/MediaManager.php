@@ -1,40 +1,158 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * KaikMedia GalleryModule
+ *
+ * @package    KaikmediaGalleryModule
+ * @copyright  KaikMedia.com
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
 namespace Kaikmedia\GalleryModule\Media;
 
-use Kaikmedia\GalleryModule\Media\MediaHandlersManager;
+use Doctrine\ORM\EntityManager;
+use Zikula\Common\Translator\TranslatorInterface;
+use Kaikmedia\GalleryModule\Settings\SettingsManager;
+use Kaikmedia\GalleryModule\Security\AccessManager;
+use Kaikmedia\GalleryModule\Collector\MediaHandlersCollector;
+use Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity;
 
 /**
- * Description of MediaManager
+ * MediaManager
  *
  * @author Kaik
  */
-class MediaManager {
-    
+class MediaManager
+{
     private $name;
-    protected $mediaHandlersManager;
+    
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var SettingsManager
+     */
+    private $settingsManager;
+
+    /**
+     * @var AccessManager
+     */
+    private $accessManager;
+   
+    /**
+     * @var MediaHandlersCollector
+     */
+    private $mediaHandlersCollector;
+    
+    
     private $handler;
+    
     private $mediaItem;
 
     /**
-     * construct
+     * Construct the manager
+     *
+     * @param TranslatorInterface $translator
+     * @param EntityManager $entityManager
+     * @param SettingsManager $settingsManager
+     * @param AccessManager $accessManager
+     * @param MediaHandlersCollector $mediaHandlersCollector
      */
-    public function __construct() {
-        $this->name = 'KaikmediaGalleryModule';
-        $this->mediaHandlersManager = new MediaHandlersManager();
+    public function __construct(
+        TranslatorInterface $translator,
+        EntityManager $entityManager,
+        SettingsManager $settingsManager,
+        AccessManager $accessManager,
+        MediaHandlersCollector $mediaHandlersCollector
+    ) {
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+        $this->settingsManager = $settingsManager;
+        $this->accessManager = $accessManager;
+        $this->mediaHandlersCollector = $mediaHandlersCollector;
     }    
     
+    /**
+     * Start managing
+     *
+     * @return Manager
+     */
+    public function getManager($id = null, $mediaItem = null, $create = true)
+    {
+        if ($mediaItem instanceof AbstractMediaEntity) {
+            // injected
+            $this->$mediaItem = $mediaItem;
+        } elseif ($id > 0) {
+            // existing
+            $this->mediaItem = $this->entityManager->find('Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity', $id);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Check if topic exists
+     *
+     * @return bool
+     */
+    public function exists()
+    {
+        return $this->mediaItem ? true : false;
+    }
+
+    /**
+     * Get the Post entity
+     *
+     * @return PostEntity
+     */
+    public function get()
+    {
+        return $this->mediaItem;
+    }
+
+    /**
+     * Get post id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->mediaItem->getId();
+    }
+
+    /**
+     * Get post as array
+     *
+     * @return mixed array or false
+     */
+    public function toArray()
+    {
+        if (!$this->mediaItem) {
+            return [];
+        }
+
+        $post = $this->mediaItem->toArray();
+
+        return $post;
+    }
     
     public function create($type) {
-        $this->handler = $this->mediaHandlersManager->getMediaHandler($type);
+        $this->handler = $this->mediaHandlersCollector->get($type);
+        if (!$this->handler) {
+            return false;
+        }
+        
         $mediaClass = $this->handler->getEntityClass();
         $this->mediaItem = new $mediaClass();
+        
         return $this;  
     }
     

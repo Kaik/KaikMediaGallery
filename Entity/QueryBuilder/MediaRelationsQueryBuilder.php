@@ -9,12 +9,12 @@
  * @link       https://github.com/Kaik/KaikMediaGallery.git
  */
 
-namespace Kaikmedia\GalleryModule\Entity;
+namespace Kaikmedia\GalleryModule\Entity\QueryBuilder;
 
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Description of MediaRelationsQueryBuilder
+ * MediaRelationsQueryBuilder
  *
  * @author Kaik
  */
@@ -30,31 +30,45 @@ class MediaRelationsQueryBuilder extends QueryBuilder
         }
     }
 
-    public function filterObj_name($obj_name)
+    public function filterHookedModule($hookedModule)
     {
-        if ($obj_name !== false) {
-            return $this->andWhere('mo.obj_name = :obj_name')->setParameter('obj_name', $obj_name);
+        if ($hookedModule !== false) {
+            return $this->andWhere('mo.hookedModule = :hookedModule')->setParameter('hookedModule', $hookedModule);
         }
     }
 
-    public function filterObj_reference($obj_reference)
+    public function filterHookedAreaId($hookedAreaId)
     {
-        if ($obj_reference !== false) {
-            return $this->andWhere('mo.obj_reference = :obj_reference')->setParameter('obj_reference', $obj_reference);
+        if ($hookedAreaId !== false) {
+            return $this->andWhere('mo.hookedAreaId = :hookedAreaId')->setParameter('hookedAreaId', $hookedAreaId);
         }
     }
 
-    public function filterType($type)
+    public function filterHookedObjectId($hookedObjectId)
     {
-        if ($type !== false) {
-            return $this->andWhere('mo.type = :type')->setParameter('type', $type);
+        if ($hookedObjectId !== false) {
+            return $this->andWhere('mo.hookedObjectId = :hookedObjectId')->setParameter('hookedObjectId', $hookedObjectId);
+        }
+    }
+    
+    public function filterHookedUrlObject($hookedUrlObject)
+    {
+        if ($hookedUrlObject !== false) {
+            return $this->andWhere('mo.hookedUrlObject = :hookedUrlObject')->setParameter('hookedUrlObject', $hookedUrlObject);
         }
     }
 
-    public function filterAuthor($author)
+    public function filterFeature($feature)
     {
-        if ($author !== false) {
-            return $this->andWhere('mo.author = :author')->setParameter('author', $author);
+        if ($feature !== false) {
+            return $this->andWhere('mo.feature = :feature')->setParameter('feature', $feature);
+        }
+    }
+    
+    public function filterMedia($media)
+    {
+        if ($media !== false) {
+            return $this->andWhere('mo.media = :media')->setParameter('media', $media);
         }
     }
 
@@ -102,3 +116,25 @@ class MediaRelationsQueryBuilder extends QueryBuilder
         return $this->orderBy('mo.' . $sortBy, $sortOrder);
     }
 }
+//
+//              id
+//              media
+//		mediaExtra
+//              
+//		feature	
+//		featureExtra	
+//		
+//		relationExtra		
+//		
+//		hookedModule		
+//		hookedAreaId	
+//		hookedObjectId	
+//		hookedUrlObject		
+//		
+//              status
+//              createdAt
+//		createdBy		
+//              updatedAt	
+//		updatedBy
+//		deletedAt
+//		deletedBy

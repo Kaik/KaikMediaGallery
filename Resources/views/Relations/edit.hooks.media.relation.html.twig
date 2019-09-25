@@ -1,0 +1,36 @@
+{% import "@KaikmediaGalleryModule/Form/form.field.text.macro.html.twig" as form_helper %}
+
+<div class="media-relation-hooks hide">
+    {{ form_helper.form_text_field('hookedModule form-group has-float-label', 
+                                    'form-control', 
+                                    idPrefix ~ '_hookedModule', 
+                                    formNamePrefix ~ '[hookedModule]', 
+                                    __('hookedModule Id'), 
+                                    selected.hookedModule|default(''), 
+                                    __('hookedModule Id')
+                                ) }}
+    {{ form_helper.form_text_field('hookedAreaId form-group has-float-label',  
+                                    'form-control', 
+                                    idPrefix ~ '_hookedAreaId', 
+                                    formNamePrefix ~ '[hookedAreaId]', 
+                                    __('hookedAreaId'), 
+                                    selected.hookedAreaId|default(''), 
+                                    __('hookedAreaId')
+                                ) }}
+    {{ form_helper.form_text_field('hookedObjectId form-group has-float-label',  
+                                    'form-control', 
+                                    idPrefix ~ '_hookedObjectId', 
+                                    formNamePrefix ~ '[hookedObjectId]', 
+                                    __('hookedObjectId'), 
+                                    selected.hookedObjectId|default(''), 
+                                    __('hookedObjectId')
+                                ) }}
+{#    {{ form_helper.form_text_field('hookedUrlObject', 
+                                    'form-group has-float-label', 
+                                    idPrefix ~ '_hookedUrlObject', 
+                                    formNamePrefix ~ '[hookedUrlObject]', 
+                                    __('hookedUrlObject'), 
+                                    selected.hookedUrlObject|default(''), 
+                                    __('hookedUrlObject')
+                                ) }}#}
+</div>

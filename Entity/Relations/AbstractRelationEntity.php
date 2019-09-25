@@ -66,6 +66,16 @@ abstract class AbstractRelationEntity extends AbstractBaseEntity
     {
         return $this->media;
     }
+    
+    /**
+     * Get Media id
+     *
+     * @return object media
+     */
+    public function getMediaId()
+    {
+        return $this->media ? $this->media->getId() : null;
+    }
 
     /**
      * Set Media
@@ -152,6 +162,16 @@ abstract class AbstractRelationEntity extends AbstractBaseEntity
     public function getRelationExtra()
     {
         return $this->relationExtra;
+    }
+
+    /**
+     * Get
+     *
+     * @return
+     */
+    public function getLastMediaHandler()
+    {
+        return $this->getMedia() !== null ? $this->getMedia()->getLastHandler() : null ;
     }
 
     /**

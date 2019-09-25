@@ -1,0 +1,48 @@
+{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/gallery.slider.css')) }}
+<div class="kmgallery-style-slider">
+    {% if items|length > 0 %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="kmgallery-style-slider">
+                    <div class="heading">
+                        <h4><span class="fa fa-picture-o"></span> {{ __('Slaidshow')}}</h4>
+                    </div>
+                    <div id="{{ container_id }}_kmgallery-slider-gallery-carousel" class="carousel slide" data-ride="carousel" data-interval="false">
+                        {% if items|length > 1 %}
+                            <div class="gallery-control clearfix">
+                                <a class="left carousel-control" href="#{{ container_id }}_kmgallery-slider-gallery-carousel" role="button" data-slide="prev"> <i class="fa fa-angle-left" aria-hidden="true"></i> </a>
+                                <a class="right carousel-control" href="#{{ container_id }}_kmgallery-slider-gallery-carousel" role="button" data-slide="next"><i class="fa fa-angle-right" aria-hidden="true"></i> </a>
+                                <ul class="thumbs list-inline text-center carousel-indicators">
+                                    {% for mediaRelation in items %}
+                                        {% set idPrefix=areaName|replace({'.': '_'}) ~ '_' ~ hookedModule ~ '_' ~ hookedAreaId|replace({'.': '_'}) ~ '_' ~ mediaRelation.feature ~ '_' ~ hookedObjectId  %}
+                                        {% set lastMediaHandler=mediaRelation.getLastMediaHandler()|default('image') %}
+                                        <li data-target="#{{ container_id }}_kmgallery-slider-gallery-carousel" data-slide-to="{{ loop.index0 }}" class="{{ loop.first ? 'active' : '' }}">
+                                            {% set presets = {'mediaExtra':mediaRelation.mediaExtra, 'relationExtra': mediaRelation.relationExtra, 'settings': settings } %}
+                                            {% if handlers[lastMediaHandler] is defined %}
+                                                {{ handlers[lastMediaHandler].getPreviewForDisplay(mediaRelation.media, presets)|raw }}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+                         {% endif %}
+                        <div class="carousel-inner clearfix">
+                            {% for mediaRelation in items %}
+                                {% set idPrefix=areaName|replace({'.': '_'}) ~ '_' ~ hookedModule ~ '_' ~ hookedAreaId|replace({'.': '_'}) ~ '_' ~ mediaRelation.feature ~ '_' ~ hookedObjectId  %}
+                                {% set lastMediaHandler=mediaRelation.getLastMediaHandler()|default('image') %}
+                                <div class="item {{ loop.first ? 'active' : '' }}">
+                                    {% set presets = {'mediaExtra':mediaRelation.mediaExtra, 'relationExtra': mediaRelation.relationExtra, 'settings': settings } %}
+                                    {% if handlers[lastMediaHandler] is defined %}
+                                        {{ handlers[lastMediaHandler].getPreviewForDisplay(mediaRelation.media, presets)|raw }}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>          
+    {% endif %}
+</div>
+

@@ -32,7 +32,7 @@ class HooksRelationsEntity extends AbstractRelationEntity
     /**
      * areaId field (hooked area id)
      *
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(length=100, nullable=true)
      */
     private $hookedAreaId;
 

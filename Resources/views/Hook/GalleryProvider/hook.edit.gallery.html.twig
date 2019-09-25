@@ -1,0 +1,93 @@
+{#{{ pageAddAsset('stylesheet', zasset('https://cdn.rawgit.com/tonystar/bootstrap-float-label/v3.0.1/dist/bootstrap-float-label.min.css')) }}#}
+
+{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/gallery.plugin.css')) }}
+{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/gallery.mediaItem.css')) }}
+{{ pageAddAsset('stylesheet', zasset('@KaikmediaGalleryModule:css/vplayer.css')) }}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.settings.js')) }}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.mediaItem.js')) }}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.mediaRelationItem.js')) }}
+
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/file-dialog.min.js')) }}
+{#{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/media-positioner.min.js')) }}#}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/text-dialog.min.js')) }}
+
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.handler.image.js')) }}
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.handler.youtube.js')) }}
+
+{{ pageAddAsset('javascript', zasset('@KaikmediaGalleryModule:js/Kaikmedia.Gallery.Plugin.js')) }}
+{#{{ dump() }}#}
+{% set setSettingsScript %}
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        (function ($) {
+            $(document).ready(function () {
+                    KaikMedia.Gallery.plugin.setPresets({{ settings|json_encode()|raw }});
+                });
+            })(jQuery);
+            /* ]]> */
+    </script>
+{% endset %}
+{% set container_id = 'conatiner' ~ random() %}
+<div id="{{ container_id }}" class="km_galllery_plugin_container gallery-container {{ areaName|replace({'.': '_'}) }} {{ settings.name }} clearfix">
+    {#  collection settings  #}
+    <i class="collection-data hide" 
+        data-name="{{ settings.name }}"
+        data-prefix="{{ settings.prefix|default('') }}"
+        data-dir="{{ settings.dir|default('') }}"
+        data-multiple="{{ settings.multiple ? 'true' : 'false' }}"
+        data-filemax="{{ settings.maxsize }}"
+        data-maxitems="{{ settings.maxitems|default(settings.multiple ? 0 : 1) }}"
+        
+        data-autosave="1"
+        
+        data-providerarea="{{ areaName|replace({'.': '_'}) }}"
+        data-hookedmodule="{{ hookedModule }}"
+        data-hookedareaid="{{ hookedAreaId }}"
+        data-hookedobjectid="{{ hookedObjectId }}"
+        data-hookedurlobject="{{ hookedUrlObject }}"
+        
+        ></i>
+    {#  title  #}
+    <h5 class="collection_title  {{ settings.show_title is defined and settings.show_title ? '' : ' hide'}}">
+        {{ settings.title[app.request.getLocale()] is defined ? settings.title[app.request.getLocale()] : __('Gallery') }}
+    </h5>
+    {#  handlers  #}
+    <div class="handlers btn-group" role="group">
+        {% set allowed='' %}
+        {% for handlerName, handler in handlers %}
+            {% set isEnabled = 0 %}
+            {#  settings allowed mimeTypes per handler  #}
+            {% for mimetype in settings.mimeTypes if handlerName == mimetype.handler.name and mimetype.enabled == 1 %} 
+                {% set isEnabled = 1 %}
+                {% if loop.first %}
+                    {% set allowed=allowed ~ '' ~ mimetype.mimeType %}
+                {% else %}
+                    {% set allowed=allowed ~ ',' ~ mimetype.mimeType %}
+                {% endif %}
+            {% endfor %}
+            {% if isEnabled %}
+                <button type="button" 
+                        class="add-action btn btn-link"
+                        data-container="{{ container_id }}"
+                        data-handler="{{ handler.name }}"
+                        data-type="{{ handler.type }}"
+                        data-allowed="{{ allowed }}"
+                        >
+                        <span class="fa-stack fa-lg">
+                          <i class="handler-icon-background fa fa-square fa-stack-2x"> </i>
+                          <i class="handler-icon {{ handler.icon }} fa-inverse fa-stack-1x"> </i>
+                          <i class="handler-add-icon fa fa-plus-circle fa-inverse fa-stack-1x">{#{{ __('Add image') }}#}</i>
+                        </span>
+                        {{ handler.getTitle(settings.multiple) }}
+                </button>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="dialog"></div>
+    <div class="selected-media">
+        {% for selected in selectedItems.items %}
+            {{ include('@KaikmediaGalleryModule/Hook/GalleryProvider/hook.edit.gallery.display.html.twig') }}
+        {% endfor %}
+    </div>
+</div>
+{{ pageAddAsset('footer', setSettingsScript) }}   

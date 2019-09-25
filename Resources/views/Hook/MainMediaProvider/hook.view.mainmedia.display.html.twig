@@ -1,0 +1,92 @@
+{% set idPrefix=areaName|replace({'.': '_'}) ~ '_' ~ hookedModule ~ '_' ~ hookedAreaId|replace({'.': '_'}) ~ '_' ~ selected.feature ~ '_' ~ hookedObjectId  %}
+{% set lastMediaHandler=selected.getLastMediaHandler()|default('image') %}
+{#
+
+"settings" => array:10 [▼
+    "feature" => "featured"
+    "css_class" => "main-media-display"
+    "width" => "1200"
+    "height" => "675"
+    "mode" => "0"
+    "autoplay" => "1"
+    "show_title" => "1"
+    "show_description" => "0"
+    "show_legal" => "0"
+  ]
+
+"selectedItems" => HookedMediaCollectionManager {#1333 ▼
+    -collection: array:1 [▼
+      0 => HooksRelationsEntity {#3010 ▼
+        -hookedModule: "KaikmediaNewsModule"
+        -hookedAreaId: "subscriber.news.ui_hooks.mainmedia"
+        -hookedObjectId: 47
+        -hookedUrlObject: RouteUrl {#3013 ▶}
+        -media: ImageEntity {#3487 ▶}
+        -mediaExtra: array:1 [▼
+          "title" => "Screenshot from 2019-03-21 21-15-14.jpg"
+        ]
+        -feature: "featured"
+        -featureExtra: []
+        -relationExtra: array:1 [▼
+          "display" => "top"
+        ]
+        #id: 94
+        -status: "A"
+        -createdAt: DateTime @1555960925 {#3016 ▶}
+        -createdBy: UserEntity {#1914 ▶}
+        -updatedAt: DateTime @1555960925 {#3012 ▶}
+        -updatedBy: UserEntity {#1914 ▶}
+        -deletedBy: null
+        -deletedAt: null
+        #reflection: null
+      }
+    ]
+
+
+#}
+{% set presets = {'mediaExtra':selected.mediaExtra, 'relationExtra': selected.relationExtra, 'settings': settings } %}
+<div id="{{ idPrefix }}_mdtm" class="mdtm">
+    <div class="error hide"></div>
+    
+{#  
+        -relationExtra: array:1 [▼
+          "display" => "top"
+        ]
+#}
+    <div class="preview">
+        {% if handlers[lastMediaHandler] is defined %}
+            {{ handlers[lastMediaHandler].getPreviewForDisplay(selected.media, presets)|raw }}
+        {% endif %}
+    </div>
+    
+    {% set showTitle = settings.show_title is defined 
+                        and settings.show_title == '1'
+                        and selected.mediaExtra.title is defined
+                        and selected.mediaExtra.title != ''
+                        ? true : false %}
+    {%  set showDescription = settings.show_description is defined 
+                        and settings.show_description == '1' 
+                        and selected.mediaExtra.description is defined 
+                        and selected.mediaExtra.description != '' 
+                        ? true : false %}
+    {% set showLegal = settings.show_legal is defined 
+                        and settings.show_legal == '1' 
+                        and selected.mediaExtra.legal is defined 
+                        and selected.mediaExtra.legal != '' 
+                        ? true : false %}
+    <div class="details {{ showTitle or showDescription or showLegal ? '' : 'hide' }}">
+        <span class="title {{ showTitle ? '' : 'hide' }}">
+            <i class="fa fa-i-cursor fa-fw" aria-hidden="true"></i> 
+            {{ showTitle ? selected.mediaExtra.title : '' }}
+        </span>
+        <span class="description {{ showDescription ? '' : 'hide' }}">
+            <i class="fa fa-info fa-fw" aria-hidden="true"></i>  
+            {{ showDescription ? selected.mediaExtra.description : '' }}
+        </span>
+        <span class="legal {{ showLegal ? '' : 'hide' }}">
+            <i class="fa fa-copyright fa-fw" aria-hidden="true"></i>  
+            {{ showLegal ? selected.mediaExtra.legal : '' }}
+        </span>
+    </div>
+{#    {{ dump() }}#}
+</div>

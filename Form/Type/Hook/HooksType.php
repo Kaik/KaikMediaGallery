@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Kaikmedia\GalleryModule\Form\Type\Hook\HooksProvidersType;
+use Kaikmedia\GalleryModule\Form\Type\Hook\Providers\HooksProvidersType;
 use Kaikmedia\GalleryModule\Form\Type\Hook\HooksSubscribersType;
 
 class HooksType extends AbstractType

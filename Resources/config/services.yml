@@ -1,18 +1,6 @@
 services:
     _defaults: { public: true }
     
-    
-#  # Link container
-#    kaikmedia_gallery_module.link_container:
-#        class: Kaikmedia\GalleryModule\Container\LinkContainer
-#        arguments:
-#          - "@translator.default"
-#          - "@router"
-#          - "@zikula_permissions_module.api.permission"
-#          - "@=service('zikula_extensions_module.api.variable').get('KaikmediaGalleryModule', 'enablecategorization', true)"
-#        tags:
-#          - { name: zikula.link_container }
-   
     kaikmedia_gallery_module.link_container:
         class: Kaikmedia\GalleryModule\Container\LinkContainer
         lazy: true
@@ -38,7 +26,7 @@ services:
         class: Kaikmedia\GalleryModule\Settings\SettingsManager
         shared: false
         tags:
-            - { name: zikula.dizkus.settings_manager }
+            - { name: zikula.gallery.settings_manager }
         arguments: 
             - "@translator.default"
             - "@doctrine.orm.default_entity_manager"
@@ -46,71 +34,38 @@ services:
             - "@zikula_hook_bundle.collector.hook_collector"
             - "@zikula_extensions_module.api.capability"
           
-    kaikmedia_gallery_module.hook_provider.media_ui_hooks_provider:
-        class: Kaikmedia\GalleryModule\Hooks\MediaProBundle
-        arguments:
-            - "@kernel"
-            - "@translator.default"
-            - "@router"
-            - "@request_stack"
-            - "@templating"
-            - "@zikula_extensions_module.api.variable"
-            - "@zikula_permissions_module.api.permission"
-            - "@doctrine.orm.default_entity_manager"
-        tags:
-            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.media" }
-        
     kaikmedia_gallery_module.media_manager:
-        class: Kaikmedia\GalleryModule\Media\MediaManager   
-          
-#    kaikmedia_gallery_module.hook_provider.gallery_ui_hooks_provider:
-#        class: Kaikmedia\GalleryModule\Hooks\GalleryProBundle
-#        arguments:
-#            - "@kernel"
-#            - "@translator.default"
-#            - "@router"
-#            - "@request_stack"
-#            - "@templating"
-#            - "@zikula_extensions_module.api.variable"
-#            - "@zikula_permissions_module.api.permission"
-#        tags:
-#            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.gallery" }
-#            
-    kaikmedia_gallery_module.hook_provider.main_image_ui_hooks_provider:
-        class: Kaikmedia\GalleryModule\Hooks\MainImageProBundle
+        class: Kaikmedia\GalleryModule\Media\MediaManager    
         arguments:
-            - "@kernel"
             - "@translator.default"
-            - "@router"
-            - "@templating"
-            - "@zikula_extensions_module.api.variable"
-            - "@zikula_permissions_module.api.permission"
             - "@doctrine.orm.default_entity_manager"
-        tags:
-            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.main_image" }            
-#
-#    kaikmedia_gallery_module.hook_provider.additional_images_ui_hooks_provider:
-#        class: Kaikmedia\GalleryModule\Hooks\AdditionalImagesProBundle
-#        arguments:
-#            - "@kernel"
-#            - "@translator.default"
-#            - "@router"
-#            - "@request_stack"
-#            - "@templating"
-#            - "@zikula_extensions_module.api.variable"
-#            - "@zikula_permissions_module.api.permission"
-#        tags:
-#            - { name: zikula.hook_provider, areaName: "provider.gallery.ui_hooks.additional_images" } 
+            - "@kaikmedia_gallery_module.settings_manager"
+            - "@kaikmedia_gallery_module.access_manager"
+            - "@kaikmedia_gallery_module.internal.media_hadlers_collector"
 
-#    kaikmedia_gallery_module.access_manager:
-#        class: Kaikmedia\GalleryModule\Security\AccessManager
-#    kaikmedia_gallery_module.features_manager:
-#        class: Kaikmedia\GalleryModule\Features\FeaturesManager
-#    kaikmedia_gallery_module.media_handlers_manager:
-#        class: Kaikmedia\GalleryModule\Media\MediaHandlersManager        
-  
-#   
-#  # form fields management     
+    kaikmedia_gallery_module.hooked_media_collection_manager:
+        class: Kaikmedia\GalleryModule\Media\HookedMediaCollectionManager    
+        shared: false
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@kaikmedia_gallery_module.settings_manager"
+          
+#  # form fields management    
+    kaikmedia_gallery_module.form.type.mimetype_select:
+        class: Kaikmedia\GalleryModule\Form\Type\Settings\MimeTypeSelectType
+        tags:
+            - { name: form.type, alias: kaikmedia_gallery_module_mimetype_select_type }
+        arguments:
+            - "@kaikmedia_gallery_module.internal.media_hadlers_collector"
+            
+#  # form fields management    
+    kaikmedia_gallery_module.form.type.translatable:
+        class: Kaikmedia\GalleryModule\Form\Type\TranslatableType
+        tags:
+            - { name: form.type, alias: kaikmedia_gallery_module_translatable_type }
+        arguments:
+            - "@zikula_settings_module.locale_api"
+
 #    kaikmedia_gallery_module.form.type.settings:
 #        class: Kaikmedia\GalleryModule\Form\Type\SettingsType
 #        tags:

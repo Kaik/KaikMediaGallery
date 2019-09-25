@@ -77,7 +77,8 @@ class MediaType extends AbstractType
 //     * {@inheritdoc}
 //     */
 //    public function getName() {
-//        return 'media'; //media_' . strtolower($this->type);
+////        return 'media_' . strtolower($this->type);
 //    }
 
 }
+//'media'; //

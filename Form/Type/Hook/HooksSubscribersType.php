@@ -28,7 +28,7 @@ class HooksSubscribersType extends AbstractType
 {
     public function __construct()
     {
-        $this->name = 'ZikulaDizkusModule';
+        $this->name = 'KaikmediaGalleryModule';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

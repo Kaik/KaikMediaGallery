@@ -1,0 +1,39 @@
+{% set container_id = 'conatiner' ~ random() %}
+<div id="{{ container_id }}" class="km_galllery_plugin_container gallery-container {{ areaName|replace({'.': '_'}) }} {{ settings.feature }} ">
+    {% set max = [] %}
+    {% set slider = [] %}
+    {% set tiles = [] %}
+    {% set list = [] %}
+    {% set other = [] %}
+    {% for selected in selectedItems.items %}
+        {% if selected.relationExtra.style is not defined %}
+            {% set other = other|merge([selected])  %}
+        {% elseif selected.relationExtra.style == 'max' %}
+            {% set max = max|merge([selected])  %}
+        {% elseif selected.relationExtra.style == 'slider' %}
+            {% set slider = slider|merge([selected])  %}
+        {% elseif selected.relationExtra.style == 'tiles' %}
+            {% set tiles = tiles|merge([selected])  %}
+        {% elseif selected.relationExtra.style == 'list' %}
+            {% set list = list|merge([selected])  %}
+        {% else %}
+            {% set other = other|merge([selected])  %}
+        {% endif %}
+    {% endfor %}        
+    {% if max|length > 0 %}
+          {{ include("@KaikmediaGalleryModule/Hook/GalleryProvider/hook.view.gallery.style.max.html.twig", {'items': max}) }}
+    {% endif %}
+    {% if slider|length > 0 %}
+          {{ include("@KaikmediaGalleryModule/Hook/GalleryProvider/hook.view.gallery.style.slider.html.twig", {'items': slider}) }}
+    {% endif %}
+    {% if tiles|length > 0 %}
+          {{ include("@KaikmediaGalleryModule/Hook/GalleryProvider/hook.view.gallery.style.tiles.html.twig", {'items': tiles}) }}
+    {% endif %}
+    {% if list|length > 0 %}
+          {{ include("@KaikmediaGalleryModule/Hook/GalleryProvider/hook.view.gallery.style.list.html.twig", {'items': list}) }}
+    {% endif %}
+    {% if other|length > 0 %}
+          {{ include("@KaikmediaGalleryModule/Hook/GalleryProvider/hook.view.gallery.style." ~ settings.style|default('tiles') ~ ".html.twig", {'items': max}) }}
+    {% endif %}
+</div>
+{#{{ dump() }}#}

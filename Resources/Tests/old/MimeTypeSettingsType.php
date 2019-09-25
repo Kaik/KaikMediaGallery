@@ -39,5 +39,4 @@ class MimeTypeSettingsType extends AbstractType {
     public function getName() {
         return 'kaikmedia_gallery_module_mimetype_settings';
     }
-
 }

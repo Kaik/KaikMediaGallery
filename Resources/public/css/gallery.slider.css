@@ -1,0 +1,118 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 21 Apr 2019, 21:37:15
+    Author     : kaik
+*/
+
+.kmgallery-style-slider { 
+    padding: 0px; 
+}
+
+.kmgallery-style-slider .heading { 
+    /*padding-left: 30px;*/ 
+}
+
+.kmgallery-style-slider .gallery-control { 
+    margin: 12px; 
+    padding: 0 15px;
+    position: relative;
+    float: none;
+    width:100%;
+}
+.kmgallery-style-slider .gallery-control .thumbs { 
+    position: static;
+    list-style: none;
+    text-align: center;
+    width: auto;
+    margin-left: 25px;
+    margin-right: 25px;
+    padding-left: 0;
+    list-style: none;
+    text-align: center;    
+}
+
+.kmgallery-style-slider .gallery-control .thumbs img { 
+    border: 1px solid #cecece; 
+    display: inline-block; 
+    vertical-align: middle; 
+    cursor: pointer; 
+    max-width: 70px;
+}
+.kmgallery-style-slider .gallery-control .thumbs li { 
+    width: auto; 
+    height: auto;
+    display: inline-block; 
+    margin: 1px; 
+    text-indent: 0; 
+    border: 0; 
+    border-radius: 0; 
+    cursor: pointer; 
+    background-color: #000 \9;
+    background-color: transparent;    
+}
+.kmgallery-style-slider .gallery-control .thumbs li.active img { 
+    border: 1px solid #1089c0;
+}
+.kmgallery-style-slider .gallery-control .carousel-control { 
+    color: #0284b8; 
+    text-align: center; 
+    text-shadow: none; 
+    font-size: 30px; 
+    width: 30px; 
+    height: 30px; 
+    line-height: 20px; 
+    top: 23%; 
+}
+.kmgallery-style-slider .gallery-control .carousel-control:hover, 
+.kmgallery-style-slider .gallery-control .carousel-control:focus, 
+.kmgallery-style-slider .gallery-control .carousel-control:active { 
+    color: #333; 
+}
+.kmgallery-style-slider .gallery-control .carousel-caption, 
+.kmgallery-style-slider .gallery-control .carousel-control .fa { 
+    font: normal normal normal 30px/26px FontAwesome; 
+}
+.kmgallery-style-slider .gallery-control .carousel-control { 
+    background-color: rgba(0, 0, 0, 0); 
+    bottom: auto; 
+    font-size: 20px; 
+    left: 5px; 
+    position: absolute; 
+    top: 30%; 
+    width: auto; 
+}
+.kmgallery-style-slider .gallery-control .carousel-control.right, 
+.kmgallery-style-slider .gallery-control .carousel-control.left { 
+    background-color: rgba(0, 0, 0, 0); 
+    background-image: none; 
+}
+.kmgallery-style-slider .gallery-control .carousel-control.right {
+    right: 25px;
+    left: auto;
+}
+
+.kmgallery-style-slider .item img {
+    width: 100%;
+}
+
+@media screen and (max-width: 420px) {
+    .kmgallery-style-slider .gallery-control { 
+        margin: 0; 
+        padding: 0;
+        width:100%;
+    }    
+    
+    .kmgallery-style-slider .gallery-control .carousel-control.right, 
+    .kmgallery-style-slider .gallery-control .carousel-control.left { 
+        display: none;
+    }
+    
+    .kmgallery-style-slider .gallery-control .thumbs { 
+        margin-left: 0;
+        margin-right: 0;   
+    }    
+}
