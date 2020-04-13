@@ -28,6 +28,7 @@ use Zikula\Bundle\HookBundle\ServiceIdTrait;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
+use Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity;
 
 /**
  * MainImageProBundle
@@ -167,13 +168,27 @@ class MainImageProBundle extends AbstractProBundle implements HookProviderInterf
 
         // sinle element
 
-        $featuredMedia = $this->getFeatureMedia($feature, $hook->getCaller(), $hook->getId());
-        if (!$featuredMedia) {
+        $hookedMedia = $this->getHookedMedia($hook->getCaller(), $hook->getId());
+        if (!$hookedMedia) {
 
             $content = '';
             goto display;
         }
-
+        
+        $featuredMedia = null;
+        foreach ($hookedMedia as $item) {
+            if ($item->getfeature() == $feature) {
+                $featuredMedia = $item;
+                break;
+            }
+        }
+        
+        $featuredMedia = (!$featuredMedia && count($hookedMedia) > 0) ? reset($hookedMedia) : $featuredMedia;
+        if (!$featuredMedia instanceof HooksRelationsEntity) {
+            $content = '';
+            goto display;   
+        }    
+            
         $mediaExtra = $featuredMedia->getMedia()->getMediaExtra();
 
         $filename = array_key_exists('fileName', $mediaExtra) ? $mediaExtra['fileName'] : false ;
@@ -347,7 +362,7 @@ class MainImageProBundle extends AbstractProBundle implements HookProviderInterf
      *
      * @return bool
      */
-    public function getMedia($module = null, $objId = null, $area = null)
+    public function getHookedMedia($module = null, $objId = null, $area = null)
     {
         if (!$module || !$objId) {
             return [];
@@ -356,7 +371,7 @@ class MainImageProBundle extends AbstractProBundle implements HookProviderInterf
 
             $media = $this->entityManager
                 ->getRepository('Kaikmedia\GalleryModule\Entity\Relations\HooksRelationsEntity')
-                    ->findOneBy($filter);
+                    ->findBy($filter);
         }
 
         return $media;
