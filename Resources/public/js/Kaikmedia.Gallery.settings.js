@@ -27,7 +27,6 @@ KaikMedia.Gallery.settings = (function ($) {
 
     function set(data)
     {
-       console.log(data);
        if($.isEmptyObject(data)){
         global.enabled = 0;           
        }else{     
@@ -42,10 +41,6 @@ KaikMedia.Gallery.settings = (function ($) {
            obj.settings = data.settings[obj.name];
         }            
        }
-       
-        //console.log('Gallery:init:0: module set settings');
-        //console.log(settings);
-        //console.log(global);
     };
     
     function isGalleryEnabled() { return global.enabled; };   
