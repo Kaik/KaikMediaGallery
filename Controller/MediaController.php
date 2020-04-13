@@ -112,50 +112,62 @@ class MediaController extends AbstractController
         $mediaItem = $mediaManager->getMediaItem();
 
         $errors = false;
-        if ($request->getMethod() == "POST") {
-            if ($mediaItem->isUploadable()) {
-                $file = $request->files->get('file');
-                // If a file was uploaded
-                if(!is_null($file)){
-                    $project_dir = $this->get('kernel')->getProjectDir();
-                    $upload_dir = $this->getVar('upload_dir');
-                    $main_upload_path = $project_dir.$upload_dir;
-                    $main_is_writeable = is_writeable($main_upload_path);
-                    if ($main_is_writeable) {
-                        $file_prefix = $request->request->get('prefix');
-                        $file_subdir = $request->request->get('dir');
-
-                        // generate a random name for the file but keep the extension
-                        $filename = $file_prefix.uniqid().".".$file->getClientOriginalExtension();
-
-                        $subdir = '';
-                        if (is_writable($main_upload_path.'/'.$file_subdir)) {
-                            $path = $main_upload_path.'/'.$file_subdir;
-                            $subdir = $file_subdir;
-                        } elseif (mkdir($main_upload_path.'/'.$file_subdir, 0775, true)) {
-                            $path = $main_upload_path.'/'.$file_subdir;
-                            $subdir = $file_subdir;
-                        } else {
-                            $path = $main_upload_path;
-                        }
-
-                        $file->move($path, $filename);
-
-                        $mediaExtra = [];
-                        $mediaExtra['fileName'] = $filename;
-                        $mediaExtra['prefix'] = $file_prefix;
-                        $mediaExtra['subdir'] = $subdir;
-                        $mediaExtra['ext'] = $file->getClientOriginalExtension();
-                        $mediaItem->setTitle($file->getClientOriginalName());
-                        $mediaItem->setMediaExtra($mediaExtra);
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($mediaItem);
-                        $em->flush();
-                    }
-                }
-            }
+        if (!$request->getMethod() == "POST") {
+            
+            goto response;
         }
 
+        if ($mediaItem->isUploadable()) {
+            $file = $request->files->get('file');
+            // If a file was uploaded
+            if(is_null($file)){
+                $errors[] = $this->__('File is empty!');
+                goto response;      
+            }        
+
+            $project_dir = $this->get('kernel')->getProjectDir();
+            $upload_dir = $this->getVar('upload_dir');
+            $main_upload_path = $project_dir.$upload_dir;            
+            if (!is_writeable($main_upload_path)) {
+                $errors[] = $this->__f('Error! Directory %s is not writeable.', ['%s' => $main_upload_path]);
+                goto response;  
+            }
+
+            $file_prefix = $request->request->get('prefix');
+            $file_subdir = $request->request->get('dir');
+
+            // generate a random name for the file but keep the extension
+            $filename = $file_prefix.uniqid().".".$file->getClientOriginalExtension();
+
+            $subdir = '';
+            
+            if (is_writable($main_upload_path.'/'.$file_subdir)) {
+                $path = $main_upload_path.'/'.$file_subdir;
+                $subdir = $file_subdir;
+            } elseif (!file_exists($main_upload_path.'/'.$file_subdir)) {
+                mkdir($main_upload_path.'/'.$file_subdir, 0775, true);
+                $path = $main_upload_path.'/'.$file_subdir;
+                $subdir = $file_subdir;
+            } else {
+                $path = $main_upload_path;
+            }
+
+            $file->move($path, $filename);
+
+            $mediaExtra = [];
+            $mediaExtra['fileName'] = $filename;
+            $mediaExtra['prefix'] = $file_prefix;
+            $mediaExtra['subdir'] = $subdir;
+            $mediaExtra['ext'] = $file->getClientOriginalExtension();
+            $mediaItem->setTitle($file->getClientOriginalName());
+            $mediaItem->setMediaExtra($mediaExtra);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($mediaItem);
+            $em->flush();
+        }
+        
+        response:
+        
         //json
         if ($_format == 'json') {
             $data = [
