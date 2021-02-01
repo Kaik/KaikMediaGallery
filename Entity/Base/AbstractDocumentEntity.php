@@ -37,7 +37,9 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * urltitle
      *
      * @ORM\Column(type="text")
-     * @Gedmo\Slug(fields={"title"})
+     * * takes too much time to add...
+     * @todo remove
+     * @ Gedmo\Slug(fields={"title"})
      */
     private $urltitle = '';
 
