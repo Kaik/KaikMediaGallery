@@ -134,7 +134,7 @@ abstract class AbstractBaseEntity extends EntityAccess
     /**
      * Get createdAt
      *
-     * @return string
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -154,7 +154,7 @@ abstract class AbstractBaseEntity extends EntityAccess
     /**
      * Get updatedBy
      *
-     * @return string
+     * @return 
      */
     public function getUpdatedBy()
     {
@@ -174,7 +174,7 @@ abstract class AbstractBaseEntity extends EntityAccess
     /**
      * Get updatedAt
      *
-     * @return string
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
