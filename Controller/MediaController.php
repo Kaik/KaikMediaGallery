@@ -11,23 +11,27 @@
 
 namespace Kaikmedia\GalleryModule\Controller;
 
-use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Response\Ajax\NotFoundResponse;
-use Zikula\Core\Response\Ajax\ForbiddenResponse;
-use Zikula\Core\Response\Ajax\BadDataResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RouterInterface;
-use Kaikmedia\GalleryModule\Media\MediaHandlersManager;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
+
+use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
+use Kaikmedia\GalleryModule\Entity\Media\AbstractMediaEntity;
 use Kaikmedia\GalleryModule\Entity\Media\ImageEntity as Media;
 use Kaikmedia\GalleryModule\Form\Media\MediaType;
-use Kaikmedia\GalleryModule\Entity\AlbumEntity as Album;
+use Kaikmedia\GalleryModule\Media\MediaHandlersManager;
+
+use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Response\Ajax\NotFoundResponse;
+use Zikula\Core\Response\Ajax\ForbiddenResponse;
+use Zikula\Core\Response\Ajax\BadDataResponse;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
@@ -108,7 +112,17 @@ class MediaController extends AbstractController
         // Permission check
         $this->get('kaikmedia_gallery_module.access_manager')->hasPermission(ACCESS_READ);
 
+        $currentUserApi = $this->get('zikula_users_module.current_user');
+        if (!$currentUserApi->isLoggedIn()) {
+            throw new AccessDeniedException($this->__('Sorry! You need to be logged in.'));
+        }
+
+        /** @var \Zikula\UsersModule\Entity\UserEntity */
+        $currentUserEntity = $this->get('zikula_users_module.user_repository')->find($currentUserApi->get('uid'));
+
         $mediaManager = $this->get('kaikmedia_gallery_module.media_manager')->create($type);
+        
+        /** @var \Kaikmedia\GalleryModule\Entity\Media\ImageEntity */
         $mediaItem = $mediaManager->getMediaItem();
 
         $errors = false;
@@ -154,13 +168,28 @@ class MediaController extends AbstractController
 
             $file->move($path, $filename);
 
-            $mediaExtra = [];
-            $mediaExtra['fileName'] = $filename;
-            $mediaExtra['prefix'] = $file_prefix;
-            $mediaExtra['subdir'] = $subdir;
-            $mediaExtra['ext'] = $file->getClientOriginalExtension();
+            $now = new \DateTime('now');
+            $mediaItem->setCreatedAt($now);
+            // $mediaItem->setCreatedBy($currentUserEntity->getUid());
+            $mediaItem->setCreatedBy($currentUserEntity);
+            $mediaItem->setUpdatedAt($now);
+            // $mediaItem->setUpdatedBy($currentUserEntity->getUid());
+            $mediaItem->setUpdatedBy($currentUserEntity);
             $mediaItem->setTitle($file->getClientOriginalName());
+            // $mediaItem->setUrltitle();
+            // $mediaItem->setDescription();
+            $mediaItem->setPublishedAt($now);
+            $mediaItem->setPublicdomain(false);
+            $mediaItem->setAuthor($currentUserEntity);
+            
+                $mediaExtra = [];
+                $mediaExtra['fileName'] = $filename;
+                $mediaExtra['prefix'] = $file_prefix;
+                $mediaExtra['subdir'] = $subdir;
+                $mediaExtra['ext'] = $file->getClientOriginalExtension();
+            // 'a:2:{s:8:"fileName";s:14:"5d3cc8dd68032.";s:3:"ext";s:0:"";}'
             $mediaItem->setMediaExtra($mediaExtra);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($mediaItem);
             $em->flush();
@@ -184,6 +213,62 @@ class MediaController extends AbstractController
         return $this->render('KaikmediaGalleryModule:Media:create.html.twig', [
         ]);
     }
+
+    // private function insertItem(AbstractMediaEntity $mediaItem)
+    // {
+
+    //     $em = $this->getDoctrine()->getManager();
+    //     $metadata = $em->getClassMetadata($mediaManager->getClass());
+
+    //     $mediaItemArray = [
+    //         $mediaItem->getStatus(), 
+    //         $mediaItem->getCreatedAt()->format('Y-m-d H:i'),
+    //         $mediaItem->getUpdatedAt()->format('Y-m-d H:i'), // '2020-12-04 19:46:23'
+    //         null,                  //deletedAt
+    //         $mediaItem->getAuthor()->getUid(),           //
+    //         $mediaItem->getAuthor()->getUid(),           //
+    //         null,                  //
+    //         $mediaItem->getTitle(),
+    //         $mediaItem->getUrltitle(),
+    //         $mediaItem->getDescription(),
+    //         $mediaItem->getOnline(),
+    //         $mediaItem->getDepot(),
+    //         $mediaItem->getInmenu(),
+    //         $mediaItem->getInlist(),
+    //         $mediaItem->getLanguage(),
+    //         $mediaItem->getLayout(),
+    //         $mediaItem->getViews(),
+    //         $mediaItem->getPublishedAt()->format('Y-m-d H:i'),
+    //         null,
+    //         $mediaItem->getAuthor()->getUid(),
+    //         $mediaItem->getLegal(),
+    //         $mediaItem->getPublicdomain(),
+    //         serialize($mediaItem->getMediaExtra()),
+    //         $metadata->discriminatorValue 
+    //     ];
+
+    //     dump($mediaItem);
+    //     dump($mediaItemArray);
+
+    //     //This call will get the doctrine connection from inside a symfony2 controller
+    //     $conn = $this->getDoctrine()->getConnection();
+    //     $sql = "INSERT INTO kmgallery_media (
+    //         status, createdAt, updatedAt, deletedAt, 
+    //         createdBy, updatedBy, deletedBy, 
+    //         title, urltitle, description, online, 
+    //         depot, inmenu, inlist, language, layout, 
+    //         views, publishedAt, expiredAt, author, 
+    //         legal, publicdomain, mediaExtra, 
+    //         discr
+    //       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    //     $stmt= $conn->prepare($sql);
+    //     $stmt->execute($mediaItemArray);
+    //     $id = $conn->lastInsertId();
+    //     $mediaItem->setId($id);
+
+    //     return $mediaItem;
+    // }
 
     /**
      * @Route(
