@@ -48,7 +48,6 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      */
     private $description = '';
 
-    //status boleans
     /**
      * @ORM\Column(type="boolean")
      */
@@ -69,7 +68,6 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      */
     private $inlist;
 
-    //other
     /**
      * @ORM\Column(type="string", length=5)
      */
@@ -123,7 +121,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set title
      *
      * @param string $title
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setTitle($title)
     {
@@ -146,7 +145,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set urltitle
      *
      * @param string $urltitle
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setUrltitle($urltitle)
     {
@@ -177,7 +177,9 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
 
     /**
      * Set description
-     *
+     * 
+     * @param string $description
+     * 
      * @return $this
      */
     public function setDescription($description)
@@ -189,7 +191,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set online
      *
      * @param boolean $online
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setOnline($online)
     {
@@ -212,7 +215,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set depot
      *
      * @param boolean $depot
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setDepot($depot)
     {
@@ -235,7 +239,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set inmenu
      *
      * @param boolean $inmenu
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setInmenu($inmenu)
     {
@@ -258,7 +263,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set inlist
      *
      * @param boolean $inlist
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setInlist($inlist)
     {
@@ -281,7 +287,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set language
      *
      * @param string $language
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setLanguage($language)
     {
@@ -304,7 +311,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set layout
      *
      * @param string $layout
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setLayout($layout)
     {
@@ -327,7 +335,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set views
      *
      * @param integer $views
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setViews($views)
     {
@@ -350,7 +359,8 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set author
      *
      * @param integer $author
-     * @return Pages
+     * 
+     * @return $this
      */
     public function setAuthor(\Zikula\UsersModule\Entity\UserEntity $author = null)
     {
@@ -362,7 +372,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
     /**
      * Get author
      *
-     * @return integer
+     * @return \Zikula\UsersModule\Entity\UserEntity|null
      */
     public function getAuthor()
     {
@@ -373,7 +383,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set published
      *
      * @param \DateTime $publishedAt
-     * @return Pages
+     * @return $this
      */
     public function setPublishedAt(\DateTime $publishedAt = null)
     {
@@ -396,7 +406,7 @@ abstract class AbstractDocumentEntity extends AbstractBaseEntity
      * Set expired
      *
      * @param \DateTime $expiredAt
-     * @return Pages
+     * @return $this
      */
     public function setExpiredAt(\DateTime $expiredAt = null)
     {
